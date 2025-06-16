@@ -1,11 +1,12 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import { SafeAreaFrameContext } from 'react-native-safe-area-context'
+import { useNavigation } from '@react-navigation/native';
+import { Button, SafeAreaView } from 'react-native';
 
 export default function HomeScreen() {
+  const navigation = useNavigation();
+
   return (
-    <SafeAreaFrameContext>
-      <Text>Home Screen</Text>
-    </SafeAreaFrameContext>
-  )
+    <SafeAreaView className="flex-1 items-center justify-center">
+      <Button title="Go to Store" onPress={() => navigation.navigate('Store')} />
+    </SafeAreaView>
+  );
 }
