@@ -8,7 +8,9 @@
     "start:dev": "nodemon index.js",
     "start:queue": "nodemon queueRedis.js",
     "start:set": "nodemon setRedis.js",
-    "start:hash": "nodemon hashRedis.js"
+    "start:hash": "nodemon hashRedis.js",
+    "start:sorted": "nodemon sorted_set.js",
+    "start:practice": "nodemon practice.js"
   },
   "keywords": [
     "Redis"
