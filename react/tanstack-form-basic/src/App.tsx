@@ -1,11 +1,24 @@
-import RegisterForm from './components/RegisterForm';
+import { Suspense } from "react";
+import { Route, Routes } from "react-router-dom";
+import { ROUTES } from "./configs/route.config";
 
-function App() {
+const renderRoute = (route: any) => {
+  if (route.children) {
+    return (
+      <Route key={route.path} path={route.path} element={<route.component />}>
+        {route.children.map((child: any) => renderRoute(child))}
+      </Route>
+    );
+  }
+  return <Route key={route.path} path={route.path} element={<route.component />} />;
+};
+
+export default function App() {
   return (
-    <div className="min-h-screen p-6 bg-gray-50">
-      <RegisterForm />
-    </div>
+    <Suspense fallback="Loading...">
+      <Routes>
+        {ROUTES.map((route) => renderRoute(route))}
+      </Routes>
+    </Suspense>
   );
 }
-
-export default App;
