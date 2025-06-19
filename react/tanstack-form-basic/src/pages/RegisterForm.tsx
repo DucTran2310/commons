@@ -1,9 +1,9 @@
+import InputField from '@/components/InputField';
+import PasswordCriteria from '@/components/PasswordCriteria';
+import type { FormValues } from '@/interfaces/form.types';
+import { validateConfirmPassword, validateEmail, validateName, validatePassword } from '@/utils/validate';
 import { useForm } from '@tanstack/react-form';
-import type { FormValues } from '../interfaces/form.types';
-import { validateConfirmPassword, validateEmail, validateName, validatePassword } from '../utils/validate';
 import { useState } from 'react';
-import PasswordCriteria from '../components/PasswordCriteria';
-import InputField from '../components/InputField';
 
 export default function RegisterForm() {
 

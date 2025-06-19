@@ -1,6 +1,6 @@
+import { ROUTES } from "@/configs/route.config";
 import { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
-import { ROUTES } from "./configs/route.config";
 
 const renderRoute = (route: any) => {
   if (route.children) {

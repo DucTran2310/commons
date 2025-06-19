@@ -1,4 +1,4 @@
-import notFoundImage from "../assets/commons/404.jpg";
+import notFoundImage from "@/assets/commons/404.jpg";
 import { Link } from "react-router-dom";
 
 const NotFound = () => {

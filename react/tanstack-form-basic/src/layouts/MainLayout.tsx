@@ -1,5 +1,5 @@
-import ContentLayout from './ContentLayout'
-import SidebarLayout from './SideBarLayout'
+import ContentLayout from "@/layouts/ContentLayout";
+import SidebarLayout from "@/layouts/SideBarLayout";
 
 const MainLayout = () => {
   return (
@@ -7,7 +7,7 @@ const MainLayout = () => {
       <SidebarLayout />
       <ContentLayout />
     </div>
-  )
-}
+  );
+};
 
-export default MainLayout
+export default MainLayout;

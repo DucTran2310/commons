@@ -1,66 +1,22 @@
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   ChevronDown,
   ChevronsDownUp,
   ChevronsUpDown,
-  Home,
   Menu,
-  Search,
-  Settings,
-  Users,
+  Search
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-
-const menuData = [
-  {
-    label: 'Dashboard',
-    icon: <Home className="w-4 h-4" />,
-    path: '/dashboard',
-  },
-  {
-    label: 'Users',
-    icon: <Users className="w-4 h-4" />,
-    children: [
-      { label: 'List', path: '/users/list' },
-      { label: 'Create', path: '/users/create' },
-      {
-        label: 'Roles',
-        children: [
-          { label: 'Admin', path: '/users/roles/admin' },
-          { label: 'User', path: '/users/roles/user' },
-          {
-            label: 'Super Admin',
-            children: [
-              { label: 'Permissions', path: '/users/roles/super-admin/permissions' },
-              { label: 'Audit Logs', path: '/users/roles/super-admin/audit-logs' },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    label: 'Form',
-    icon: <Settings className="w-4 h-4" />,
-    children: [
-      { label: 'Tanstack', path: '/form/tanstack' },
-      { label: 'Security', path: '/settings/security' },
-    ],
-  },
-  {
-    label: 'Settings',
-    icon: <Settings className="w-4 h-4" />,
-    children: [
-      { label: 'General', path: '/settings/general' },
-      { label: 'Security', path: '/settings/security' },
-    ],
-  },
-];
+import { MENU_DATA } from '@/components/Sidebar/Menu';
+import { MultiLevelFlyout } from '@/components/Sidebar/MultiLevelFlyout';
 
 export default function SidebarLayout() {
   const [open, setOpen] = useState(true);
   const [submenuOpen, setSubmenuOpen] = useState<Record<string, boolean>>({});
   const [search, setSearch] = useState('');
+  const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
+  const [flyoutPosition, setFlyoutPosition] = useState<{ top: number; left: number } | null>(null);
   const location = useLocation();
 
   const toggleDrawer = () => {
@@ -82,12 +38,12 @@ export default function SidebarLayout() {
         }
       }
     };
-    traverse(menuData);
+    traverse(MENU_DATA);
     setSubmenuOpen(allLabels);
   };
 
   const filteredMenu = useMemo(() => {
-    if (!search.trim()) return menuData;
+    if (!search.trim()) return MENU_DATA;
     const filter = (items: any[]): any[] => {
       return items
         .map((item) => {
@@ -100,15 +56,15 @@ export default function SidebarLayout() {
         })
         .filter(Boolean) as any[];
     };
-    return filter(menuData);
+    return filter(MENU_DATA);
   }, [search]);
 
   const RecursiveMenuItem = ({ item, level = 0 }: { item: any; level?: number }) => {
     const isOpen = submenuOpen[item.label] || false;
     const hasChildren = !!item.children?.length;
     const isActive = item.path && location.pathname === item.path;
-
-    const padding = open ? 16 + level * 12 : 12;
+    const padding = open ? 16 + level * 12 : 18;
+    const isTopLevel = level === 0;
 
     const content = (
       <div
@@ -116,41 +72,74 @@ export default function SidebarLayout() {
           }`}
         style={{ paddingLeft: `${padding}px` }}
       >
-        {level === 0 && item.icon}
+        {isTopLevel && item.icon}
         <span className={open ? 'truncate' : 'sr-only'}>{item.label}</span>
         {hasChildren && open && (
           <ChevronDown
-            className={`w-4 h-4 ml-auto transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
+            className={`w-4 h-4 ml-auto transition-transform duration-300 ${isOpen ? 'rotate-180' : ''
+              }`}
           />
         )}
       </div>
     );
 
+    const Wrapper = hasChildren ? 'button' : 'div';
+
     return (
-      <div>
+      <div
+        className="relative group"
+        onMouseEnter={(e) => {
+          if (!open && hasChildren) {
+            const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+            setHoveredMenu(item.label);
+            setFlyoutPosition({ top: rect.top, left: rect.right });
+          }
+        }}
+        onMouseLeave={() => {
+          if (!open) {
+            setHoveredMenu(null);
+            setFlyoutPosition(null);
+          }
+        }}
+      >
         {hasChildren ? (
-          <button
+          <Wrapper
             type="button"
             className="w-full text-left"
-            onClick={() => toggleSubmenu(item.label)}
+            onClick={() => open && toggleSubmenu(item.label)}
           >
             {content}
-          </button>
+          </Wrapper>
         ) : item.path ? (
           <Link to={item.path}>{content}</Link>
         ) : (
           content
         )}
 
-        {hasChildren && (
-          <div
-            className={`transition-all overflow-hidden ${isOpen ? 'max-h-96' : 'max-h-0'
-              } duration-300`}
-          >
-            {item.children.map((child: any) => (
-              <RecursiveMenuItem key={child.label} item={child} level={level + 1} />
-            ))}
-          </div>
+        {!open && hasChildren && hoveredMenu === item.label && flyoutPosition && (
+          <MultiLevelFlyout item={item} position={flyoutPosition} />
+        )}
+
+        {hasChildren && open && (
+          <AnimatePresence initial={false}>
+            <motion.div
+              key={isOpen ? 'open' : 'closed'}
+              initial={{ height: 0, opacity: 0 }}
+              animate={{
+                height: isOpen ? 'auto' : 0,
+                opacity: isOpen ? 1 : 0,
+              }}
+              exit={{ height: 0, opacity: 0 }}
+              style={{ overflow: 'hidden' }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+            >
+              <div>
+                {item.children.map((child: any) => (
+                  <RecursiveMenuItem key={child.label} item={child} level={level + 1} />
+                ))}
+              </div>
+            </motion.div>
+          </AnimatePresence>
         )}
       </div>
     );
@@ -159,7 +148,7 @@ export default function SidebarLayout() {
   return (
     <>
       <aside
-        className={`bg-white border-r h-screen transition-all duration-300 bg-[#9393aa] flex flex-col ${open ? 'w-60' : 'w-16'
+        className={`bg-[#9393aa] border-r h-screen transition-all duration-300 flex flex-col ${open ? 'w-60' : 'w-16'
           }`}
       >
         <div className="flex items-center justify-between p-3 border-b">
@@ -172,7 +161,7 @@ export default function SidebarLayout() {
         {open && (
           <div className="p-3">
             <div className="relative">
-              <Search className="absolute left-2 w-4 h-4 top-1.5 text-gray-500" />
+              <Search className="absolute left-2 w-4 h-4 top-1.5 text-gray-500 z-100" />
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
