@@ -1,5 +1,4 @@
-import type { FieldApi } from "@tanstack/react-form";
-import type { FormValues } from "../interfaces/form.types";
+import type { AnyField } from "../interfaces/form.types";
 
 export const validateName = ({ value }: { value: string }) =>
   !value ? "Tên là bắt buộc" : undefined;
@@ -25,7 +24,7 @@ export const validateConfirmPassword = ({
   fieldApi,
 }: {
   value: string;
-  fieldApi: FieldApi<FormValues, "confirmPassword", string>;
+  fieldApi: AnyField;
 }) => {
   const password = fieldApi.form.getFieldValue("password");
   return value !== password ? "Mật khẩu không khớp" : undefined;

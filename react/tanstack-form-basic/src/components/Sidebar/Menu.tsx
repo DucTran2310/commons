@@ -1,31 +1,28 @@
-import {
-  Home,
-  Users,
-  Settings,
-} from 'lucide-react';
+import { REGISTER_FORM_TANSTACK, REGISTER_FORM_TANSTACK_MUI } from "@/constants/menus.constants";
+import { Home, Settings, Users } from "lucide-react";
 
 export const MENU_DATA = [
   {
-    label: 'Dashboard',
+    label: "Dashboard",
     icon: <Home className="w-4 h-4" />,
-    path: '/dashboard',
+    path: "/dashboard",
   },
   {
-    label: 'Users',
+    label: "Users",
     icon: <Users className="w-4 h-4" />,
     children: [
-      { label: 'List', path: '/users/list' },
-      { label: 'Create', path: '/users/create' },
+      { label: "List", path: "/users/list" },
+      { label: "Create", path: "/users/create" },
       {
-        label: 'Roles',
+        label: "Roles",
         children: [
-          { label: 'Admin', path: '/users/roles/admin' },
-          { label: 'User', path: '/users/roles/user' },
+          { label: "Admin", path: "/users/roles/admin" },
+          { label: "User", path: "/users/roles/user" },
           {
-            label: 'Super Admin',
+            label: "Super Admin",
             children: [
-              { label: 'Permissions', path: '/users/roles/super-admin/permissions' },
-              { label: 'Audit Logs', path: '/users/roles/super-admin/audit-logs' },
+              { label: "Permissions", path: "/users/roles/super-admin/permissions" },
+              { label: "Audit Logs", path: "/users/roles/super-admin/audit-logs" },
             ],
           },
         ],
@@ -33,19 +30,19 @@ export const MENU_DATA = [
     ],
   },
   {
-    label: 'Form',
+    label: "Form",
     icon: <Settings className="w-4 h-4" />,
     children: [
-      { label: 'Tanstack', path: '/form/tanstack' },
-      { label: 'Security', path: '/settings/security' },
+      { label: "Tanstack", path: REGISTER_FORM_TANSTACK },
+      { label: "Tanstack_MUI", path: REGISTER_FORM_TANSTACK_MUI },
     ],
   },
   {
-    label: 'Settings',
+    label: "Settings",
     icon: <Settings className="w-4 h-4" />,
     children: [
-      { label: 'General', path: '/settings/general' },
-      { label: 'Security', path: '/settings/security' },
+      { label: "General", path: "/settings/general" },
+      { label: "Security", path: "/settings/security" },
     ],
   },
 ];
