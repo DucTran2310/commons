@@ -1,5 +1,6 @@
-import { REGISTER_FORM_TANSTACK, REGISTER_FORM_TANSTACK_MUI } from "@/constants/menus.constants";
-import { Home, Settings, Users } from "lucide-react";
+import { FORM_BASIC_REACT_HOOK_FORM, FORM_USER_WIZARD, INFINITE_BIGDATA_SCROLL, INFINITE_SCROLL, MIND_MAP_LAYOUT, REGISTER_FORM_TANSTACK, REGISTER_FORM_TANSTACK_MUI } from "@/constants/menus.constants";
+import { Brain, GalleryVertical, GalleryVerticalEnd, Home, Settings, Telescope, Users } from "lucide-react";
+
 
 export const MENU_DATA = [
   {
@@ -35,7 +36,35 @@ export const MENU_DATA = [
     children: [
       { label: "Tanstack", path: REGISTER_FORM_TANSTACK },
       { label: "Tanstack_MUI", path: REGISTER_FORM_TANSTACK_MUI },
+      {
+        label: "React-hook-form",
+        children: [
+          { label: "form-basic", path: FORM_BASIC_REACT_HOOK_FORM },
+          { label: "user-form-wizard", path: FORM_USER_WIZARD }
+        ],
+      },
     ],
+  },
+  {
+    label: "Performance-FE",
+    icon: <Telescope className="w-4 h-4" />,
+    children: [
+      {
+        label: "Infinite-scroll",
+        icon: <GalleryVerticalEnd className="w-4 h-4" />, 
+        path: INFINITE_SCROLL
+      },
+      {
+        label: "Infinite-big-data-scroll",
+        icon: <GalleryVertical className="w-4 h-4" />, 
+        path: INFINITE_BIGDATA_SCROLL
+      },
+    ],
+  },
+  {
+    label: "Mind-map",
+    icon: <Brain className="w-4 h-4" />,
+    path: MIND_MAP_LAYOUT
   },
   {
     label: "Settings",
