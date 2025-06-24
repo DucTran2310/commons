@@ -3,6 +3,12 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "jsx": "react-jsx",
+    "importsNotUsedAsValues": "remove",
+    "preserveValueImports": false
   }
 }

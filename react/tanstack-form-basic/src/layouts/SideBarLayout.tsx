@@ -1,10 +1,13 @@
 import { MENU_DATA } from '@/components/Sidebar/Menu';
 import { RecursiveMenuItem } from '@/components/Sidebar/RecursiveMenuItem';
+import { useTheme } from '@/hooks/useTheme';
 import {
   ChevronsDownUp,
   ChevronsUpDown,
   Menu,
-  Search
+  Moon,
+  Search,
+  Sun
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
@@ -14,6 +17,7 @@ export default function SidebarLayout() {
   const [search, setSearch] = useState('');
   const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
   const [flyoutPosition, setFlyoutPosition] = useState<{ top: number; left: number } | null>(null);
+  const { theme, toggleTheme } = useTheme();
 
   const toggleDrawer = () => {
     handleExpandAll(false);
@@ -57,10 +61,11 @@ export default function SidebarLayout() {
 
   return (
     <>
-      <aside
-        className={`bg-[#9393aa] border-r h-[100vh] transition-all duration-300 flex flex-col ${open ? 'w-60' : 'w-16'
-          }`}
-      >
+      <aside className={`transition-all duration-300 flex flex-col border-r
+        ${open ? 'w-60' : 'w-16'}
+        bg-[#bebebe] dark:bg-gray-700
+        text-black dark:text-white
+      `}>
         <div className="flex items-center justify-between p-3 border-b">
           {open && <span className="font-bold text-lg">Menu</span>}
           <button onClick={toggleDrawer} className="p-1 hover:bg-gray-100 rounded">
@@ -106,6 +111,9 @@ export default function SidebarLayout() {
             </button>
             <button onClick={() => handleExpandAll(false)} className="hover:bg-gray-100 p-1 rounded">
               <ChevronsUpDown className="w-4 h-4" />
+            </button>
+            <button onClick={toggleTheme} className="hover:bg-gray-100 p-1 rounded">
+              {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
             </button>
           </div>
         )}

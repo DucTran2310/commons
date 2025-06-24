@@ -1,4 +1,7 @@
 import {
+  DEBUG_DEMO,
+  DEBUG_WITH_HOOK,
+  EVENT_BUBBLING,
   FORM_BASIC_REACT_HOOK_FORM,
   FORM_USER_WIZARD,
   INFINITE_BIGDATA_SCROLL,
@@ -10,8 +13,9 @@ import {
   REGISTER_FORM_TANSTACK_MUI,
   TANSTACK_QUERY,
   TANSTACK_QUERY_ADVANCE,
+  UNDO_REDO,
 } from "@/constants/menus.constants";
-import { Brain, GalleryVertical, GalleryVerticalEnd, Home, KeyRound, Settings, Telescope, Users } from "lucide-react";
+import { Brain, GalleryVertical, GalleryVerticalEnd, Home, KeyRound, MonitorCog, Settings, Telescope } from "lucide-react";
 
 export const MENU_DATA = [
   {
@@ -20,25 +24,23 @@ export const MENU_DATA = [
     path: "/dashboard",
   },
   {
-    label: "Users",
-    icon: <Users className="w-4 h-4" />,
+    label: "Feature",
+    icon: <MonitorCog className="w-4 h-4" />,
     children: [
-      { label: "List", path: "/users/list" },
-      { label: "Create", path: "/users/create" },
       {
-        label: "Roles",
+        label: "Event & DOM Handling",
         children: [
-          { label: "Admin", path: "/users/roles/admin" },
-          { label: "User", path: "/users/roles/user" },
-          {
-            label: "Super Admin",
-            children: [
-              { label: "Permissions", path: "/users/roles/super-admin/permissions" },
-              { label: "Audit Logs", path: "/users/roles/super-admin/audit-logs" },
-            ],
-          },
-        ],
+          { label: "Undo_Redo", path: UNDO_REDO },
+          { label: "Event_Bubbling", path: EVENT_BUBBLING },
+        ]
       },
+      {
+        label: "Debug",
+        children: [
+          { label: "Debugger", path: DEBUG_DEMO },
+          { label: "Debug with Hook", path: DEBUG_WITH_HOOK }
+        ]
+      }
     ],
   },
   {

@@ -1,4 +1,7 @@
 import {
+  DEBUG_DEMO,
+  DEBUG_WITH_HOOK,
+  EVENT_BUBBLING,
   FORM_BASIC_REACT_HOOK_FORM,
   FORM_USER_WIZARD,
   INFINITE_BIGDATA_SCROLL,
@@ -12,6 +15,7 @@ import {
   REGISTER_FORM_TANSTACK_MUI,
   TANSTACK_QUERY,
   TANSTACK_QUERY_ADVANCE,
+  UNDO_REDO,
 } from "@/constants/menus.constants";
 import { lazy } from "react";
 
@@ -31,6 +35,10 @@ const ProfilePage = lazy(() => import("@/pages/Profile/localStorage/ProfilePage"
 const LoginPage = lazy(() => import("@/pages/Profile/localStorage/LoginPage"));
 const LoginPage_Cookie = lazy(() => import("@/pages/Profile/cookie/LoginPage_Cookie"));
 const ProfilePage_Cookie = lazy(() => import("@/pages/Profile/cookie/ProfilePage_Cookie"));
+const UndoRedoApp = lazy(() => import("@/pages/Feature/Undo_Redo/UndoRedoApp"));
+const Event_Bubbling = lazy(() => import("@/pages/Feature/Event_DOM_Handling/Event_Bubbling"));
+const DebuggerDemo = lazy(() => import("@/pages/Debug/DebugDemo"));
+const DebugWithHook = lazy(() => import("@/pages/Debug/DebugWithHook"));
 
 // Danh sách route
 export const ROUTES = [
@@ -85,6 +93,24 @@ export const ROUTES = [
       {
         path: PROFILE_PAGE_COOKIE,
         component: ProfilePage_Cookie,
+      },
+      // feature
+      {
+        path: UNDO_REDO,
+        component: UndoRedoApp,
+      },
+      {
+        path: EVENT_BUBBLING,
+        component: Event_Bubbling,
+      },
+      // debug
+      {
+        path: DEBUG_DEMO,
+        component: DebuggerDemo,
+      },
+      {
+        path: DEBUG_WITH_HOOK,
+        component: DebugWithHook,
       },
       {
         path: "*",

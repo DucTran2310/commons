@@ -33,6 +33,7 @@ export function useUndoRedo<T>(initial: T) {
   const clear = () => {
     setUndoStack([]);
     setRedoStack([]);
+    setValue(initial);
     log("CLEAR", value);
   };
 
