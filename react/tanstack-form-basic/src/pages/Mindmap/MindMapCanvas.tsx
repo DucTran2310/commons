@@ -8,9 +8,7 @@ export const MindMapCanvas = () => {
       <svg className="absolute top-0 left-0 w-full h-full pointer-events-none">
         {initialNodes.map((child) => {
           const parent = initialNodes.find((n) => n.id === child.parentId);
-          return parent ? (
-            <Edge key={`${child.id}-${parent.id}`} from={parent} to={child} />
-          ) : null;
+          return parent ? <Edge key={`${child.id}-${parent.id}`} from={parent} to={child} /> : null;
         })}
       </svg>
 

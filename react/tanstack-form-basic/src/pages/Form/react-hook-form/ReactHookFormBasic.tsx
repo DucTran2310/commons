@@ -32,7 +32,6 @@ export default function ComplexForm() {
   });
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log("Gửi dữ liệu:", data);
     alert("Form gửi thành công!");
     reset();
   };

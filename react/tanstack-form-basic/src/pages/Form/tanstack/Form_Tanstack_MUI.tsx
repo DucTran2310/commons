@@ -45,7 +45,6 @@ export default function UserProfileForm() {
       friends: [{ name: '' }],
     },
     onSubmit: async ({ value }) => {
-      console.log('Submitted values:', value); // ✅ Log chỉ khi submit thành công
       showAlert('success', 'Gửi thành công ✅');
     },
     onSubmitInvalid: async () => {

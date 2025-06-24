@@ -3,7 +3,7 @@ import SidebarLayout from "@/layouts/SideBarLayout";
 
 const MainLayout = () => {
   return (
-    <div className="flex">
+    <div className="flex h-[100vh]">
       <SidebarLayout />
       <ContentLayout />
     </div>

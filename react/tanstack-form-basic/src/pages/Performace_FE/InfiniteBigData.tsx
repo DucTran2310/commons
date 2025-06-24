@@ -130,7 +130,7 @@ const InfiniteScrollAdvanced: React.FC = () => {
   return (
     <div className="p-4 max-w-md mx-auto h-[100vh]">
       <h2 className="text-xl font-bold mb-4">Infinite Scroll + Observer + Cache + Virtual</h2>
-      <div className="scrollable-container border rounded overflow-y-auto h-[700px]">
+      <div className="border rounded h-[700px]">
         <List
           height={700}
           width="100%"

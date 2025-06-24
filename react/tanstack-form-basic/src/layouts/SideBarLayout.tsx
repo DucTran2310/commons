@@ -55,12 +55,10 @@ export default function SidebarLayout() {
     return filter(MENU_DATA);
   }, [search]);
 
-
-
   return (
     <>
       <aside
-        className={`bg-[#9393aa] border-r h-[100vw] transition-all duration-300 flex flex-col ${open ? 'w-60' : 'w-16'
+        className={`bg-[#9393aa] border-r h-[100vh] transition-all duration-300 flex flex-col ${open ? 'w-60' : 'w-16'
           }`}
       >
         <div className="flex items-center justify-between p-3 border-b">

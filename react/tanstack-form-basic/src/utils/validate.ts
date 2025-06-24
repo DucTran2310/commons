@@ -1,4 +1,4 @@
-import type { AnyField } from "../interfaces/form.types";
+import type { AnyField } from "@/interfaces/form.types";
 
 export const validateName = ({ value }: { value: string }) =>
   !value ? "Tên là bắt buộc" : undefined;

@@ -1,4 +1,4 @@
-import { ROUTES } from "@/configs/route.config";
+import { ROUTES } from "@/components/Sidebar/configs/route.config";
 import { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 
