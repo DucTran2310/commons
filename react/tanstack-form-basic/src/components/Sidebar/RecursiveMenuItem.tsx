@@ -1,7 +1,7 @@
-import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
-import { MultiLevelFlyout } from './MultiLevelFlyout';
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import { MultiLevelFlyout } from "./MultiLevelFlyout";
 
 export function RecursiveMenuItem({
   item,
@@ -23,18 +23,16 @@ export function RecursiveMenuItem({
 
   const content = (
     <div
-      className={`flex items-center gap-2 py-2 px-4 hover:bg-gray-100 transition w-full text-sm rounded-lg ${isActive ? 'bg-blue-100 font-medium' : ''}`}
+      className={`flex items-center gap-2 py-2 px-4 hover:bg-gray-100 transition w-full text-sm rounded-lg ${isActive ? "bg-blue-100 font-medium" : ""}`}
       style={{ paddingLeft: `${padding}px` }}
     >
       {isTopLevel && item.icon}
-      <span className={open ? 'truncate' : 'sr-only'}>{item.label}</span>
-      {hasChildren && open && (
-        <ChevronDown className={`w-4 h-4 ml-auto transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
-      )}
+      <span className={open ? "truncate" : "sr-only"}>{item.label}</span>
+      {hasChildren && open && <ChevronDown className={`w-4 h-4 ml-auto transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} />}
     </div>
   );
 
-  const Wrapper = hasChildren ? 'button' : 'div';
+  const Wrapper = hasChildren ? "button" : "div";
 
   return (
     <div
@@ -54,11 +52,7 @@ export function RecursiveMenuItem({
       }}
     >
       {hasChildren ? (
-        <Wrapper
-          type="button"
-          className="w-full text-left"
-          onClick={() => open && toggleSubmenu(item.label)}
-        >
+        <Wrapper type="button" className="w-full text-left" onClick={() => open && toggleSubmenu(item.label)}>
           {content}
         </Wrapper>
       ) : item.path ? (
@@ -67,19 +61,17 @@ export function RecursiveMenuItem({
         content
       )}
 
-      {!open && hasChildren && hoveredMenu === item.label && flyoutPosition && (
-        <MultiLevelFlyout item={item} position={flyoutPosition} />
-      )}
+      {!open && hasChildren && hoveredMenu === item.label && flyoutPosition && <MultiLevelFlyout item={item} position={flyoutPosition} />}
 
       {hasChildren && open && (
         <AnimatePresence initial={false}>
           <motion.div
-            key={isOpen ? 'open' : 'closed'}
+            key={isOpen ? "open" : "closed"}
             initial={{ height: 0, opacity: 0 }}
-            animate={{ height: isOpen ? 'auto' : 0, opacity: isOpen ? 1 : 0 }}
+            animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
             exit={{ height: 0, opacity: 0 }}
-            style={{ overflow: 'hidden' }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            style={{ overflow: "hidden" }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
           >
             <div>
               {item.children.map((child: any) => (

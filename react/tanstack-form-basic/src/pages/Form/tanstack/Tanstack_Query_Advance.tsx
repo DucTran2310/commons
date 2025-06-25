@@ -1,5 +1,5 @@
-import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
-import { useEffect, useRef, useState } from 'react';
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
 
 interface User {
   id: number;
@@ -18,7 +18,7 @@ interface Comment {
 }
 
 const fetchUsers = async (): Promise<User[]> => {
-  const res = await fetch('https://jsonplaceholder.typicode.com/users');
+  const res = await fetch("https://jsonplaceholder.typicode.com/users");
   return res.json();
 };
 
@@ -44,35 +44,43 @@ const fetchCommentsByPost = async ({ pageParam = 0, postId }: { pageParam?: numb
 };
 
 const highlight = (text: string, keyword: string) => {
-  if (!keyword) return text;
-  const regex = new RegExp(`(${keyword})`, 'gi');
+  if (!keyword) {
+    return text;
+  }
+  const regex = new RegExp(`(${keyword})`, "gi");
   return text.split(regex).map((part, i) =>
-    regex.test(part) ? <mark key={i} className="bg-yellow-200">{part}</mark> : part
+    regex.test(part) ? (
+      <mark key={i} className="bg-yellow-200">
+        {part}
+      </mark>
+    ) : (
+      part
+    ),
   );
 };
 
 const UserPostCommentsTabs = () => {
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [tab, setTab] = useState<'user' | 'post'>('user');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [tab, setTab] = useState<"user" | "post">("user");
   const observerRef = useRef<HTMLDivElement | null>(null);
 
   const { data: users = [] } = useQuery({
-    queryKey: ['users'],
+    queryKey: ["users"],
     queryFn: fetchUsers,
   });
 
   const { data: posts = [] } = useQuery({
-    queryKey: ['posts', selectedUserId],
+    queryKey: ["posts", selectedUserId],
     queryFn: () => fetchPostsByUser(selectedUserId!),
     enabled: !!selectedUserId,
   });
 
   const { data: userComments = [] } = useQuery({
-    queryKey: ['comments-by-user', selectedUserId],
+    queryKey: ["comments-by-user", selectedUserId],
     queryFn: () => fetchCommentsByUser(selectedUserId!),
-    enabled: !!selectedUserId && tab === 'user',
+    enabled: !!selectedUserId && tab === "user",
   });
 
   const {
@@ -81,38 +89,36 @@ const UserPostCommentsTabs = () => {
     hasNextPage,
     isLoading,
   } = useInfiniteQuery({
-    queryKey: ['comments-by-post', selectedPostId],
+    queryKey: ["comments-by-post", selectedPostId],
     queryFn: ({ pageParam = 0 }) => fetchCommentsByPost({ pageParam, postId: selectedPostId! }),
-    enabled: !!selectedPostId && tab === 'post',
+    enabled: !!selectedPostId && tab === "post",
     getNextPageParam: (lastPage, allPages) => (lastPage.length < 10 ? undefined : allPages.length * 10),
   });
 
   useEffect(() => {
     const el = observerRef.current;
-    if (!el || !hasNextPage) return;
+    if (!el || !hasNextPage) {
+      return;
+    }
     const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) fetchNextPage();
+      if (entry.isIntersecting) {
+        fetchNextPage();
+      }
     });
     observer.observe(el);
     return () => observer.disconnect();
   }, [hasNextPage, fetchNextPage]);
 
   const filteredPosts = posts.filter(
-    (p) =>
-      p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.body.toLowerCase().includes(searchTerm.toLowerCase())
+    (p) => p.title.toLowerCase().includes(searchTerm.toLowerCase()) || p.body.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const filteredUserComments = userComments.filter(
-    (c) =>
-      c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.body.toLowerCase().includes(searchTerm.toLowerCase())
+    (c) => c.name.toLowerCase().includes(searchTerm.toLowerCase()) || c.body.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const filteredPostComments = (postCommentsData?.pages.flat() ?? []).filter(
-    (c) =>
-      c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.body.toLowerCase().includes(searchTerm.toLowerCase())
+    (c) => c.name.toLowerCase().includes(searchTerm.toLowerCase()) || c.body.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
@@ -123,12 +129,12 @@ const UserPostCommentsTabs = () => {
         <div>
           <label className="block font-semibold">1. Chọn người dùng:</label>
           <select
-            value={selectedUserId || ''}
+            value={selectedUserId || ""}
             onChange={(e) => {
               const userId = Number(e.target.value);
               setSelectedUserId(userId);
               setSelectedPostId(null);
-              setTab('user');
+              setTab("user");
             }}
             className="border px-2 py-1 rounded"
           >
@@ -153,22 +159,19 @@ const UserPostCommentsTabs = () => {
         </div>
 
         <div className="flex gap-4 mt-4">
-          <button
-            onClick={() => setTab('user')}
-            className={`px-3 py-1 rounded ${tab === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
-          >
+          <button onClick={() => setTab("user")} className={`px-3 py-1 rounded ${tab === "user" ? "bg-blue-600 text-white" : "bg-gray-200"}`}>
             💬 Tất cả bình luận của user
           </button>
           <button
-            onClick={() => setTab('post')}
-            className={`px-3 py-1 rounded ${tab === 'post' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+            onClick={() => setTab("post")}
+            className={`px-3 py-1 rounded ${tab === "post" ? "bg-blue-600 text-white" : "bg-gray-200"}`}
             disabled={!selectedUserId}
           >
             📝 Bài viết và bình luận của post
           </button>
         </div>
 
-        {tab === 'user' && selectedUserId && (
+        {tab === "user" && selectedUserId && (
           <div>
             <h3 className="font-semibold mt-4">💬 Bình luận tất cả bài viết:</h3>
             {filteredUserComments.length ? (
@@ -186,7 +189,7 @@ const UserPostCommentsTabs = () => {
           </div>
         )}
 
-        {tab === 'post' && selectedUserId && (
+        {tab === "post" && selectedUserId && (
           <div>
             <h3 className="font-semibold mt-4">📝 Danh sách bài viết:</h3>
             <ul className="space-y-2 mt-2">
@@ -194,7 +197,7 @@ const UserPostCommentsTabs = () => {
                 <li
                   key={post.id}
                   onClick={() => setSelectedPostId(post.id)}
-                  className={`cursor-pointer border p-2 rounded hover:bg-gray-100 ${selectedPostId === post.id ? 'bg-blue-100' : ''}`}
+                  className={`cursor-pointer border p-2 rounded hover:bg-gray-100 ${selectedPostId === post.id ? "bg-blue-100" : ""}`}
                 >
                   <strong>{highlight(post.title, searchTerm)}</strong>
                   <p className="text-sm text-gray-600">{highlight(post.body, searchTerm)}</p>

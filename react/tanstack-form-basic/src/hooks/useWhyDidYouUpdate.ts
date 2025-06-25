@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 export function useWhyDidYouUpdate(componentName: string, props: Record<string, any>) {
   const previousProps = useRef<Record<string, any>>({});

@@ -1,13 +1,23 @@
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
+import Terminal from "vite-plugin-terminal";
+import chalk from 'chalk'
+
+console.log(chalk.green('[INIT] Starting Vite Dev Server...'))
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   // const cdnUrl = env.VITE_APP_CDN || '';
 
   return {
-    plugins: [react()],
+    plugins: [
+      react(),
+      Terminal({
+        console: "terminal",
+        output: ["terminal", "console"],
+      }),
+    ],
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "src"),

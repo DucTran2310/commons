@@ -21,29 +21,40 @@ export default function UserFormWizard() {
   } = useUserForm();
 
   const onSubmit = (data: any) => {
-    alert("🎉 Gửi thành công: " + JSON.stringify(data, null, 2));
+    alert(`🎉 Gửi thành công: ${JSON.stringify(data, null, 2)}`);
     reset();
     setActiveStep(0);
   };
 
   const handleNext = async () => {
     let valid = false;
-    if (activeStep === 0) valid = await trigger(["name", "email"]);
-    else if (activeStep === 1) valid = await trigger(["address.city", "address.street"]);
-    else if (activeStep === 2) valid = await trigger("friends");
-    else valid = true;
+    if (activeStep === 0) {
+      valid = await trigger(["name", "email"]);
+    } else if (activeStep === 1) {
+      valid = await trigger(["address.city", "address.street"]);
+    } else if (activeStep === 2) {
+      valid = await trigger("friends");
+    } else {
+      valid = true;
+    }
 
-    if (valid) setActiveStep((prev) => prev + 1);
+    if (valid) {
+      setActiveStep((prev) => prev + 1);
+    }
   };
 
   const handleBack = () => setActiveStep((prev) => prev - 1);
 
   return (
     <Box className="max-w-2xl mx-auto p-6 bg-white rounded shadow space-y-6">
-      <Typography variant="h4" fontWeight="bold">📋 Quản lý người dùng</Typography>
+      <Typography variant="h4" fontWeight="bold">
+        📋 Quản lý người dùng
+      </Typography>
       <Stepper activeStep={activeStep}>
         {steps.map((label) => (
-          <Step key={label}><StepLabel>{label}</StepLabel></Step>
+          <Step key={label}>
+            <StepLabel>{label}</StepLabel>
+          </Step>
         ))}
       </Stepper>
 
@@ -62,20 +73,8 @@ export default function UserFormWizard() {
       >
         {activeStep === 0 && (
           <Box className="space-y-4">
-            <TextField
-              label="Tên"
-              fullWidth
-              {...register("name")}
-              error={!!errors.name}
-              helperText={errors.name?.message}
-            />
-            <TextField
-              label="Email"
-              fullWidth
-              {...register("email")}
-              error={!!errors.email}
-              helperText={errors.email?.message}
-            />
+            <TextField label="Tên" fullWidth {...register("name")} error={!!errors.name} helperText={errors.name?.message} />
+            <TextField label="Email" fullWidth {...register("email")} error={!!errors.email} helperText={errors.email?.message} />
           </Box>
         )}
 
@@ -114,21 +113,14 @@ export default function UserFormWizard() {
                 </Button>
               </Box>
             ))}
-            <Button
-              variant="outlined"
-              onClick={() => append({ name: "" })}
-            >
+            <Button variant="outlined" onClick={() => append({ name: "" })}>
               + Thêm bạn
             </Button>
-            {typeof errors.friends?.message === "string" && (
-              <Typography className="text-red-600 text-sm">{errors.friends.message}</Typography>
-            )}
+            {typeof errors.friends?.message === "string" && <Typography className="text-red-600 text-sm">{errors.friends.message}</Typography>}
           </Box>
         )}
 
-        {activeStep === 3 && (
-          <StepPreview data={getValues()} />
-        )}
+        {activeStep === 3 && <StepPreview data={getValues()} />}
 
         <Box className="flex justify-between mt-6">
           {activeStep > 0 && (

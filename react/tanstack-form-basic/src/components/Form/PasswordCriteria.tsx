@@ -1,4 +1,4 @@
-import { Check, X } from 'lucide-react';
+import { Check, X } from "lucide-react";
 
 export const passwordCriteriaList = [
   { label: "Tối thiểu 8 ký tự", test: (v: string) => v.length >= 8 },
@@ -14,7 +14,7 @@ export default function PasswordCriteria({ password }: { password: string }) {
       {passwordCriteriaList.map((item) => {
         const passed = item.test(password);
         return (
-          <li key={item.label} className={`flex items-center gap-2 ${passed ? 'text-green-600' : 'text-red-500'}`}>
+          <li key={item.label} className={`flex items-center gap-2 ${passed ? "text-green-600" : "text-red-500"}`}>
             {passed ? <Check size={16} /> : <X size={16} />}
             {item.label}
           </li>

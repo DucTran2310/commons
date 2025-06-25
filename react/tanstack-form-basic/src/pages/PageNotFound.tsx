@@ -16,7 +16,8 @@ const NotFound = () => {
       {/* Nút quay lại */}
       <Link
         to="/"
-        className="inline-block bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300 hover:from-blue-600 hover:to-blue-700"
+        className="inline-block bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-6
+        rounded-full shadow-md hover:shadow-lg transition duration-300 hover:from-blue-600 hover:to-blue-700"
       >
         Quay lại trang chủ
       </Link>

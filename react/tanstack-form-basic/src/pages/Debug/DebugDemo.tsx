@@ -1,33 +1,42 @@
-import { useEffect, useState } from "react";
+import Loading from "@/components/Loading/Loading";
+import { useUserPoints } from "@/hooks/useUserPoint";
+import { fetchUsers } from "@/services/debugServices";
+import { useQuery } from "@tanstack/react-query";
 
-const DebuggerDemo = () => {
-  const [count, setCount] = useState(0);
+const DebugDemo = () => {
+  const {
+    data: users = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["users"],
+    queryFn: fetchUsers,
+  });
+  const { getUserPoints } = useUserPoints();
 
-  const handleIncrease = () => {
-    const newCount = count + 1;
-
-    // 👇 Tạm dừng ở đây để kiểm tra giá trị
-    debugger;
-
-    setCount(newCount);
-  };
-
-  useEffect(() => {
-    console.log("Component mounted!");
-  }, []);
+  if (isLoading) {
+    return <Loading />;
+  }
+  if (isError) {
+    return <p>Error...</p>;
+  }
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">🛠️ Debugger Demo</h1>
-      <p className="mb-4">Giá trị hiện tại: <strong>{count}</strong></p>
-      <button
-        onClick={handleIncrease}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-      >
-        Tăng số
-      </button>
+    <div className="p-6 w-full">
+      <h2 className="text-xl font-bold mb-4">🔍 Debug Demo</h2>
+      <ul className="space-y-2">
+        {users.map((u) => {
+          const points = getUserPoints(u); // <-- Có thể debug ở đây
+          return (
+            <li key={u.id} className="border rounded p-2 flex justify-between bg-white shadow">
+              <span>{u.name}</span>
+              <span className="font-bold text-blue-600">{points} pts</span>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 };
 
-export default DebuggerDemo;
+export default DebugDemo;

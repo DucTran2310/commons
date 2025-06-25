@@ -4,10 +4,12 @@ export function setCookie(name: string, value: string, days: number) {
 }
 
 export function getCookie(name: string): string | null {
-  return document.cookie
-    .split('; ')
-    .find((row) => row.startsWith(`${name}=`))
-    ?.split('=')[1] ?? null;
+  return (
+    document.cookie
+      .split("; ")
+      .find((row) => row.startsWith(`${name}=`))
+      ?.split("=")[1] ?? null
+  );
 }
 
 export function deleteCookie(name: string) {

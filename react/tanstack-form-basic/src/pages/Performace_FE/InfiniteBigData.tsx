@@ -39,7 +39,9 @@ const InfiniteScrollAdvanced: React.FC = () => {
   };
 
   const loadPage = async (pageToLoad: number) => {
-    if (hasLoaded.current.has(pageToLoad) || loading) return;
+    if (hasLoaded.current.has(pageToLoad) || loading) {
+      return;
+    }
     setLoading(true);
     const data = await fetchChunk(pageToLoad);
     hasLoaded.current.add(pageToLoad);
@@ -57,16 +59,13 @@ const InfiniteScrollAdvanced: React.FC = () => {
 
   // Intersection Observer
   useEffect(() => {
-    if (!sentinelRef.current || !hasMore || loading || !canObserve) return;
+    if (!sentinelRef.current || !hasMore || loading || !canObserve) {
+      return;
+    }
 
     observer.current = new IntersectionObserver((entries) => {
       const target = entries[0];
-      if (
-        target.isIntersecting &&
-        !loading &&
-        hasMore &&
-        !hasIntersectedRecently.current
-      ) {
+      if (target.isIntersecting && !loading && hasMore && !hasIntersectedRecently.current) {
         hasIntersectedRecently.current = true;
         setPage((prev) => prev + 1);
       }
@@ -96,10 +95,7 @@ const InfiniteScrollAdvanced: React.FC = () => {
 
   // Skeleton loader
   const Skeleton = ({ style }: { style: React.CSSProperties }) => (
-    <div
-      style={{ ...style, padding: 8 }}
-      className="border rounded bg-gray-100 animate-pulse flex gap-2 items-center"
-    >
+    <div style={{ ...style, padding: 8 }} className="border rounded bg-gray-100 animate-pulse flex gap-2 items-center">
       <div className="w-[100px] h-[60px] bg-gray-300 rounded" />
       <div className="h-4 bg-gray-300 rounded w-1/2" />
     </div>
@@ -108,46 +104,31 @@ const InfiniteScrollAdvanced: React.FC = () => {
   const Row = React.memo(
     ({ index, style, data }: { index: number; style: React.CSSProperties; data: Item[] }) => {
       const item = data[index];
-      if (!item) return <Skeleton style={style} />;
+      if (!item) {
+        return <Skeleton style={style} />;
+      }
       return (
-        <div
-          style={{ ...style, padding: 8 }}
-          className="border rounded bg-white shadow-sm hover:bg-gray-100 flex gap-2 items-center"
-        >
-          <img
-            loading="lazy"
-            src={LAZY_IMAGE_URL(item.id)}
-            alt="img"
-            className="w-[100px] h-[60px] object-cover rounded"
-          />
+        <div style={{ ...style, padding: 8 }} className="border rounded bg-white shadow-sm hover:bg-gray-100 flex gap-2 items-center">
+          <img loading="lazy" src={LAZY_IMAGE_URL(item.id)} alt="img" className="w-[100px] h-[60px] object-cover rounded" />
           <span>{item.name}</span>
         </div>
       );
     },
-    (prevProps, nextProps) => prevProps.data === nextProps.data
+    (prevProps, nextProps) => prevProps.data === nextProps.data,
   );
 
   return (
     <div className="p-4 max-w-md mx-auto h-[100vh]">
       <h2 className="text-xl font-bold mb-4">Infinite Scroll + Observer + Cache + Virtual</h2>
       <div className="border rounded h-[700px]">
-        <List
-          height={700}
-          width="100%"
-          itemCount={visibleItems.length}
-          itemSize={ITEM_HEIGHT}
-          itemData={visibleItems}
-          className="px-2"
-        >
+        <List height={700} width="100%" itemCount={visibleItems.length} itemSize={ITEM_HEIGHT} itemData={visibleItems} className="px-2">
           {Row}
         </List>
 
         {/* Sentinel chỉ mount nếu đủ dữ liệu */}
         {canObserve && <div ref={sentinelRef} className="h-4" />}
 
-        {loading && (
-          <div className="text-center text-sm text-gray-500 p-4">Đang tải thêm...</div>
-        )}
+        {loading && <div className="text-center text-sm text-gray-500 p-4">Đang tải thêm...</div>}
       </div>
     </div>
   );

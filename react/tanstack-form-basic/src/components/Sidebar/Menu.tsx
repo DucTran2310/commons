@@ -32,15 +32,15 @@ export const MENU_DATA = [
         children: [
           { label: "Undo_Redo", path: UNDO_REDO },
           { label: "Event_Bubbling", path: EVENT_BUBBLING },
-        ]
+        ],
       },
       {
         label: "Debug",
         children: [
           { label: "Debugger", path: DEBUG_DEMO },
-          { label: "Debug with Hook", path: DEBUG_WITH_HOOK }
-        ]
-      }
+          { label: "Debug with Hook", path: DEBUG_WITH_HOOK },
+        ],
+      },
     ],
   },
   {

@@ -1,7 +1,7 @@
-import useDebounce from '@/hooks/useDebounce';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import useDebounce from "@/hooks/useDebounce";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 // Product type
 export type Product = {
@@ -27,21 +27,23 @@ const fetchProducts = async ({
   category: string;
 }): Promise<Product[]> => {
   const skip = (page - 1) * 10;
-  let url = `https://dummyjson.com/products/search?q=${keyword}&limit=10&skip=${skip}`;
+  const url = `https://dummyjson.com/products/search?q=${keyword}&limit=10&skip=${skip}`;
   const res = await fetch(url);
   const data = await res.json();
   let products: Product[] = data.products || [];
-  if (category) products = products.filter((p) => p.category.includes(category));
+  if (category) {
+    products = products.filter((p) => p.category.includes(category));
+  }
   return products.filter((p) => p.price >= priceMin && p.price <= priceMax);
 };
 
 const Tanstack_Query = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [keyword, setKeyword] = useState(searchParams.get('keyword') || '');
-  const [priceMin, setPriceMin] = useState(Number(searchParams.get('min') || '0'));
-  const [priceMax, setPriceMax] = useState(Number(searchParams.get('max') || '2000'));
-  const [category, setCategory] = useState(searchParams.get('category') || '');
-  const [page, setPage] = useState(Number(searchParams.get('page') || '1'));
+  const [keyword, setKeyword] = useState(searchParams.get("keyword") || "");
+  const [priceMin, setPriceMin] = useState(Number(searchParams.get("min") || "0"));
+  const [priceMax, setPriceMax] = useState(Number(searchParams.get("max") || "2000"));
+  const [category, setCategory] = useState(searchParams.get("category") || "");
+  const [page, setPage] = useState(Number(searchParams.get("page") || "1"));
   const queryClient = useQueryClient();
   const listRef = useRef<HTMLUListElement | null>(null);
 
@@ -50,7 +52,7 @@ const Tanstack_Query = () => {
   const debouncedPriceMin = Number(useDebounce(priceMin.toString().trim(), 1000));
   const debouncedPriceMax = Number(useDebounce(priceMax.toString().trim(), 1000));
 
-  const queryKey = ['products', page, debouncedKeyword, priceMin, debouncedPriceMax, category];
+  const queryKey = ["products", page, debouncedKeyword, priceMin, debouncedPriceMax, category];
 
   const {
     data: products,
@@ -74,7 +76,7 @@ const Tanstack_Query = () => {
   // Prefetch next page
   useEffect(() => {
     queryClient.prefetchQuery({
-      queryKey: ['products', page + 1, debouncedKeyword, debouncedPriceMin, debouncedPriceMax, category],
+      queryKey: ["products", page + 1, debouncedKeyword, debouncedPriceMin, debouncedPriceMax, category],
       queryFn: () =>
         fetchProducts({
           page,
@@ -106,11 +108,11 @@ const Tanstack_Query = () => {
 
   // Scroll to top when page changes
   useEffect(() => {
-    listRef.current?.scrollIntoView({ behavior: 'smooth' });
+    listRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [page]);
 
-  const allCategories = ['smartphones', 'laptops', 'fragrances', 'skincare', 'groceries', 'furniture'];
-  console.log('products: ', products)
+  const allCategories = ["smartphones", "laptops", "fragrances", "skincare", "groceries", "furniture"];
+  console.log("products: ", products);
 
   return (
     <div className="max-w-3xl mx-auto p-4 space-y-6">
@@ -137,11 +139,7 @@ const Tanstack_Query = () => {
           placeholder="Đến"
           className="border px-2 py-1 rounded w-24"
         />
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="border px-2 py-1 rounded w-1/4"
-        >
+        <select value={category} onChange={(e) => setCategory(e.target.value)} className="border px-2 py-1 rounded w-1/4">
           <option value="">📂 Tất cả danh mục</option>
           {allCategories.map((cat) => (
             <option key={cat} value={cat}>
@@ -160,14 +158,12 @@ const Tanstack_Query = () => {
         <ul className="grid gap-4">
           {products?.map((product) => (
             <li key={product.id} className="flex gap-4 border p-3 rounded shadow-sm">
-              <img
-                src={product.thumbnail}
-                alt={product.title}
-                className="w-20 h-20 object-cover rounded"
-              />
+              <img src={product.thumbnail} alt={product.title} className="w-20 h-20 object-cover rounded" />
               <div>
                 <h3 className="font-semibold">{product.title}</h3>
-                <p className="text-sm text-gray-600">💰 ${product.price} – 📂 {product.category}</p>
+                <p className="text-sm text-gray-600">
+                  💰 ${product.price} – 📂 {product.category}
+                </p>
               </div>
             </li>
           ))}

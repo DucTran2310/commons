@@ -13,7 +13,9 @@ export function useUndoRedo<T>(initial: T) {
   };
 
   const undo = () => {
-    if (undoStack.length === 0) return;
+    if (undoStack.length === 0) {
+      return;
+    }
     const last = undoStack[undoStack.length - 1];
     setUndoStack((prev) => prev.slice(0, -1));
     setRedoStack((prev) => [...prev, value]);
@@ -22,7 +24,9 @@ export function useUndoRedo<T>(initial: T) {
   };
 
   const redo = () => {
-    if (redoStack.length === 0) return;
+    if (redoStack.length === 0) {
+      return;
+    }
     const last = redoStack[redoStack.length - 1];
     setRedoStack((prev) => prev.slice(0, -1));
     setUndoStack((prev) => [...prev, value]);

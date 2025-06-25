@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { XCircle, PlusCircle } from "lucide-react";
+import { PlusCircle, XCircle } from "lucide-react";
 import { useToastQueue } from "@/hooks/useToastQueue";
 
 type Product = {
@@ -34,10 +34,7 @@ const Event_Bubbling: React.FC = () => {
   const closeModal = () => setSelectedProduct(null);
 
   return (
-    <div
-      className="p-6 bg-gray-100 min-h-screen"
-      onClick={handleContainerClick}
-    >
+    <div className="p-6 bg-gray-100 min-h-screen" onClick={handleContainerClick}>
       <h2 className="text-xl font-bold mb-4">🛍️ Danh sách sản phẩm</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -51,10 +48,7 @@ const Event_Bubbling: React.FC = () => {
             <p className="text-sm text-gray-500">ID: {product.id}</p>
 
             {/* Nút Thêm */}
-            <button
-              onClick={(e) => handleAddClick(e, product)}
-              className="absolute top-2 right-2 p-1 rounded hover:bg-blue-100"
-            >
+            <button onClick={(e) => handleAddClick(e, product)} className="absolute top-2 right-2 p-1 rounded hover:bg-blue-100">
               <PlusCircle className="w-5 h-5 text-blue-500" />
             </button>
           </div>
@@ -63,23 +57,12 @@ const Event_Bubbling: React.FC = () => {
 
       {/* Modal */}
       {selectedProduct && (
-        <div
-          onClick={closeModal}
-          className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="bg-white p-6 rounded shadow-lg max-w-sm w-full relative"
-          >
-            <button
-              onClick={closeModal}
-              className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
-            >
+        <div onClick={closeModal} className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div onClick={(e) => e.stopPropagation()} className="bg-white p-6 rounded shadow-lg max-w-sm w-full relative">
+            <button onClick={closeModal} className="absolute top-2 right-2 text-gray-500 hover:text-red-500">
               <XCircle className="w-6 h-6" />
             </button>
-            <h2 className="text-xl font-bold mb-2">
-              Thông tin sản phẩm
-            </h2>
+            <h2 className="text-xl font-bold mb-2">Thông tin sản phẩm</h2>
             <p className="text-gray-600 mb-2">{selectedProduct.name}</p>
             <p className="text-sm text-gray-400">ID: {selectedProduct.id}</p>
           </div>
@@ -89,10 +72,7 @@ const Event_Bubbling: React.FC = () => {
       {/* Toast Queue */}
       <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 space-y-2">
         {queue.map((toast) => (
-          <div
-            key={toast.id}
-            className="bg-green-500 text-white px-4 py-2 rounded shadow animate-fade-in-out"
-          >
+          <div key={toast.id} className="bg-green-500 text-white px-4 py-2 rounded shadow animate-fade-in-out">
             {toast.message}
           </div>
         ))}
@@ -115,7 +95,8 @@ const Event_Bubbling: React.FC = () => {
             <strong>Modal:</strong> Layer popup nên có <code>z-index</code> cao và xử lý <code>e.stopPropagation()</code> nếu click nền để đóng.
           </li>
           <li>
-            <strong>UX nhỏ:</strong> Gợi ý animation nhỏ (bounce/fade), dùng Tailwind utility như <code>animate-bounce</code>, <code>transition-all</code>.
+            <strong>UX nhỏ:</strong> Gợi ý animation nhỏ (bounce/fade), dùng Tailwind utility như <code>animate-bounce</code>,{" "}
+            <code>transition-all</code>.
           </li>
         </ul>
       </div>

@@ -1,20 +1,13 @@
-import { MENU_DATA } from '@/components/Sidebar/Menu';
-import { RecursiveMenuItem } from '@/components/Sidebar/RecursiveMenuItem';
-import { useTheme } from '@/hooks/useTheme';
-import {
-  ChevronsDownUp,
-  ChevronsUpDown,
-  Menu,
-  Moon,
-  Search,
-  Sun
-} from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { MENU_DATA } from "@/components/Sidebar/Menu";
+import { RecursiveMenuItem } from "@/components/Sidebar/RecursiveMenuItem";
+import { useTheme } from "@/hooks/useTheme";
+import { ChevronsDownUp, ChevronsUpDown, Menu, Moon, Search, Sun } from "lucide-react";
+import { useMemo, useState } from "react";
 
 export default function SidebarLayout() {
   const [open, setOpen] = useState(true);
   const [submenuOpen, setSubmenuOpen] = useState<Record<string, boolean>>({});
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
   const [flyoutPosition, setFlyoutPosition] = useState<{ top: number; left: number } | null>(null);
   const { theme, toggleTheme } = useTheme();
@@ -43,7 +36,9 @@ export default function SidebarLayout() {
   };
 
   const filteredMenu = useMemo(() => {
-    if (!search.trim()) return MENU_DATA;
+    if (!search.trim()) {
+      return MENU_DATA;
+    }
     const filter = (items: any[]): any[] => {
       return items
         .map((item) => {
@@ -61,11 +56,13 @@ export default function SidebarLayout() {
 
   return (
     <>
-      <aside className={`transition-all duration-300 flex flex-col border-r
-        ${open ? 'w-60' : 'w-16'}
+      <aside
+        className={`transition-all duration-300 flex flex-col border-r
+        ${open ? "w-60" : "w-16"}
         bg-[#bebebe] dark:bg-gray-700
         text-black dark:text-white
-      `}>
+      `}
+      >
         <div className="flex items-center justify-between p-3 border-b">
           {open && <span className="font-bold text-lg">Menu</span>}
           <button onClick={toggleDrawer} className="p-1 hover:bg-gray-100 rounded">
@@ -113,7 +110,7 @@ export default function SidebarLayout() {
               <ChevronsUpDown className="w-4 h-4" />
             </button>
             <button onClick={toggleTheme} className="hover:bg-gray-100 p-1 rounded">
-              {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+              {theme === "light" ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
             </button>
           </div>
         )}

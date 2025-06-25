@@ -1,16 +1,9 @@
-import FormField from '@/components/Form/FormField';
-import { userSchema } from '@/validation/form.validation';
-import {
-  Alert,
-  Box,
-  Button,
-  MenuItem,
-  Snackbar,
-  Typography
-} from '@mui/material';
-import { useField, useForm } from '@tanstack/react-form';
-import { useMemo, useRef, useState } from 'react';
-import { z } from 'zod';
+import FormField from "@/components/Form/FormField";
+import { userSchema } from "@/validation/form.validation";
+import { Alert, Box, Button, MenuItem, Snackbar, Typography } from "@mui/material";
+import { useField, useForm } from "@tanstack/react-form";
+import { useMemo, useRef, useState } from "react";
+import { z } from "zod";
 
 // Field validator
 function useZodFieldValidator(schema: z.ZodTypeAny) {
@@ -22,10 +15,10 @@ function useZodFieldValidator(schema: z.ZodTypeAny) {
 }
 
 export default function UserProfileForm() {
-  const [alert, setAlert] = useState({ open: false, type: 'success' as 'success' | 'error', message: '' });
+  const [alert, setAlert] = useState({ open: false, type: "success" as "success" | "error", message: "" });
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const showAlert = (type: 'success' | 'error', message: string) => {
+  const showAlert = (type: "success" | "error", message: string) => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
@@ -37,24 +30,24 @@ export default function UserProfileForm() {
 
   const form = useForm({
     defaultValues: {
-      name: '',
-      email: '',
-      gender: '',
-      country: '',
-      address: { street: '', city: '' },
-      friends: [{ name: '' }],
+      name: "",
+      email: "",
+      gender: "",
+      country: "",
+      address: { street: "", city: "" },
+      friends: [{ name: "" }],
     },
     onSubmit: async ({ value }) => {
-      showAlert('success', 'Gửi thành công ✅');
+      showAlert("success", "Gửi thành công ✅");
     },
     onSubmitInvalid: async () => {
-      console.log('VVVERROR')
+      console.log("VVVERROR");
       Object.keys(form.state.values).forEach((key) => {
         form.setFieldMeta(key as any, (old) => ({ ...old, touched: true }));
       });
 
       // ✅ Thêm đoạn này cho từng bạn
-      form.getFieldValue('friends').forEach((_, index) => {
+      form.getFieldValue("friends").forEach((_, index) => {
         form.setFieldMeta(`friends[${index}].name`, (old) => ({
           ...old,
           touched: true,
@@ -63,14 +56,14 @@ export default function UserProfileForm() {
 
       const firstError = document.querySelector('[aria-invalid="true"]');
       if (firstError) {
-        (firstError as HTMLElement).scrollIntoView({ behavior: 'smooth', block: 'center' });
+        (firstError as HTMLElement).scrollIntoView({ behavior: "smooth", block: "center" });
       }
-      showAlert('error', 'Vui lòng kiểm tra lỗi ❌');
-    }
+      showAlert("error", "Vui lòng kiểm tra lỗi ❌");
+    },
   });
 
-  const countryField = useField({ form, name: 'country' });
-  const friendsField = useField({ form, name: 'friends' });
+  const countryField = useField({ form, name: "country" });
+  const friendsField = useField({ form, name: "friends" });
   const country = countryField.state.value;
   const friends = friendsField.state.value;
 
@@ -90,17 +83,17 @@ export default function UserProfileForm() {
           e.preventDefault();
 
           await Promise.all(
-            Object.keys(form.state.values).map((key) =>
-              form.validateField(key as any, 'submit') // ✅ thêm cause
-            )
+            Object.keys(form.state.values).map(
+              (key) => form.validateField(key as any, "submit"), // ✅ thêm cause
+            ),
           );
 
-          form.validateField('address.street', 'submit');
-          form.validateField('address.city', 'submit');
+          form.validateField("address.street", "submit");
+          form.validateField("address.city", "submit");
 
           // Ép validate từng friend
-          form.getFieldValue('friends').forEach((_, index) => {
-            form.validateField(`friends[${index}].name`, 'submit'); // ✅ thêm cause
+          form.getFieldValue("friends").forEach((_, index) => {
+            form.validateField(`friends[${index}].name`, "submit"); // ✅ thêm cause
           });
 
           // 👉 3. Gọi handleSubmit để chạy tiếp submit hoặc onSubmitInvalid
@@ -140,19 +133,13 @@ export default function UserProfileForm() {
           )}
         </form.Field>
 
-        {country === 'vietnam' && (
+        {country === "vietnam" && (
           <Box className="space-y-4">
             <Typography variant="h6">Địa chỉ</Typography>
-            <form.Field
-              name="address.street"
-              validators={streetValidator}
-            >
+            <form.Field name="address.street" validators={streetValidator}>
               {(field) => <FormField field={field} label="Tên đường" />}
             </form.Field>
-            <form.Field
-              name="address.city"
-              validators={cityValidator}
-            >
+            <form.Field name="address.city" validators={cityValidator}>
               {(field) => <FormField field={field} label="Thành phố" />}
             </form.Field>
           </Box>
@@ -161,11 +148,7 @@ export default function UserProfileForm() {
         <Box className="space-y-2">
           <Typography variant="h6">Danh sách bạn bè</Typography>
           {friends.map((_, index) => (
-            <form.Field
-              key={index}
-              name={`friends[${index}].name` as const}
-              validators={friendNameValidator}
-            >
+            <form.Field key={index} name={`friends[${index}].name` as const} validators={friendNameValidator}>
               {(field) => (
                 <Box className="flex gap-2 items-center">
                   <FormField field={field} label={`Bạn ${index + 1}`} />
@@ -174,7 +157,7 @@ export default function UserProfileForm() {
                     color="error"
                     onClick={() => {
                       const updated = friends.filter((_, i) => i !== index);
-                      form.setFieldValue('friends', updated);
+                      form.setFieldValue("friends", updated);
                     }}
                   >
                     Xoá
@@ -186,8 +169,8 @@ export default function UserProfileForm() {
           <Button
             variant="outlined"
             onClick={() => {
-              const updated = [...form.getFieldValue('friends'), { name: '' }];
-              form.setFieldValue('friends', updated);
+              const updated = [...form.getFieldValue("friends"), { name: "" }];
+              form.setFieldValue("friends", updated);
               const newIndex = updated.length - 1;
 
               // ✅ Đánh dấu field mới là "touched"
@@ -206,10 +189,7 @@ export default function UserProfileForm() {
         </Button>
       </form>
 
-      <Snackbar
-        open={alert.open}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
+      <Snackbar open={alert.open} anchorOrigin={{ vertical: "top", horizontal: "center" }}>
         <Alert severity={alert.type} variant="filled">
           {alert.message}
         </Alert>

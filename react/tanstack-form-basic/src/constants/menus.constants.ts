@@ -24,5 +24,5 @@ export const UNDO_REDO = "/feature/undo-redo";
 export const EVENT_BUBBLING = "/feature/event-bubbling";
 
 // Debug
-export const DEBUG_DEMO = '/debug'
-export const DEBUG_WITH_HOOK = '/debug/useHook'
+export const DEBUG_DEMO = "/debug";
+export const DEBUG_WITH_HOOK = "/debug/useHook";

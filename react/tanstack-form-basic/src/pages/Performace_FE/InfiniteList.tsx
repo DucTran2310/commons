@@ -36,7 +36,9 @@ const InfiniteList: React.FC = () => {
   }, [page]);
 
   useEffect(() => {
-    if (!loadMoreRef.current) return;
+    if (!loadMoreRef.current) {
+      return;
+    }
 
     observer.current = new IntersectionObserver(
       (entries) => {
@@ -44,7 +46,7 @@ const InfiniteList: React.FC = () => {
           setPage((prev) => prev + 1);
         }
       },
-      { threshold: 1 }
+      { threshold: 1 },
     );
 
     observer.current.observe(loadMoreRef.current);
@@ -61,10 +63,7 @@ const InfiniteList: React.FC = () => {
       {/* Scrollable Container */}
       <ul className="space-y-2 overflow-y-scroll h-[800px] border rounded p-2">
         {items.map((item) => (
-          <li
-            key={item.id}
-            className="p-2 border rounded shadow-sm bg-white hover:bg-gray-100"
-          >
+          <li key={item.id} className="p-2 border rounded shadow-sm bg-white hover:bg-gray-100">
             {item.name}
           </li>
         ))}

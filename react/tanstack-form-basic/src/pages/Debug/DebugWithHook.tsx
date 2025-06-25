@@ -14,7 +14,7 @@ export default function DebugWithHook() {
 
   // ✅ Memo hóa callback để giữ nguyên tham chiếu
   const onCardClick = useCallback(() => {
-    console.log("Card clicked");
+    // console.log("Card clicked");
   }, []);
 
   return (

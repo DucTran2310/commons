@@ -1,13 +1,9 @@
 // ✅ MultiLevelFlyout.tsx: Hỗ trợ submenu nhiều tầng + tự chỉnh vị trí + dark mode
 
-import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 
-export function MultiLevelFlyout({ item, depth = 0, position }: {
-  item: any;
-  depth?: number;
-  position: { top: number; left: number };
-}) {
+export function MultiLevelFlyout({ item, depth = 0, position }: { item: any; depth?: number; position: { top: number; left: number } }) {
   const [subHovered, setSubHovered] = useState<string | null>(null);
   const [subPosition, setSubPosition] = useState<{ top: number; left: number } | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -59,16 +55,10 @@ export function MultiLevelFlyout({ item, depth = 0, position }: {
               setSubPosition(null);
             }}
           >
-            {child.path ? (
-              <Link to={child.path}>{child.label}</Link>
-            ) : (
-              <span className="cursor-default">{child.label}</span>
-            )}
+            {child.path ? <Link to={child.path}>{child.label}</Link> : <span className="cursor-default">{child.label}</span>}
 
             {/* Flyout đệ quy */}
-            {hasChild && subHovered === child.label && subPosition && (
-              <MultiLevelFlyout item={child} position={subPosition} depth={depth + 1} />
-            )}
+            {hasChild && subHovered === child.label && subPosition && <MultiLevelFlyout item={child} position={subPosition} depth={depth + 1} />}
           </div>
         );
       })}

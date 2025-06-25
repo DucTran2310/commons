@@ -1,8 +1,4 @@
-import {
-  useForm,
-  useFieldArray,
-  type SubmitHandler
-} from "react-hook-form";
+import { type SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { formSchema } from "@/validation/form.validation";
@@ -71,43 +67,22 @@ export default function ComplexForm() {
         {fields.map((field, index) => (
           <div key={field.id} className="flex items-center gap-2">
             <div className="flex-1">
-              <input
-                {...register(`friends.${index}.name`)}
-                className="border p-2 w-full"
-                placeholder={`Tên bạn ${index + 1}`}
-              />
-              {errors.friends?.[index]?.name && (
-                <p className="text-red-600 text-sm mt-1">
-                  {errors.friends[index]?.name?.message}
-                </p>
-              )}
+              <input {...register(`friends.${index}.name`)} className="border p-2 w-full" placeholder={`Tên bạn ${index + 1}`} />
+              {errors.friends?.[index]?.name && <p className="text-red-600 text-sm mt-1">{errors.friends[index]?.name?.message}</p>}
             </div>
 
-            <button
-              type="button"
-              onClick={() => remove(index)}
-              className="bg-red-500 text-white px-2 py-1 rounded"
-            >
+            <button type="button" onClick={() => remove(index)} className="bg-red-500 text-white px-2 py-1 rounded">
               Xoá
             </button>
           </div>
         ))}
-        {(errors.friends as any)?.message && (
-          <p className="text-red-600">{(errors.friends as any).message}</p>
-        )}
-        <button
-          type="button"
-          onClick={() => append({ name: "" })}
-          className="bg-blue-500 text-white px-3 py-1 rounded"
-        >
+        {(errors.friends as any)?.message && <p className="text-red-600">{(errors.friends as any).message}</p>}
+        <button type="button" onClick={() => append({ name: "" })} className="bg-blue-500 text-white px-3 py-1 rounded">
           + Thêm bạn
         </button>
       </fieldset>
 
-      <button
-        type="submit"
-        className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700"
-      >
+      <button type="submit" className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
         Gửi
       </button>
     </form>
