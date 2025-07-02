@@ -57,7 +57,7 @@ const InfiniteList: React.FC = () => {
   }, [loading]);
 
   return (
-    <div className="p-4 max-w-md mx-auto h-[100vh]">
+    <div className="p-4 w-full mx-auto h-[100vh]">
       <h2 className="text-xl font-bold mb-4">Infinite Scroll Demo</h2>
 
       {/* Scrollable Container */}

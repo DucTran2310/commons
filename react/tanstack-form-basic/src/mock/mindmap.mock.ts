@@ -29,6 +29,13 @@ export const initialNodes: MindMapNodeType[] = [
     color: "#34d399",
   },
   {
+    id: "main4",
+    title: "Main Topic 4",
+    position: { x: 200, y: 450 },
+    parentId: "center",
+    color: "#34d399",
+  },
+  {
     id: "sub1",
     title: "Subtopic 1",
     position: { x: 200, y: 380 },
