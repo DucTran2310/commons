@@ -2,6 +2,11 @@ import {
   DEBUG_DEMO,
   DEBUG_WITH_HOOK,
   EVENT_BUBBLING,
+  EVENT_CUSTOM,
+  EVENT_DEBOUNCE_THROTTLE,
+  EVENT_DELEGATION,
+  EVENT_PHASE,
+  EVENT_SYNTHETIC,
   FORM_BASIC_REACT_HOOK_FORM,
   FORM_USER_WIZARD,
   INFINITE_BIGDATA_SCROLL,
@@ -32,6 +37,11 @@ export const MENU_DATA = [
         children: [
           { label: "Undo_Redo", path: UNDO_REDO },
           { label: "Event_Bubbling", path: EVENT_BUBBLING },
+          { label: "Event_Phase", path: EVENT_PHASE },
+          { label: "Event_Delegation", path: EVENT_DELEGATION },
+          { label: "Event_Synthetic", path: EVENT_SYNTHETIC },
+          { label: "Event_Debounce_Throttle", path: EVENT_DEBOUNCE_THROTTLE },
+          { label: "Event_Custom", path: EVENT_CUSTOM },
         ],
       },
       {

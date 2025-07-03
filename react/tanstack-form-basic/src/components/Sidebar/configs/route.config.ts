@@ -2,6 +2,11 @@ import {
   DEBUG_DEMO,
   DEBUG_WITH_HOOK,
   EVENT_BUBBLING,
+  EVENT_CUSTOM,
+  EVENT_DEBOUNCE_THROTTLE,
+  EVENT_DELEGATION,
+  EVENT_PHASE,
+  EVENT_SYNTHETIC,
   FORM_BASIC_REACT_HOOK_FORM,
   FORM_USER_WIZARD,
   INFINITE_BIGDATA_SCROLL,
@@ -37,6 +42,11 @@ const LoginPage_Cookie = lazy(() => import("@/pages/Profile/cookie/LoginPage_Coo
 const ProfilePage_Cookie = lazy(() => import("@/pages/Profile/cookie/ProfilePage_Cookie"));
 const UndoRedoApp = lazy(() => import("@/pages/Feature/Undo_Redo/UndoRedoApp"));
 const Event_Bubbling = lazy(() => import("@/pages/Feature/Event_DOM_Handling/Event_Bubbling"));
+const EventPhasesPage = lazy(() => import("@/pages/Feature/Event_DOM_Handling/EventPhase"));
+const EventDelegationAdvanced = lazy(() => import("@/pages/Feature/Event_DOM_Handling/EventDelegationAdvanced"));
+const EventVisualizer = lazy(() => import("@/pages/Feature/Event_DOM_Handling/EventVisualizer"));
+const DebounceThrottleDemo = lazy(() => import("@/pages/Feature/Event_DOM_Handling/DebounceThrottleDemo"));
+const Custom_Event = lazy(() => import("@/pages/Feature/Event_DOM_Handling/Custom_Event/Custom_Event"));
 const DebuggerDemo = lazy(() => import("@/pages/Debug/DebugDemo"));
 const DebugWithHook = lazy(() => import("@/pages/Debug/DebugWithHook"));
 
@@ -102,6 +112,26 @@ export const ROUTES = [
       {
         path: EVENT_BUBBLING,
         component: Event_Bubbling,
+      },
+      {
+        path: EVENT_PHASE,
+        component: EventPhasesPage,
+      },
+      {
+        path: EVENT_DELEGATION,
+        component: EventDelegationAdvanced,
+      },
+      {
+        path: EVENT_SYNTHETIC,
+        component: EventVisualizer,
+      },
+      {
+        path: EVENT_DEBOUNCE_THROTTLE,
+        component: DebounceThrottleDemo,
+      },
+      {
+        path: EVENT_CUSTOM,
+        component: Custom_Event
       },
       // debug
       {

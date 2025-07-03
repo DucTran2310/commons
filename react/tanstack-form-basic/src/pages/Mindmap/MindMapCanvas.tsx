@@ -7,7 +7,6 @@ export const MindMapCanvas = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [startDrag, setStartDrag] = useState<{ x: number; y: number } | null>(null);
 
-
   const containerRef = useRef<HTMLDivElement>(null);
   const [nodes, setNodes] = useState(initialNodes);
   const [position, setPosition] = useState({ x: 0, y: 0 });
