@@ -28,6 +28,10 @@ export const EVENT_SYNTHETIC = "/feature/event-synthetic";
 export const EVENT_DEBOUNCE_THROTTLE = "/feature/event-debounce-throttle";
 export const EVENT_CUSTOM = "/feature/event-custom";
 
+// Clipboard
+export const CLIPBOARD_DEMO_BASIC = '/feature/clipboard/basic';
+export const CLIPBOARD_QR_CODE = '/feature/clipboard/qr-code';
+
 // Debug
 export const DEBUG_DEMO = "/debug";
 export const DEBUG_WITH_HOOK = "/debug/useHook";

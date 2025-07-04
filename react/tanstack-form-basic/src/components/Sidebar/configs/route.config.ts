@@ -1,4 +1,6 @@
 import {
+  CLIPBOARD_DEMO_BASIC,
+  CLIPBOARD_QR_CODE,
   DEBUG_DEMO,
   DEBUG_WITH_HOOK,
   EVENT_BUBBLING,
@@ -41,12 +43,18 @@ const LoginPage = lazy(() => import("@/pages/Profile/localStorage/LoginPage"));
 const LoginPage_Cookie = lazy(() => import("@/pages/Profile/cookie/LoginPage_Cookie"));
 const ProfilePage_Cookie = lazy(() => import("@/pages/Profile/cookie/ProfilePage_Cookie"));
 const UndoRedoApp = lazy(() => import("@/pages/Feature/Undo_Redo/UndoRedoApp"));
+// Event
 const Event_Bubbling = lazy(() => import("@/pages/Feature/Event_DOM_Handling/Event_Bubbling"));
 const EventPhasesPage = lazy(() => import("@/pages/Feature/Event_DOM_Handling/EventPhase"));
 const EventDelegationAdvanced = lazy(() => import("@/pages/Feature/Event_DOM_Handling/EventDelegationAdvanced"));
 const EventVisualizer = lazy(() => import("@/pages/Feature/Event_DOM_Handling/EventVisualizer"));
 const DebounceThrottleDemo = lazy(() => import("@/pages/Feature/Event_DOM_Handling/DebounceThrottleDemo"));
 const Custom_Event = lazy(() => import("@/pages/Feature/Event_DOM_Handling/Custom_Event/Custom_Event"));
+// Clipboard
+const ClipboardDemo = lazy(() => import("@/pages/Feature/Event_DOM_Handling/Clipboard_API/ClipboardDemo"));
+const ClipboardToQR = lazy(() => import("@/pages/Feature/Event_DOM_Handling/Clipboard_API/ClipboardToQR"));
+
+// Debug
 const DebuggerDemo = lazy(() => import("@/pages/Debug/DebugDemo"));
 const DebugWithHook = lazy(() => import("@/pages/Debug/DebugWithHook"));
 
@@ -132,6 +140,15 @@ export const ROUTES = [
       {
         path: EVENT_CUSTOM,
         component: Custom_Event
+      },
+      // CLIPBOARD
+      {
+        path: CLIPBOARD_DEMO_BASIC,
+        component: ClipboardDemo
+      },
+      {
+        path: CLIPBOARD_QR_CODE,
+        component: ClipboardToQR
       },
       // debug
       {

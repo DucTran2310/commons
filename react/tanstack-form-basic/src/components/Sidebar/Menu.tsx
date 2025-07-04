@@ -1,4 +1,6 @@
 import {
+  CLIPBOARD_DEMO_BASIC,
+  CLIPBOARD_QR_CODE,
   DEBUG_DEMO,
   DEBUG_WITH_HOOK,
   EVENT_BUBBLING,
@@ -20,7 +22,7 @@ import {
   TANSTACK_QUERY_ADVANCE,
   UNDO_REDO,
 } from "@/constants/menus.constants";
-import { Brain, GalleryVertical, GalleryVerticalEnd, Home, KeyRound, MonitorCog, Settings, Telescope } from "lucide-react";
+import { Brain, GalleryVertical, GalleryVerticalEnd, Home, Keyboard, KeyRound, MonitorCog, Settings, Telescope } from "lucide-react";
 
 export const MENU_DATA = [
   {
@@ -42,6 +44,14 @@ export const MENU_DATA = [
           { label: "Event_Synthetic", path: EVENT_SYNTHETIC },
           { label: "Event_Debounce_Throttle", path: EVENT_DEBOUNCE_THROTTLE },
           { label: "Event_Custom", path: EVENT_CUSTOM },
+          {
+            label: "ClipBoard",
+            icon: <Keyboard className="w-4 h-4" />,
+            children: [
+              { label: "ClipBoard_basic", path: CLIPBOARD_DEMO_BASIC },
+              { label: "ClipBoard_QR_CODE", path: CLIPBOARD_QR_CODE }
+            ]
+          },
         ],
       },
       {
