@@ -1,4 +1,5 @@
 import {
+  TANSTACK_BACKGROUND_REFETCHING,
   CLIPBOARD_DEMO_BASIC,
   CLIPBOARD_QR_CODE,
   DEBUG_DEMO,
@@ -9,6 +10,7 @@ import {
   EVENT_DELEGATION,
   EVENT_PHASE,
   EVENT_SYNTHETIC,
+  FILE_LIST_WITH_CONTEXT_MENU,
   FORM_BASIC_REACT_HOOK_FORM,
   FORM_USER_WIZARD,
   INFINITE_BIGDATA_SCROLL,
@@ -20,9 +22,9 @@ import {
   REGISTER_FORM_TANSTACK_MUI,
   TANSTACK_QUERY,
   TANSTACK_QUERY_ADVANCE,
-  UNDO_REDO,
+  UNDO_REDO
 } from "@/constants/menus.constants";
-import { Brain, GalleryVertical, GalleryVerticalEnd, Home, Keyboard, KeyRound, MonitorCog, Settings, Telescope } from "lucide-react";
+import { Brain, GalleryVertical, GalleryVerticalEnd, Home, Keyboard, KeyRound, MonitorCog, MousePointerClick, Settings, Telescope } from "lucide-react";
 
 export const MENU_DATA = [
   {
@@ -50,6 +52,13 @@ export const MENU_DATA = [
             children: [
               { label: "ClipBoard_basic", path: CLIPBOARD_DEMO_BASIC },
               { label: "ClipBoard_QR_CODE", path: CLIPBOARD_QR_CODE }
+            ]
+          },
+          {
+            label: "Context & Right Click",
+            icon: <MousePointerClick className="w-4 h-4" />,
+            children: [
+              { label: "File list with context menu", path: FILE_LIST_WITH_CONTEXT_MENU }
             ]
           },
         ],
@@ -82,6 +91,7 @@ export const MENU_DATA = [
           { label: "Tanstack_MUI", path: REGISTER_FORM_TANSTACK_MUI },
           { label: "Tanstack_Query", path: TANSTACK_QUERY },
           { label: "Tanstack_Query_Advance", path: TANSTACK_QUERY_ADVANCE },
+          { label: "Tanstack_Background_Refetching", path: TANSTACK_BACKGROUND_REFETCHING },
         ],
       },
       {

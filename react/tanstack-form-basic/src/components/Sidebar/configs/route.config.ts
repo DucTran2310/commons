@@ -9,6 +9,7 @@ import {
   EVENT_DELEGATION,
   EVENT_PHASE,
   EVENT_SYNTHETIC,
+  FILE_LIST_WITH_CONTEXT_MENU,
   FORM_BASIC_REACT_HOOK_FORM,
   FORM_USER_WIZARD,
   INFINITE_BIGDATA_SCROLL,
@@ -20,43 +21,85 @@ import {
   PROFILE_PAGE_COOKIE,
   REGISTER_FORM_TANSTACK,
   REGISTER_FORM_TANSTACK_MUI,
+  TANSTACK_BACKGROUND_REFETCHING,
   TANSTACK_QUERY,
   TANSTACK_QUERY_ADVANCE,
-  UNDO_REDO,
+  UNDO_REDO
 } from "@/constants/menus.constants";
 import { lazy } from "react";
 
 // Lazy load các component
 const NotFound = lazy(() => import("@/pages/PageNotFound"));
 const RegisterForm = lazy(() => import("@/pages/Form/tanstack/RegisterForm"));
-const Form_Tanstack_MUI = lazy(() => import("@/pages/Form/tanstack/Form_Tanstack_MUI"));
+const Form_Tanstack_MUI = lazy(
+  () => import("@/pages/Form/tanstack/Form_Tanstack_MUI")
+);
 const MainLayout = lazy(() => import("@/layouts/MainLayout"));
-const Tanstack_Query = lazy(() => import("@/pages/Form/tanstack/Tanstack_Query"));
-const Tanstack_Query_Advance = lazy(() => import("@/pages/Form/tanstack/Tanstack_Query_Advance"));
-const ReactHookFormBasic = lazy(() => import("@/pages/Form/react-hook-form/ReactHookFormBasic"));
-const UserFormWizard = lazy(() => import("@/pages/Form/react-hook-form/UserFormWizard"));
+const Tanstack_Query = lazy(
+  () => import("@/pages/Form/tanstack/Tanstack_Query")
+);
+const Tanstack_Query_Advance = lazy(
+  () => import("@/pages/Form/tanstack/Tanstack_Query_Advance")
+);
+const ReactHookFormBasic = lazy(
+  () => import("@/pages/Form/react-hook-form/ReactHookFormBasic")
+);
+const UserFormWizard = lazy(
+  () => import("@/pages/Form/react-hook-form/UserFormWizard")
+);
 const MindMapLayout = lazy(() => import("@/pages/Mindmap/MindMapLayout"));
 const InfiniteList = lazy(() => import("@/pages/Performace_FE/InfiniteList"));
-const InfiniteBigData = lazy(() => import("@/pages/Performace_FE/InfiniteBigData"));
-const ProfilePage = lazy(() => import("@/pages/Profile/localStorage/ProfilePage"));
+const InfiniteBigData = lazy(
+  () => import("@/pages/Performace_FE/InfiniteBigData")
+);
+const ProfilePage = lazy(
+  () => import("@/pages/Profile/localStorage/ProfilePage")
+);
 const LoginPage = lazy(() => import("@/pages/Profile/localStorage/LoginPage"));
-const LoginPage_Cookie = lazy(() => import("@/pages/Profile/cookie/LoginPage_Cookie"));
-const ProfilePage_Cookie = lazy(() => import("@/pages/Profile/cookie/ProfilePage_Cookie"));
+const LoginPage_Cookie = lazy(
+  () => import("@/pages/Profile/cookie/LoginPage_Cookie")
+);
+const ProfilePage_Cookie = lazy(
+  () => import("@/pages/Profile/cookie/ProfilePage_Cookie")
+);
 const UndoRedoApp = lazy(() => import("@/pages/Feature/Undo_Redo/UndoRedoApp"));
 // Event
-const Event_Bubbling = lazy(() => import("@/pages/Feature/Event_DOM_Handling/Event_Bubbling"));
-const EventPhasesPage = lazy(() => import("@/pages/Feature/Event_DOM_Handling/EventPhase"));
-const EventDelegationAdvanced = lazy(() => import("@/pages/Feature/Event_DOM_Handling/EventDelegationAdvanced"));
-const EventVisualizer = lazy(() => import("@/pages/Feature/Event_DOM_Handling/EventVisualizer"));
-const DebounceThrottleDemo = lazy(() => import("@/pages/Feature/Event_DOM_Handling/DebounceThrottleDemo"));
-const Custom_Event = lazy(() => import("@/pages/Feature/Event_DOM_Handling/Custom_Event/Custom_Event"));
+const Event_Bubbling = lazy(
+  () => import("@/pages/Feature/Event_DOM_Handling/Event_Bubbling")
+);
+const EventPhasesPage = lazy(
+  () => import("@/pages/Feature/Event_DOM_Handling/EventPhase")
+);
+const EventDelegationAdvanced = lazy(
+  () => import("@/pages/Feature/Event_DOM_Handling/EventDelegationAdvanced")
+);
+const EventVisualizer = lazy(
+  () => import("@/pages/Feature/Event_DOM_Handling/EventVisualizer")
+);
+const DebounceThrottleDemo = lazy(
+  () => import("@/pages/Feature/Event_DOM_Handling/DebounceThrottleDemo")
+);
+const Custom_Event = lazy(
+  () => import("@/pages/Feature/Event_DOM_Handling/Custom_Event/Custom_Event")
+);
 // Clipboard
-const ClipboardDemo = lazy(() => import("@/pages/Feature/Event_DOM_Handling/Clipboard_API/ClipboardDemo"));
-const ClipboardToQR = lazy(() => import("@/pages/Feature/Event_DOM_Handling/Clipboard_API/ClipboardToQR"));
-
+const ClipboardDemo = lazy(
+  () => import("@/pages/Feature/Event_DOM_Handling/Clipboard_API/ClipboardDemo")
+);
+const ClipboardToQR = lazy(
+  () => import("@/pages/Feature/Event_DOM_Handling/Clipboard_API/ClipboardToQR")
+);
+// Context & right click
+const FileListWithContextMenu = lazy(
+  () =>
+    import(
+      "@/pages/Feature/Event_DOM_Handling/ContextMenu&RightClick/FileListWithContextMenu"
+    )
+);
 // Debug
 const DebuggerDemo = lazy(() => import("@/pages/Debug/DebugDemo"));
 const DebugWithHook = lazy(() => import("@/pages/Debug/DebugWithHook"));
+const Background_Refetching = lazy(() => import("@/pages/Form/tanstack/Background_Refetching"))
 
 // Danh sách route
 export const ROUTES = [
@@ -80,6 +123,10 @@ export const ROUTES = [
       {
         path: TANSTACK_QUERY_ADVANCE,
         component: Tanstack_Query_Advance,
+      },
+      {
+        path: TANSTACK_BACKGROUND_REFETCHING,
+        component: Background_Refetching
       },
       {
         path: FORM_BASIC_REACT_HOOK_FORM,
@@ -139,16 +186,21 @@ export const ROUTES = [
       },
       {
         path: EVENT_CUSTOM,
-        component: Custom_Event
+        component: Custom_Event,
       },
       // CLIPBOARD
       {
         path: CLIPBOARD_DEMO_BASIC,
-        component: ClipboardDemo
+        component: ClipboardDemo,
       },
       {
         path: CLIPBOARD_QR_CODE,
-        component: ClipboardToQR
+        component: ClipboardToQR,
+      },
+      // CONTEXT MENU & RIGHT CLICK
+      {
+        path: FILE_LIST_WITH_CONTEXT_MENU,
+        component: FileListWithContextMenu,
       },
       // debug
       {
