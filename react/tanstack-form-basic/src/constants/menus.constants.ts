@@ -5,15 +5,17 @@ export const LOGIN_PAGE_COOKIE = "/login-cookie";
 export const PROFILE_PAGE_COOKIE = "/profile-cookie";
 
 // form with tanstack and react hook form
-export const REGISTER_FORM_TANSTACK = "/form/tanstack";
-export const REGISTER_FORM_TANSTACK_MUI = "/form/tanstack_mui";
 export const FORM_BASIC_REACT_HOOK_FORM = "/form/react-hook-form-basic";
 export const FORM_USER_WIZARD = "/form/user-form-wizard";
 
 // tanstack
+export const REGISTER_FORM_TANSTACK = "/form/tanstack";
+export const REGISTER_FORM_TANSTACK_MUI = "/form/tanstack_mui";
 export const TANSTACK_QUERY = "/form/tanstack-query";
 export const TANSTACK_QUERY_ADVANCE = "/form/tanstack-query-advance";
 export const TANSTACK_BACKGROUND_REFETCHING = "form/tanstack-background-refetching";
+export const TANSTACK_STALE_CACHE_TIME = "form/tanstack-stale-cache-time";
+export const TANSTACK_QUERY_MUTATION= "form/tanstack-query_mutation";
 
 // Mind map
 export const MIND_MAP_LAYOUT = "/mind-map";
@@ -32,11 +34,11 @@ export const EVENT_DEBOUNCE_THROTTLE = "/feature/event-debounce-throttle";
 export const EVENT_CUSTOM = "/feature/event-custom";
 
 // Clipboard
-export const CLIPBOARD_DEMO_BASIC = '/feature/clipboard/basic';
-export const CLIPBOARD_QR_CODE = '/feature/clipboard/qr-code';
+export const CLIPBOARD_DEMO_BASIC = "/feature/clipboard/basic";
+export const CLIPBOARD_QR_CODE = "/feature/clipboard/qr-code";
 
 // Context menu & right click
-export const FILE_LIST_WITH_CONTEXT_MENU = '/feature/file-list-with-context-menu'
+export const FILE_LIST_WITH_CONTEXT_MENU = "/feature/file-list-with-context-menu";
 
 // Debug
 export const DEBUG_DEMO = "/debug";

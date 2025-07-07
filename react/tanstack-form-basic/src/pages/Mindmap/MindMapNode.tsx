@@ -45,7 +45,7 @@ export const MindMapNode: React.FC<MindMapNodeProps> = ({ node, onDrag }) => {
         position: "absolute",
         left: node.position.x,
         top: node.position.y,
-        background: hovered ? "#1e40af" : node.color ?? "#fff",
+        background: hovered ? "#1e40af" : (node.color ?? "#fff"),
         color: "white",
         padding: "8px 16px",
         borderRadius: 8,

@@ -1,17 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  DndContext, closestCenter, useSensor, useSensors,
-  PointerSensor, KeyboardSensor
-} from "@dnd-kit/core";
-import type { DragEndEvent } from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  rectSortingStrategy,
-  useSortable
-} from "@dnd-kit/sortable";
+import { DndContext, type DragEndEvent, KeyboardSensor, PointerSensor, closestCenter, useSensor, useSensors } from "@dnd-kit/core";
+import { SortableContext, arrayMove, rectSortingStrategy, sortableKeyboardCoordinates, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { restrictToParentElement } from "@dnd-kit/modifiers";
 
@@ -29,17 +19,27 @@ const initialFiles: FileItem[] = [
 
 const getFileIcon = (type: string) => {
   switch (type) {
-    case "pdf": return "📄";
-    case "image": return "🖼️";
-    case "text": return "📑";
-    default: return "📁";
+    case "pdf":
+      return "📄";
+    case "image":
+      return "🖼️";
+    case "text":
+      return "📑";
+    default:
+      return "📁";
   }
 };
 
 // ✅ Refactor file card thành component riêng
 const SortableFileCard = ({
-  file, renamingId, newName, inputRef, onRightClick,
-  onDoubleClick, onChangeNewName, onConfirmRename
+  file,
+  renamingId,
+  newName,
+  inputRef,
+  onRightClick,
+  onDoubleClick,
+  onChangeNewName,
+  onConfirmRename,
 }: {
   file: FileItem;
   renamingId: string | null;
@@ -50,9 +50,7 @@ const SortableFileCard = ({
   onChangeNewName: (value: string) => void;
   onConfirmRename: (id: string) => void;
 }) => {
-  const {
-    attributes, listeners, setNodeRef, transform, transition, isDragging
-  } = useSortable({ id: file.id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: file.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -113,10 +111,7 @@ const FileListWithContextMenu: React.FC = () => {
         setNewName("");
       }
 
-      if (
-        contextRef.current && !contextRef.current.contains(target) &&
-        submenuRef.current && !submenuRef.current.contains(target)
-      ) {
+      if (contextRef.current && !contextRef.current.contains(target) && submenuRef.current && !submenuRef.current.contains(target)) {
         setContextMenu({ x: 0, y: 0, file: null });
         setSubmenuOpen(false);
       }
@@ -126,16 +121,19 @@ const FileListWithContextMenu: React.FC = () => {
     return () => window.removeEventListener("mousedown", handleClickOutside);
   }, [renamingId]);
 
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
-  );
+  const sensors = useSensors(useSensor(PointerSensor), useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }));
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!contextMenu.file) return;
-      if (e.ctrlKey && e.key === "c") alert(`Copied ${contextMenu.file.name}`);
-      if (e.key === "Delete") handleDelete(contextMenu.file.id);
+      if (!contextMenu.file) {
+        return;
+      }
+      if (e.ctrlKey && e.key === "c") {
+        alert(`Copied ${contextMenu.file.name}`);
+      }
+      if (e.key === "Delete") {
+        handleDelete(contextMenu.file.id);
+      }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
@@ -162,7 +160,9 @@ const FileListWithContextMenu: React.FC = () => {
 
   const confirmRename = (id: string) => {
     const currentFile = files.find((f) => f.id === id);
-    if (!currentFile) return;
+    if (!currentFile) {
+      return;
+    }
 
     const originalExt = currentFile.name.split(".").pop()?.toLowerCase();
     const newExt = newName.split(".").pop()?.toLowerCase();
@@ -201,10 +201,14 @@ const FileListWithContextMenu: React.FC = () => {
 
   const renderPreview = (file: FileItem) => {
     switch (file.type) {
-      case 'pdf': return <iframe src="https://mozilla.github.io/pdf.js/web/viewer.html" className="w-full h-96" title="PDF Preview" />;
-      case 'image': return <img src="https://via.placeholder.com/600x400" alt={file.name} className="w-full max-h-96 object-contain" />;
-      case 'text': return <pre className="bg-gray-100 p-4 rounded max-h-96 overflow-y-auto">Sample text content...</pre>;
-      default: return null;
+      case "pdf":
+        return <iframe src="https://mozilla.github.io/pdf.js/web/viewer.html" className="w-full h-96" title="PDF Preview" />;
+      case "image":
+        return <img src="https://via.placeholder.com/600x400" alt={file.name} className="w-full max-h-96 object-contain" />;
+      case "text":
+        return <pre className="bg-gray-100 p-4 rounded max-h-96 overflow-y-auto">Sample text content...</pre>;
+      default:
+        return null;
     }
   };
 
@@ -242,14 +246,20 @@ const FileListWithContextMenu: React.FC = () => {
             style={{ top: contextMenu.y, left: contextMenu.x }}
             ref={contextRef}
           >
-            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleRename}>✏️ Rename</li>
-            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => setPreviewFile(contextMenu.file)}>🔍 Preview</li>
+            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleRename}>
+              ✏️ Rename
+            </li>
+            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => setPreviewFile(contextMenu.file)}>
+              🔍 Preview
+            </li>
             <li
               className="px-4 py-2 hover:bg-gray-100 cursor-pointer relative"
               onMouseEnter={() => setSubmenuOpen(true)}
               onMouseLeave={(e) => {
                 const toElement = e.relatedTarget as HTMLElement;
-                if (!submenuRef.current?.contains(toElement)) setSubmenuOpen(false);
+                if (!submenuRef.current?.contains(toElement)) {
+                  setSubmenuOpen(false);
+                }
               }}
             >
               ⚙️ More
@@ -263,16 +273,23 @@ const FileListWithContextMenu: React.FC = () => {
                     className="absolute top-0 left-full ml-2 bg-white border rounded shadow-md w-40"
                   >
                     <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">📎 Info</li>
-                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => {
-                      if (contextMenu.file) setPreviewFile(contextMenu.file);
-                    }}>
+                    <li
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => {
+                        if (contextMenu.file) {
+                          setPreviewFile(contextMenu.file);
+                        }
+                      }}
+                    >
                       🔍 Preview
                     </li>
                   </motion.ul>
                 )}
               </AnimatePresence>
             </li>
-            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-500" onClick={() => handleDelete(contextMenu.file!.id)}>🗑️ Delete</li>
+            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-500" onClick={() => handleDelete(contextMenu.file!.id)}>
+              🗑️ Delete
+            </li>
           </motion.ul>
         )}
       </AnimatePresence>

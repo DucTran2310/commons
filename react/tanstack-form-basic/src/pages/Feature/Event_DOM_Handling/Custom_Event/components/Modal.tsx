@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useCustomEvent } from "@/hooks/useCustomEvent";
 
 export const Modal = () => {
@@ -27,10 +27,7 @@ export const Modal = () => {
           >
             <h2 className="text-xl font-bold mb-2">🚀 Modal Event Triggered!</h2>
             <p className="text-gray-600 mb-4">You opened this modal via Custom Event.</p>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="px-4 py-2 bg-blue-600 text-white rounded"
-            >
+            <button onClick={() => setIsOpen(false)} className="px-4 py-2 bg-blue-600 text-white rounded">
               Close
             </button>
           </motion.div>

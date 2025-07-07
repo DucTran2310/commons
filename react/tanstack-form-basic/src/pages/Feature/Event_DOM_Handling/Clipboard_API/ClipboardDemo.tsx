@@ -1,17 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 // Fake WebSocket broadcast
 const subscribers: ((msg: { userId: string; text: string }) => void)[] = [];
 
-const useFakeWebSocket = (
-  onMessage: (msg: { userId: string; text: string }) => void
-) => {
+const useFakeWebSocket = (onMessage: (msg: { userId: string; text: string }) => void) => {
   useEffect(() => {
     subscribers.push(onMessage);
     return () => {
       const index = subscribers.indexOf(onMessage);
-      if (index !== -1) subscribers.splice(index, 1);
+      if (index !== -1) {
+        subscribers.splice(index, 1);
+      }
     };
   }, [onMessage]);
 
@@ -40,10 +40,7 @@ const ClipboardDemo: React.FC = () => {
   const { send } = useFakeWebSocket((msg) => {
     if (msg.userId !== userId) {
       setToast(`${msg.userId} shared clipboard!`);
-      setHistory((prev) => [
-        { text: msg.text, timestamp: new Date().toLocaleTimeString(), userId: msg.userId },
-        ...prev,
-      ]);
+      setHistory((prev) => [{ text: msg.text, timestamp: new Date().toLocaleTimeString(), userId: msg.userId }, ...prev]);
     }
   });
 
@@ -53,7 +50,9 @@ const ClipboardDemo: React.FC = () => {
   };
 
   const handleCopy = async () => {
-    if (inputRef.current) inputRef.current.select();
+    if (inputRef.current) {
+      inputRef.current.select();
+    }
     try {
       await navigator.clipboard.writeText(text);
       const timestamp = new Date().toLocaleTimeString();
@@ -98,8 +97,8 @@ const ClipboardDemo: React.FC = () => {
           <select
             value={userId}
             onChange={(e) => {
-              setText('')
-              setUserId(e.target.value)
+              setText("");
+              setUserId(e.target.value);
             }}
             className="border px-2 py-1 rounded text-sm"
           >
@@ -118,22 +117,13 @@ const ClipboardDemo: React.FC = () => {
         />
 
         <div className="flex gap-4">
-          <button
-            onClick={handleCopy}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-          >
+          <button onClick={handleCopy} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
             📄 Copy
           </button>
-          <button
-            onClick={handlePaste}
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
-          >
+          <button onClick={handlePaste} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
             📥 Paste
           </button>
-          <button
-            onClick={handleClearAll}
-            className="bg-red-500 text-white px-4 py-2 rounded ml-auto"
-          >
+          <button onClick={handleClearAll} className="bg-red-500 text-white px-4 py-2 rounded ml-auto">
             🧹 Clear All
           </button>
         </div>
@@ -145,28 +135,18 @@ const ClipboardDemo: React.FC = () => {
           ) : (
             <ul className="space-y-2 text-sm">
               {history.map((item, idx) => (
-                <li
-                  key={idx}
-                  className="bg-gray-100 rounded p-2 flex justify-between items-center"
-                >
+                <li key={idx} className="bg-gray-100 rounded p-2 flex justify-between items-center">
                   <div className="flex-1">
                     <p>
-                      <span className="font-medium">{item.userId}</span>:{" "}
-                      <code className="bg-white px-1">{item.text}</code>
+                      <span className="font-medium">{item.userId}</span>: <code className="bg-white px-1">{item.text}</code>
                     </p>
                     <p className="text-xs text-gray-500">{item.timestamp}</p>
                   </div>
                   <div className="flex gap-2 ml-4">
-                    <button
-                      onClick={() => handleRestore(item.text)}
-                      className="text-blue-600 hover:underline text-xs"
-                    >
+                    <button onClick={() => handleRestore(item.text)} className="text-blue-600 hover:underline text-xs">
                       📥 Paste
                     </button>
-                    <button
-                      onClick={() => handleDelete(idx)}
-                      className="text-red-600 hover:underline text-xs"
-                    >
+                    <button onClick={() => handleDelete(idx)} className="text-red-600 hover:underline text-xs">
                       ❌
                     </button>
                   </div>

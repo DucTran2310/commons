@@ -30,11 +30,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ x, y, onClose, onAction, item
   }, [onClose]);
 
   return (
-    <div
-      ref={ref}
-      className="absolute z-50 bg-white dark:bg-gray-800 border rounded shadow-md w-56"
-      style={{ top: y, left: x }}
-    >
+    <div ref={ref} className="absolute z-50 bg-white dark:bg-gray-800 border rounded shadow-md w-56" style={{ top: y, left: x }}>
       {items.map((item, idx) => (
         <div
           key={idx}

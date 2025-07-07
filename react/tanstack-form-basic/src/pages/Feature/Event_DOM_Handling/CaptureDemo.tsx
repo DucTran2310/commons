@@ -1,4 +1,3 @@
-
 export default function CaptureDemo() {
   const handleCapture = (who: string) => () => {
     console.log(`[CAPTURE] ${who}`);
@@ -9,16 +8,8 @@ export default function CaptureDemo() {
   };
 
   return (
-    <div
-      onClickCapture={handleCapture("GrandParent")}
-      onClick={handleBubble("GrandParent")}
-      style={{ padding: 20, backgroundColor: "#ffe4e1" }}
-    >
-      <div
-        onClickCapture={handleCapture("Parent")}
-        onClick={handleBubble("Parent")}
-        style={{ padding: 20, backgroundColor: "#add8e6" }}
-      >
+    <div onClickCapture={handleCapture("GrandParent")} onClick={handleBubble("GrandParent")} style={{ padding: 20, backgroundColor: "#ffe4e1" }}>
+      <div onClickCapture={handleCapture("Parent")} onClick={handleBubble("Parent")} style={{ padding: 20, backgroundColor: "#add8e6" }}>
         <div
           onClickCapture={handleCapture("Child")}
           onClick={handleBubble("Child")}

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MindMapNode } from "./MindMapNode";
 import { Edge } from "./Edge";
 import { initialNodes } from "@/mock/mindmap.mock";
@@ -17,11 +17,7 @@ export const MindMapCanvas = () => {
   const isMac = /Mac/.test(navigator.platform);
 
   const handleDragNode = (id: string, newPos: { x: number; y: number }) => {
-    setNodes((prev) =>
-      prev.map((node) =>
-        node.id === id ? { ...node, position: newPos } : node
-      )
-    );
+    setNodes((prev) => prev.map((node) => (node.id === id ? { ...node, position: newPos } : node)));
   };
 
   // Mouse drag with Shift
@@ -78,7 +74,9 @@ export const MindMapCanvas = () => {
 
   // Center canvas on main node
   const centerMainNode = () => {
-    if (!containerRef.current || !centerNode) return;
+    if (!containerRef.current || !centerNode) {
+      return;
+    }
     const { width: vw, height: vh } = containerRef.current.getBoundingClientRect();
     const centerX = centerNode.position.x;
     const centerY = centerNode.position.y;
@@ -101,31 +99,18 @@ export const MindMapCanvas = () => {
     >
       {/* Zoom Indicator + Controls */}
       <div className="absolute top-2 right-4 z-50 flex items-center gap-2">
-        <div className="px-3 py-1 bg-white text-sm rounded shadow border border-gray-300">
-          Zoom: {(scale * 100).toFixed(0)}%
-        </div>
-        <button
-          className="px-2 py-1 text-sm bg-white border rounded shadow hover:bg-gray-200"
-          onClick={() => setScale(1)}
-        >
+        <div className="px-3 py-1 bg-white text-sm rounded shadow border border-gray-300">Zoom: {(scale * 100).toFixed(0)}%</div>
+        <button className="px-2 py-1 text-sm bg-white border rounded shadow hover:bg-gray-200" onClick={() => setScale(1)}>
           Reset Zoom
         </button>
-        <button
-          className="px-2 py-1 text-sm bg-white border rounded shadow hover:bg-gray-200"
-          onClick={centerMainNode}
-        >
+        <button className="px-2 py-1 text-sm bg-white border rounded shadow hover:bg-gray-200" onClick={centerMainNode}>
           Center
         </button>
       </div>
 
       {/* Mini-map */}
       <div className="absolute bottom-4 right-4 z-50 w-48 h-32 border border-gray-400 bg-white bg-opacity-80 rounded overflow-hidden">
-        <svg
-          width="100%"
-          height="100%"
-          viewBox={`0 0 ${canvasSize.width} ${canvasSize.height}`}
-          className="absolute top-0 left-0"
-        >
+        <svg width="100%" height="100%" viewBox={`0 0 ${canvasSize.width} ${canvasSize.height}`} className="absolute top-0 left-0">
           {/* Mini edges */}
           {nodes.map((child) => {
             const parent = nodes.find((n) => n.id === child.parentId);
@@ -143,13 +128,7 @@ export const MindMapCanvas = () => {
           })}
           {/* Mini nodes */}
           {nodes.map((node) => (
-            <circle
-              key={node.id}
-              cx={node.position.x}
-              cy={node.position.y}
-              r="8"
-              fill={node.color || "#000"}
-            />
+            <circle key={node.id} cx={node.position.x} cy={node.position.y} r="8" fill={node.color || "#000"} />
           ))}
         </svg>
 
@@ -176,15 +155,10 @@ export const MindMapCanvas = () => {
         }}
       >
         {/* Edges */}
-        <svg
-          className="absolute top-0 left-0 pointer-events-none z-0"
-          style={{ width: "2000px", height: "2000px", overflow: "visible" }}
-        >
+        <svg className="absolute top-0 left-0 pointer-events-none z-0" style={{ width: "2000px", height: "2000px", overflow: "visible" }}>
           {nodes.map((child) => {
             const parent = nodes.find((n) => n.id === child.parentId);
-            return parent ? (
-              <Edge key={`${child.id}-${parent.id}`} from={parent} to={child} />
-            ) : null;
+            return parent ? <Edge key={`${child.id}-${parent.id}`} from={parent} to={child} /> : null;
           })}
         </svg>
 

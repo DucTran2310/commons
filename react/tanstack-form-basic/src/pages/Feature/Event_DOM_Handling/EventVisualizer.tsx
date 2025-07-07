@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 // Các level mô phỏng DOM tree
 const LEVELS = ["Admin", "Manager", "Staff"] as const;
-type Level = typeof LEVELS[number];
+type Level = (typeof LEVELS)[number];
 
 type Phase = "capture" | "bubble";
 
@@ -44,13 +44,17 @@ export default function EventVisualizer() {
   useEffect(() => {
     LEVELS.forEach((level) => {
       const el = refs.current[level];
-      if (!el) return;
+      if (!el) {
+        return;
+      }
 
       // Handler cho native event
       const handler = (e: Event) => {
         // Đánh dấu đã log event này (dựa trên timeStamp + level + type)
         const key = `${e.timeStamp}-${level}-native`;
-        if (eventLogged.current.has(key)) return;
+        if (eventLogged.current.has(key)) {
+          return;
+        }
         eventLogged.current.add(key);
 
         setHighlighted(level);
@@ -92,7 +96,9 @@ export default function EventVisualizer() {
   const handleReactClick = (level: Level, e: React.MouseEvent<HTMLDivElement>) => {
     // Đánh dấu đã log event này (dựa trên nativeEvent.timeStamp + level + type)
     const key = `${e.nativeEvent.timeStamp}-${level}-react`;
-    if (eventLogged.current.has(key)) return;
+    if (eventLogged.current.has(key)) {
+      return;
+    }
     eventLogged.current.add(key);
 
     setHighlighted(level);
@@ -125,9 +131,7 @@ export default function EventVisualizer() {
 
   // Dispatch native click event vào node Staff
   const dispatchNativeClick = () => {
-    refs.current["Staff"]?.dispatchEvent(
-      new MouseEvent("click", { bubbles: true, cancelable: true })
-    );
+    refs.current.Staff?.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
   };
 
   // Vẽ SVG minh họa DOM tree
@@ -150,24 +154,11 @@ export default function EventVisualizer() {
               cx={positions[level].x}
               cy={positions[level].y}
               r={28}
-              fill={
-                level === "Admin"
-                  ? "#f97316"
-                  : level === "Manager"
-                  ? "#3b82f6"
-                  : "#22c55e"
-              }
+              fill={level === "Admin" ? "#f97316" : level === "Manager" ? "#3b82f6" : "#22c55e"}
               stroke={highlighted === level ? "#fde047" : "#fff"}
               strokeWidth={highlighted === level ? 6 : 2}
             />
-            <text
-              x={positions[level].x}
-              y={positions[level].y + 6}
-              textAnchor="middle"
-              fontSize={18}
-              fill="#fff"
-              fontWeight="bold"
-            >
+            <text x={positions[level].x} y={positions[level].y + 6} textAnchor="middle" fontSize={18} fill="#fff" fontWeight="bold">
               {level}
             </text>
           </g>
@@ -196,71 +187,42 @@ export default function EventVisualizer() {
           level === "Admin" && "bg-orange-500",
           level === "Manager" && "bg-blue-500",
           level === "Staff" && "bg-green-500",
-          highlighted === level && "ring-4 ring-yellow-300"
+          highlighted === level && "ring-4 ring-yellow-300",
         )}
-        onClick={
-          useReactEvent
-            ? (e) => handleReactClick(level, e)
-            : undefined
-        }
-        onClickCapture={
-          useReactEvent && phase === "capture"
-            ? (e) => handleReactClick(level, e)
-            : undefined
-        }
-        style={{ transition: 'box-shadow 0.2s' }}
+        onClick={useReactEvent ? (e) => handleReactClick(level, e) : undefined}
+        onClickCapture={useReactEvent && phase === "capture" ? (e) => handleReactClick(level, e) : undefined}
+        style={{ transition: "box-shadow 0.2s" }}
       >
         {level}
         {children}
       </div>
     );
     // Lồng nhau: Admin > Manager > Staff
-    return getDiv(
-      "Admin",
-      getDiv(
-        "Manager",
-        getDiv("Staff", null)
-      )
-    );
+    return getDiv("Admin", getDiv("Manager", getDiv("Staff", null)));
   };
 
   return (
     <div className="min-h-screen bg-gray-50 p-8 font-sans">
       <h1 className="text-3xl font-bold mb-6">🫧 Bubble & Capture Visualizer</h1>
       <div className="flex flex-wrap gap-4 mb-8 items-center text-sm">
-        <select
-          value={phase}
-          onChange={(e) => setPhase(e.target.value as Phase)}
-          className="border px-3 py-1 rounded shadow"
-        >
+        <select value={phase} onChange={(e) => setPhase(e.target.value as Phase)} className="border px-3 py-1 rounded shadow">
           <option value="capture">Capture Phase</option>
           <option value="bubble">Bubble Phase</option>
         </select>
-        <select
-          value={stopAt}
-          onChange={(e) => setStopAt(e.target.value as Level | "none")}
-          className="border px-3 py-1 rounded shadow"
-        >
+        <select value={stopAt} onChange={(e) => setStopAt(e.target.value as Level | "none")} className="border px-3 py-1 rounded shadow">
           <option value="none">Don't stop</option>
           {LEVELS.map((l) => (
             <option key={l}>{l}</option>
           ))}
         </select>
         <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            checked={useReactEvent}
-            onChange={(e) => setUseReactEvent(e.target.checked)}
-          />
+          <input type="checkbox" checked={useReactEvent} onChange={(e) => setUseReactEvent(e.target.checked)} />
           Use React SyntheticEvent
         </label>
         <button onClick={() => setLogs([])} className="text-sm text-blue-600 underline">
           🧼 Clear Logs
         </button>
-        <button
-          onClick={dispatchNativeClick}
-          className="text-sm text-gray-700 underline hover:text-black"
-        >
+        <button onClick={dispatchNativeClick} className="text-sm text-gray-700 underline hover:text-black">
           ⚡ Dispatch Native Click (Staff)
         </button>
       </div>
@@ -270,11 +232,11 @@ export default function EventVisualizer() {
           {renderSVG()}
           <div className="mt-6">{renderNestedDivs()}</div>
           <div className="text-xs text-gray-500 mt-2 text-center max-w-xs">
-            <b>Chú thích:</b> <br />
-            - <b>React SyntheticEvent</b>: Dùng onClick/onClickCapture trên JSX.<br />
-            - <b>Native Event</b>: Dùng addEventListener trực tiếp trên DOM node.<br />
-            - Có thể chọn phase, stopPropagation, và highlight node đang xử lý.<br />
-            - Không log trùng, có thể so sánh thứ tự xử lý giữa hai loại event.
+            <b>Chú thích:</b> <br />- <b>React SyntheticEvent</b>: Dùng onClick/onClickCapture trên JSX.
+            <br />- <b>Native Event</b>: Dùng addEventListener trực tiếp trên DOM node.
+            <br />
+            - Có thể chọn phase, stopPropagation, và highlight node đang xử lý.
+            <br />- Không log trùng, có thể so sánh thứ tự xử lý giữa hai loại event.
           </div>
         </div>
         {/* Logs */}
@@ -290,12 +252,7 @@ export default function EventVisualizer() {
                   exit={{ opacity: 0, x: 20 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <span className={clsx(
-                    log.type === "react" ? "text-blue-300" : "text-green-300",
-                    "mr-2"
-                  )}>
-                    {log.time}
-                  </span>
+                  <span className={clsx(log.type === "react" ? "text-blue-300" : "text-green-300", "mr-2")}>{log.time}</span>
                   <span>{log.message}</span>
                 </motion.div>
               ))}

@@ -47,7 +47,9 @@ const EventPhasesPage: React.FC = () => {
 
     // Button A handlers
     const handleButtonACapture = (e: Event) => {
-      if (showCapturing) addLog("🔼 Capturing - Button A");
+      if (showCapturing) {
+        addLog("🔼 Capturing - Button A");
+      }
     };
 
     const handleButtonABubbling1 = (e: Event) => {
@@ -68,12 +70,16 @@ const EventPhasesPage: React.FC = () => {
     };
 
     const handleButtonBCapture = (e: Event) => {
-      if (showCapturing) addLog("🔼 Capturing - Button B");
+      if (showCapturing) {
+        addLog("🔼 Capturing - Button B");
+      }
     };
 
     const handleButtonBBubbling = (e: Event) => {
       highlight(btnB);
-      if (showBubbling) addLog("🔽 Bubbling - Button B");
+      if (showBubbling) {
+        addLog("🔽 Bubbling - Button B");
+      }
     };
 
     // Attach listeners
@@ -114,14 +120,38 @@ const EventPhasesPage: React.FC = () => {
       <h1 className="text-2xl font-bold mb-4">🎯 DOM Event Phases (React + Native)</h1>
 
       <div className="flex gap-4 flex-wrap justify-center text-sm mb-6">
-        <label><input type="checkbox" checked={stopProp} onChange={(e) => {
-          setStopProp(e.target.checked); if (e.target.checked) setStopImmediate(false);
-        }} /> stopPropagation()</label>
-        <label><input type="checkbox" checked={stopImmediate} onChange={(e) => {
-          setStopImmediate(e.target.checked); if (e.target.checked) setStopProp(false);
-        }} /> stopImmediatePropagation()</label>
-        <label><input type="checkbox" checked={showCapturing} onChange={(e) => setShowCapturing(e.target.checked)} /> Show Capturing</label>
-        <label><input type="checkbox" checked={showBubbling} onChange={(e) => setShowBubbling(e.target.checked)} /> Show Bubbling</label>
+        <label>
+          <input
+            type="checkbox"
+            checked={stopProp}
+            onChange={(e) => {
+              setStopProp(e.target.checked);
+              if (e.target.checked) {
+                setStopImmediate(false);
+              }
+            }}
+          />{" "}
+          stopPropagation()
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={stopImmediate}
+            onChange={(e) => {
+              setStopImmediate(e.target.checked);
+              if (e.target.checked) {
+                setStopProp(false);
+              }
+            }}
+          />{" "}
+          stopImmediatePropagation()
+        </label>
+        <label>
+          <input type="checkbox" checked={showCapturing} onChange={(e) => setShowCapturing(e.target.checked)} /> Show Capturing
+        </label>
+        <label>
+          <input type="checkbox" checked={showBubbling} onChange={(e) => setShowBubbling(e.target.checked)} /> Show Bubbling
+        </label>
         <button onClick={() => setShowTheory((prev) => !prev)} className="underline text-blue-600">
           {showTheory ? "Ẩn lý thuyết" : "Hiện lý thuyết"}
         </button>
@@ -148,9 +178,7 @@ const EventPhasesPage: React.FC = () => {
           </button>
         </div>
         <div className="h-64 overflow-y-auto space-y-1">
-          {logs.length === 0 ? (
-            <p className="text-gray-400">Chưa có sự kiện nào</p>
-          ) : logs.map((log, i) => <div key={i}>{log}</div>)}
+          {logs.length === 0 ? <p className="text-gray-400">Chưa có sự kiện nào</p> : logs.map((log, i) => <div key={i}>{log}</div>)}
         </div>
       </div>
 
@@ -158,10 +186,18 @@ const EventPhasesPage: React.FC = () => {
         <div className="mt-6 w-full max-w-xl bg-white p-4 rounded shadow text-sm text-left space-y-2">
           <h2 className="text-lg font-bold">📚 Lý thuyết</h2>
           <ul className="list-disc list-inside space-y-2">
-            <li><strong>Capturing phase</strong>: từ Container → Box → Button (top-down)</li>
-            <li><strong>Bubbling phase</strong>: từ Button → Box → Container (bottom-up)</li>
-            <li><code>stopPropagation()</code>: chặn lan truyền lên cha, nhưng handler khác cùng phần tử vẫn chạy</li>
-            <li><code>stopImmediatePropagation()</code>: chặn luôn handler còn lại ở cùng phần tử</li>
+            <li>
+              <strong>Capturing phase</strong>: từ Container → Box → Button (top-down)
+            </li>
+            <li>
+              <strong>Bubbling phase</strong>: từ Button → Box → Container (bottom-up)
+            </li>
+            <li>
+              <code>stopPropagation()</code>: chặn lan truyền lên cha, nhưng handler khác cùng phần tử vẫn chạy
+            </li>
+            <li>
+              <code>stopImmediatePropagation()</code>: chặn luôn handler còn lại ở cùng phần tử
+            </li>
             <li>React synthetic events chạy sau DOM bubbling → cần test DOM trực tiếp để hiểu chính xác</li>
           </ul>
         </div>

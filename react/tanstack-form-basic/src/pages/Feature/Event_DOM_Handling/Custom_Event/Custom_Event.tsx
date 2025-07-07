@@ -12,16 +12,10 @@ const Custom_Event: React.FC = () => {
       <h1 className="text-3xl font-bold mb-6">🎯 Custom Event Visualizer</h1>
 
       <div className="space-x-4">
-        <button
-          onClick={() => EventBus.emit("toast:show", "✅ Hello from Toast!")}
-          className="px-4 py-2 bg-green-600 text-white rounded shadow"
-        >
+        <button onClick={() => EventBus.emit("toast:show", "✅ Hello from Toast!")} className="px-4 py-2 bg-green-600 text-white rounded shadow">
           Show Toast
         </button>
-        <button
-          onClick={() => EventBus.emit("modal:open")}
-          className="px-4 py-2 bg-blue-600 text-white rounded shadow"
-        >
+        <button onClick={() => EventBus.emit("modal:open")} className="px-4 py-2 bg-blue-600 text-white rounded shadow">
           Open Modal
         </button>
       </div>

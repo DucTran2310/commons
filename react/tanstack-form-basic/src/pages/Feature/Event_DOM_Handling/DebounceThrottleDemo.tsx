@@ -38,30 +38,27 @@ const AutocompleteVisualizer = () => {
 
   const debouncedQuery = useDebounce(query, debounceMs);
 
-  const throttledFetch = useThrottle(
-    async (q: string, inputTime?: number, userId?: number) => {
-      const start = Date.now();
-      setLoading(true);
-      const res = await fakeSearchApi(q);
-      const latency = Date.now() - start;
-      const delayFromInput = inputTime ? start - inputTime : undefined;
+  const throttledFetch = useThrottle(async (q: string, inputTime?: number, userId?: number) => {
+    const start = Date.now();
+    setLoading(true);
+    const res = await fakeSearchApi(q);
+    const latency = Date.now() - start;
+    const delayFromInput = inputTime ? start - inputTime : undefined;
 
-      setLog((prev) => [
-        ...prev,
-        {
-          type: "fetch",
-          time: start,
-          query: q,
-          latency,
-          inputTime,
-          userId,
-        },
-      ]);
-      setResults(res);
-      setLoading(false);
-    },
-    throttleMs
-  );
+    setLog((prev) => [
+      ...prev,
+      {
+        type: "fetch",
+        time: start,
+        query: q,
+        latency,
+        inputTime,
+        userId,
+      },
+    ]);
+    setResults(res);
+    setLoading(false);
+  }, throttleMs);
 
   useEffect(() => {
     if (debouncedQuery.trim()) {
@@ -84,18 +81,20 @@ const AutocompleteVisualizer = () => {
   }, [log]);
 
   useEffect(() => {
-    if (!fakeUsersOn) return;
+    if (!fakeUsersOn) {
+      return;
+    }
     const intervals: NodeJS.Timeout[] = [];
     for (let i = 1; i <= NUM_FAKE_USERS; i++) {
-      const interval = setInterval(() => {
-        const fakeInput = `User${i}-${Math.random().toString(36).slice(2, 6)}`;
-        const now = Date.now();
-        setLog((prev) => [
-          ...prev,
-          { type: "input", time: now, query: fakeInput, userId: i },
-        ]);
-        throttledFetch(fakeInput, now, i);
-      }, 1000 + i * 150);
+      const interval = setInterval(
+        () => {
+          const fakeInput = `User${i}-${Math.random().toString(36).slice(2, 6)}`;
+          const now = Date.now();
+          setLog((prev) => [...prev, { type: "input", time: now, query: fakeInput, userId: i }]);
+          throttledFetch(fakeInput, now, i);
+        },
+        1000 + i * 150,
+      );
       intervals.push(interval);
     }
     return () => intervals.forEach(clearInterval);
@@ -109,8 +108,7 @@ const AutocompleteVisualizer = () => {
       Math.max(1, log.filter((l) => l.type === "fetch" && l.latency).length)
     ).toFixed(1),
     avgDelay: (
-      log.filter((l) => l.type === "fetch" && l.inputTime)
-        .reduce((sum, l) => sum + (l.time - (l.inputTime || 0)), 0) /
+      log.filter((l) => l.type === "fetch" && l.inputTime).reduce((sum, l) => sum + (l.time - (l.inputTime || 0)), 0) /
       Math.max(1, log.filter((l) => l.type === "fetch" && l.inputTime).length)
     ).toFixed(1),
   };
@@ -140,9 +138,7 @@ const AutocompleteVisualizer = () => {
             placeholder="Type to search..."
             className="w-full px-4 py-2 border border-gray-300 rounded shadow-sm"
           />
-          {loading && (
-            <div className="loader h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-          )}
+          {loading && <div className="loader h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>}
         </div>
 
         <div className="flex flex-wrap gap-4 items-center text-sm">
@@ -165,11 +161,7 @@ const AutocompleteVisualizer = () => {
             />
           </label>
           <label className="flex items-center gap-2 ml-auto">
-            <input
-              type="checkbox"
-              checked={fakeUsersOn}
-              onChange={(e) => setFakeUsersOn(e.target.checked)}
-            />
+            <input type="checkbox" checked={fakeUsersOn} onChange={(e) => setFakeUsersOn(e.target.checked)} />
             🔁 Benchmark Mode
           </label>
           <button onClick={() => setLog([])} className="px-3 py-1 bg-red-500 text-white rounded">
@@ -186,9 +178,7 @@ const AutocompleteVisualizer = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className={`text-xs px-2 py-1 rounded shadow-sm ${
-                  item.type === "input"
-                    ? "bg-blue-200 text-blue-800"
-                    : "bg-green-200 text-green-800"
+                  item.type === "input" ? "bg-blue-200 text-blue-800" : "bg-green-200 text-green-800"
                 }`}
               >
                 {new Date(item.time).toLocaleTimeString()} <br />
@@ -196,7 +186,8 @@ const AutocompleteVisualizer = () => {
                 {item.type === "fetch" && item.inputTime && (
                   <>
                     <br />⏱ Delay: {item.time - item.inputTime}ms
-                    <br />📡 Latency: {item.latency}ms
+                    <br />
+                    📡 Latency: {item.latency}ms
                   </>
                 )}
               </motion.div>
@@ -211,10 +202,18 @@ const AutocompleteVisualizer = () => {
 
         <div className="bg-white p-4 rounded shadow text-sm text-gray-700">
           <h2 className="font-semibold mb-2">📦 Stats</h2>
-          <p>🧠 Total Input Events: <strong>{stats.input}</strong></p>
-          <p>📤 Total Fetch Calls: <strong>{stats.fetch}</strong></p>
-          <p>⏱ Avg Fetch Latency: <strong>{stats.avgLatency} ms</strong></p>
-          <p>⌛ Avg Delay from Input: <strong>{stats.avgDelay} ms</strong></p>
+          <p>
+            🧠 Total Input Events: <strong>{stats.input}</strong>
+          </p>
+          <p>
+            📤 Total Fetch Calls: <strong>{stats.fetch}</strong>
+          </p>
+          <p>
+            ⏱ Avg Fetch Latency: <strong>{stats.avgLatency} ms</strong>
+          </p>
+          <p>
+            ⌛ Avg Delay from Input: <strong>{stats.avgDelay} ms</strong>
+          </p>
         </div>
       </div>
     </div>

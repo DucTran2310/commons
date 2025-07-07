@@ -1,5 +1,4 @@
 import {
-  TANSTACK_BACKGROUND_REFETCHING,
   CLIPBOARD_DEMO_BASIC,
   CLIPBOARD_QR_CODE,
   DEBUG_DEMO,
@@ -20,11 +19,25 @@ import {
   PROFILE_PAGE_COOKIE,
   REGISTER_FORM_TANSTACK,
   REGISTER_FORM_TANSTACK_MUI,
+  TANSTACK_BACKGROUND_REFETCHING,
   TANSTACK_QUERY,
   TANSTACK_QUERY_ADVANCE,
-  UNDO_REDO
+  TANSTACK_QUERY_MUTATION,
+  TANSTACK_STALE_CACHE_TIME,
+  UNDO_REDO,
 } from "@/constants/menus.constants";
-import { Brain, GalleryVertical, GalleryVerticalEnd, Home, Keyboard, KeyRound, MonitorCog, MousePointerClick, Settings, Telescope } from "lucide-react";
+import {
+  Brain,
+  GalleryVertical,
+  GalleryVerticalEnd,
+  Home,
+  KeyRound,
+  Keyboard,
+  MonitorCog,
+  MousePointerClick,
+  Settings,
+  Telescope,
+} from "lucide-react";
 
 export const MENU_DATA = [
   {
@@ -51,15 +64,18 @@ export const MENU_DATA = [
             icon: <Keyboard className="w-4 h-4" />,
             children: [
               { label: "ClipBoard_basic", path: CLIPBOARD_DEMO_BASIC },
-              { label: "ClipBoard_QR_CODE", path: CLIPBOARD_QR_CODE }
-            ]
+              { label: "ClipBoard_QR_CODE", path: CLIPBOARD_QR_CODE },
+            ],
           },
           {
             label: "Context & Right Click",
             icon: <MousePointerClick className="w-4 h-4" />,
             children: [
-              { label: "File list with context menu", path: FILE_LIST_WITH_CONTEXT_MENU }
-            ]
+              {
+                label: "File list with context menu",
+                path: FILE_LIST_WITH_CONTEXT_MENU,
+              },
+            ],
           },
         ],
       },
@@ -91,7 +107,15 @@ export const MENU_DATA = [
           { label: "Tanstack_MUI", path: REGISTER_FORM_TANSTACK_MUI },
           { label: "Tanstack_Query", path: TANSTACK_QUERY },
           { label: "Tanstack_Query_Advance", path: TANSTACK_QUERY_ADVANCE },
-          { label: "Tanstack_Background_Refetching", path: TANSTACK_BACKGROUND_REFETCHING },
+          {
+            label: "Tanstack_Background_Refetching",
+            path: TANSTACK_BACKGROUND_REFETCHING,
+          },
+          {
+            label: "Tanstack_Stale_Cache_Time",
+            path: TANSTACK_STALE_CACHE_TIME,
+          },
+          { label: "Tanstack_Query_Mutation", path: TANSTACK_QUERY_MUTATION },
         ],
       },
       {

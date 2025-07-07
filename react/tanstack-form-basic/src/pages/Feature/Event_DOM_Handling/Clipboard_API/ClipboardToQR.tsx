@@ -1,9 +1,5 @@
 // ClipboardToQR.tsx
-import {
-  DragDropContext,
-  Draggable,
-  Droppable
-} from "@hello-pangea/dnd";
+import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { formatDistanceToNow } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
 import { debounce } from "lodash";
@@ -55,7 +51,9 @@ const ClipboardToQR: React.FC = () => {
   const handlePaste = async () => {
     try {
       const clipboard = await navigator.clipboard.readText();
-      if (!clipboard.trim()) return showToast("📭 Clipboard empty");
+      if (!clipboard.trim()) {
+        return showToast("📭 Clipboard empty");
+      }
       if (clipboard.length > MAX_QR_LENGTH) {
         return showToast("❌ Text too long for QR! Limit 200 characters.");
       }
@@ -81,7 +79,9 @@ const ClipboardToQR: React.FC = () => {
   const handleDelete = (id: string) => {
     const newHistory = history.filter((item) => item.id !== id);
     saveHistory(newHistory);
-    if (selected?.id === id) setSelected(null);
+    if (selected?.id === id) {
+      setSelected(null);
+    }
   };
 
   const handleExportJSON = () => {
@@ -93,14 +93,14 @@ const ClipboardToQR: React.FC = () => {
   };
 
   const handleSearch = debounce((keyword: string) => {
-    const filtered = originalHistory.current.filter((h) =>
-      h.text.toLowerCase().includes(keyword.toLowerCase())
-    );
+    const filtered = originalHistory.current.filter((h) => h.text.toLowerCase().includes(keyword.toLowerCase()));
     setHistory(filtered);
   }, 300);
 
   const onDragEnd = (result: any) => {
-    if (!result.destination) return;
+    if (!result.destination) {
+      return;
+    }
     const newItems = Array.from(history);
     const [movedItem] = newItems.splice(result.source.index, 1);
     newItems.splice(result.destination.index, 0, movedItem);
@@ -124,21 +124,17 @@ const ClipboardToQR: React.FC = () => {
             if (manualText) {
               const item = { id: "manual", text: manualText, createdAt: Date.now() };
               setSelected(item);
-            } else setSelected(null);
+            } else {
+              setSelected(null);
+            }
           }}
         />
 
         <div className="flex justify-between items-center gap-2">
-          <button
-            onClick={handlePaste}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow"
-          >
+          <button onClick={handlePaste} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow">
             📥 Load Clipboard
           </button>
-          <button
-            onClick={handleExportJSON}
-            className="bg-gray-200 hover:bg-gray-300 text-sm px-3 py-2 rounded"
-          >
+          <button onClick={handleExportJSON} className="bg-gray-200 hover:bg-gray-300 text-sm px-3 py-2 rounded">
             📤 Export JSON
           </button>
         </div>
@@ -163,11 +159,7 @@ const ClipboardToQR: React.FC = () => {
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="history-list">
               {(provided) => (
-                <ul
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                  className="space-y-2 max-h-64 overflow-y-auto"
-                >
+                <ul ref={provided.innerRef} {...provided.droppableProps} className="space-y-2 max-h-64 overflow-y-auto">
                   {history.map((item, index) => (
                     <Draggable draggableId={item.id} index={index} key={item.id}>
                       {(provided) => (
@@ -177,28 +169,17 @@ const ClipboardToQR: React.FC = () => {
                           {...provided.dragHandleProps}
                           className="flex items-start justify-between bg-gray-100 px-3 py-2 rounded shadow-sm"
                         >
-                          <div
-                            onClick={() => setSelected(item)}
-                            className="cursor-pointer flex-1"
-                          >
+                          <div onClick={() => setSelected(item)} className="cursor-pointer flex-1">
                             <p className="text-sm text-gray-800 hover:underline">
-                              {item.text.length > 50 ? item.text.slice(0, 50) + "..." : item.text}
+                              {item.text.length > 50 ? `${item.text.slice(0, 50)}...` : item.text}
                             </p>
-                            <p className="text-xs text-gray-400">
-                              {formatDistanceToNow(item.createdAt)} ago
-                            </p>
+                            <p className="text-xs text-gray-400">{formatDistanceToNow(item.createdAt)} ago</p>
                           </div>
                           <div className="flex gap-2 ml-2 text-xs">
-                            <button
-                              className="text-blue-600 hover:underline"
-                              onClick={() => handleCopy(item.text)}
-                            >
+                            <button className="text-blue-600 hover:underline" onClick={() => handleCopy(item.text)}>
                               📤 Copy
                             </button>
-                            <button
-                              className="text-red-500 hover:underline"
-                              onClick={() => handleDelete(item.id)}
-                            >
+                            <button className="text-red-500 hover:underline" onClick={() => handleDelete(item.id)}>
                               ❌ Delete
                             </button>
                           </div>

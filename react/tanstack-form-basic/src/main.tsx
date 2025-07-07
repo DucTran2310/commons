@@ -7,8 +7,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import "./index.css";
-
-import { StagewiseToolbar } from '@stagewise/toolbar-react';
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 const queryClient = new QueryClient();
 
@@ -18,9 +17,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <CustomThemeProvider>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <App />
+          <ErrorBoundary>
+            <App />
+          </ErrorBoundary>
           <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-right" />
-          <StagewiseToolbar />
         </BrowserRouter>
       </QueryClientProvider>
     </CustomThemeProvider>
