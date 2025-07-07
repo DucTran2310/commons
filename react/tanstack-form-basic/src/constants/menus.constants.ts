@@ -16,6 +16,7 @@ export const TANSTACK_QUERY_ADVANCE = "/form/tanstack-query-advance";
 export const TANSTACK_BACKGROUND_REFETCHING = "form/tanstack-background-refetching";
 export const TANSTACK_STALE_CACHE_TIME = "form/tanstack-stale-cache-time";
 export const TANSTACK_QUERY_MUTATION= "form/tanstack-query_mutation";
+export const TANSTACK_INFINITE_SCROLL= "form/tanstack-infinite_scroll";
 
 // Mind map
 export const MIND_MAP_LAYOUT = "/mind-map";

@@ -20,6 +20,7 @@ import {
   REGISTER_FORM_TANSTACK,
   REGISTER_FORM_TANSTACK_MUI,
   TANSTACK_BACKGROUND_REFETCHING,
+  TANSTACK_INFINITE_SCROLL,
   TANSTACK_QUERY,
   TANSTACK_QUERY_ADVANCE,
   TANSTACK_QUERY_MUTATION,
@@ -107,15 +108,10 @@ export const MENU_DATA = [
           { label: "Tanstack_MUI", path: REGISTER_FORM_TANSTACK_MUI },
           { label: "Tanstack_Query", path: TANSTACK_QUERY },
           { label: "Tanstack_Query_Advance", path: TANSTACK_QUERY_ADVANCE },
-          {
-            label: "Tanstack_Background_Refetching",
-            path: TANSTACK_BACKGROUND_REFETCHING,
-          },
-          {
-            label: "Tanstack_Stale_Cache_Time",
-            path: TANSTACK_STALE_CACHE_TIME,
-          },
+          { label: "Tanstack_Background_Refetching", path: TANSTACK_BACKGROUND_REFETCHING },
+          { label: "Tanstack_Stale_Cache_Time", path: TANSTACK_STALE_CACHE_TIME },
           { label: "Tanstack_Query_Mutation", path: TANSTACK_QUERY_MUTATION },
+          { label: "Tanstack_Infinite_Scroll", path: TANSTACK_INFINITE_SCROLL },
         ],
       },
       {
