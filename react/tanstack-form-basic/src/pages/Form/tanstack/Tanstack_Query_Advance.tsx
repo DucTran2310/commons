@@ -93,6 +93,7 @@ const UserPostCommentsTabs = () => {
     queryFn: ({ pageParam = 0 }) => fetchCommentsByPost({ pageParam, postId: selectedPostId! }),
     enabled: !!selectedPostId && tab === "post",
     getNextPageParam: (lastPage, allPages) => (lastPage.length < 10 ? undefined : allPages.length * 10),
+    initialPageParam: 1, // 👈
   });
 
   useEffect(() => {

@@ -30,6 +30,7 @@ let mockDB = [
 
 const delayWithPossibleError = async () => {
   await new Promise((r) => setTimeout(r, 1000));
-  if (Math.random() < 0.8) throw new Error("Lỗi server ngẫu nhiên!");
+  if (Math.random() < 0.8) {
+    throw new Error("Lỗi server ngẫu nhiên!");
+  }
 };
-

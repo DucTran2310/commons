@@ -1,17 +1,8 @@
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
-import {
-  fetchProducts,
-  addProduct,
-  deleteProduct,
-  updateProduct,
-} from "@/mock/fakeProductAPI";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { addProduct, deleteProduct, fetchProducts, updateProduct } from "@/mock/fakeProductAPI";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function QueryMutationAdvanced() {
   const queryClient = useQueryClient();
@@ -41,9 +32,7 @@ export default function QueryMutationAdvanced() {
     onMutate: async (id: number) => {
       await queryClient.cancelQueries({ queryKey: ["products"] });
       const prevData = queryClient.getQueryData(["products"]);
-      queryClient.setQueryData(["products"], (old: any) =>
-        old.filter((item: any) => item.id !== id)
-      );
+      queryClient.setQueryData(["products"], (old: any) => old.filter((item: any) => item.id !== id));
       return { prevData };
     },
     onError: (_err, _id, context) => {
@@ -64,9 +53,7 @@ export default function QueryMutationAdvanced() {
     onMutate: async ({ id, name }) => {
       await queryClient.cancelQueries({ queryKey: ["products"] });
       const prevData = queryClient.getQueryData(["products"]);
-      queryClient.setQueryData(["products"], (old: any) =>
-        old.map((item: any) => (item.id === id ? { ...item, name } : item))
-      );
+      queryClient.setQueryData(["products"], (old: any) => old.map((item: any) => (item.id === id ? { ...item, name } : item)));
       return { prevData };
     },
     onError: (_err, _newData, context) => {
@@ -84,21 +71,11 @@ export default function QueryMutationAdvanced() {
   return (
     <div className="max-w-xl mx-auto mt-10 p-6 bg-white shadow rounded">
       <Toaster position="top-center" />
-      <h2 className="text-2xl font-bold mb-4">
-        🚀 Mutation nâng cao (Add / Delete / Update)
-      </h2>
+      <h2 className="text-2xl font-bold mb-4">🚀 Mutation nâng cao (Add / Delete / Update)</h2>
 
       <div className="flex gap-2 mb-4">
-        <input
-          className="border p-2 flex-1 rounded"
-          placeholder="Tên sản phẩm mới"
-          value={newName}
-          onChange={(e) => setNewName(e.target.value)}
-        />
-        <button
-          onClick={() => addMutation.mutate(newName)}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
+        <input className="border p-2 flex-1 rounded" placeholder="Tên sản phẩm mới" value={newName} onChange={(e) => setNewName(e.target.value)} />
+        <button onClick={() => addMutation.mutate(newName)} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
           ➕ Thêm
         </button>
       </div>
@@ -116,9 +93,7 @@ export default function QueryMutationAdvanced() {
               <ProductRow
                 item={item}
                 onDelete={() => deleteMutation.mutate(item.id)}
-                onUpdate={(name) =>
-                  updateMutation.mutate({ id: item.id, name })
-                }
+                onUpdate={(name) => updateMutation.mutate({ id: item.id, name })}
               />
             </motion.li>
           ))}
@@ -130,15 +105,7 @@ export default function QueryMutationAdvanced() {
   );
 }
 
-function ProductRow({
-  item,
-  onDelete,
-  onUpdate,
-}: {
-  item: { id: number; name: string };
-  onDelete: () => void;
-  onUpdate: (name: string) => void;
-}) {
+function ProductRow({ item, onDelete, onUpdate }: { item: { id: number; name: string }; onDelete: () => void; onUpdate: (name: string) => void }) {
   const [edit, setEdit] = useState(false);
   const [newName, setNewName] = useState(item.name);
 
@@ -146,11 +113,7 @@ function ProductRow({
     <div className="flex items-center gap-2">
       {edit ? (
         <>
-          <input
-            className="border px-2 py-1 rounded"
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-          />
+          <input className="border px-2 py-1 rounded" value={newName} onChange={(e) => setNewName(e.target.value)} />
           <button
             onClick={() => {
               onUpdate(newName);
@@ -164,19 +127,13 @@ function ProductRow({
       ) : (
         <>
           <span className="flex-1">{item.name}</span>
-          <button
-            onClick={() => setEdit(true)}
-            className="px-2 py-1 bg-yellow-500 text-white rounded"
-          >
+          <button onClick={() => setEdit(true)} className="px-2 py-1 bg-yellow-500 text-white rounded">
             ✏️ Sửa
           </button>
         </>
       )}
 
-      <button
-        onClick={onDelete}
-        className="px-2 py-1 bg-red-600 text-white rounded"
-      >
+      <button onClick={onDelete} className="px-2 py-1 bg-red-600 text-white rounded">
         ❌ Xoá
       </button>
     </div>

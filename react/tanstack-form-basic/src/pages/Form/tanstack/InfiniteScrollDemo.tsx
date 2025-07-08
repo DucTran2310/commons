@@ -5,18 +5,11 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 export default function InfiniteScrollUsers() {
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading,
-    isError,
-  } = useInfiniteQuery({
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } = useInfiniteQuery({
     queryKey: ["users-infinite"],
-    queryFn: ({ pageParam = 1 }) =>
-      fetchUsersPage({ pageParam, pageSize: 10 }),
+    queryFn: ({ pageParam = 1 }) => fetchUsersPage({ pageParam, pageSize: 10 }),
     getNextPageParam: (lastPage) => lastPage.nextPage,
+    initialPageParam: 1, // 👈 THÊM DÒNG NÀY VÀO
   });
 
   const { ref, inView } = useInView();
@@ -24,10 +17,12 @@ export default function InfiniteScrollUsers() {
 
   // Chờ load xong trang đầu tiên mới enable scroll fetch
   useEffect(() => {
-    if (!isFetchingNextPage && data?.pages.length > 0 && !ready) {
+    const pageCount = data?.pages?.length ?? 0;
+
+    if (!isFetchingNextPage && pageCount > 0 && !ready) {
       setReady(true);
     }
-  }, [data?.pages.length, isFetchingNextPage]);
+  }, [data, isFetchingNextPage, ready]);
 
   // Debounce 300ms khi scroll đến đáy
   useEffect(() => {
@@ -59,7 +54,7 @@ export default function InfiniteScrollUsers() {
               >
                 <strong>{user.name}</strong> – {user.email}
               </motion.li>
-            ))
+            )),
           )}
         </AnimatePresence>
 
@@ -72,9 +67,7 @@ export default function InfiniteScrollUsers() {
           <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
         </div>
       )}
-      {!hasNextPage && (
-        <p className="text-gray-500 mt-2 text-center">✅ Đã tải hết 100 người dùng!</p>
-      )}
+      {!hasNextPage && <p className="text-gray-500 mt-2 text-center">✅ Đã tải hết 100 người dùng!</p>}
 
       <TheoryBox />
     </div>

@@ -22,10 +22,12 @@ import {
   REGISTER_FORM_TANSTACK,
   REGISTER_FORM_TANSTACK_MUI,
   TANSTACK_BACKGROUND_REFETCHING,
+  TANSTACK_DEPENDENT_QUERY,
   TANSTACK_INFINITE_SCROLL,
   TANSTACK_QUERY,
   TANSTACK_QUERY_ADVANCE,
   TANSTACK_QUERY_MUTATION,
+  TANSTACK_RETRY_BACKOFF,
   TANSTACK_STALE_CACHE_TIME,
   UNDO_REDO,
 } from "@/constants/menus.constants";
@@ -44,6 +46,8 @@ const UserFormWizard = lazy(() => import("@/pages/Form/react-hook-form/UserFormW
 const StaleVsCacheDemo = lazy(() => import("@/pages/Form/tanstack/StaleVsCacheDemo"));
 const QueryMutationAdvanced = lazy(() => import("@/pages/Form/tanstack/QueryMutation"));
 const InfiniteScrollDemo = lazy(() => import("@/pages/Form/tanstack/InfiniteScrollDemo"));
+const DependentQueryDemo = lazy(() => import("@/pages/Form/tanstack/DependentQueryDemo"));
+const RetryBackoffDemo = lazy(() => import("@/pages/Form/tanstack/RetryBackoffDemo"));
 // Mindmap
 const MindMapLayout = lazy(() => import("@/pages/Mindmap/MindMapLayout"));
 const InfiniteList = lazy(() => import("@/pages/Performace_FE/InfiniteList"));
@@ -117,6 +121,14 @@ export const ROUTES = [
       {
         path: TANSTACK_INFINITE_SCROLL,
         component: InfiniteScrollDemo,
+      },
+      {
+        path: TANSTACK_DEPENDENT_QUERY,
+        component: DependentQueryDemo,
+      },
+      {
+        path: TANSTACK_RETRY_BACKOFF,
+        component: RetryBackoffDemo,
       },
       // performance frontend
       {

@@ -54,7 +54,9 @@ export default function AdvancedQueryCacheDemo() {
         <button
           onClick={() => {
             setShow((s) => {
-              if (s) setUnmountTime(Date.now());
+              if (s) {
+                setUnmountTime(Date.now());
+              }
               return !s;
             });
           }}
@@ -72,11 +74,7 @@ export default function AdvancedQueryCacheDemo() {
           🔁 Invalidate "{group}"
         </button>
 
-        <select
-          value={group}
-          onChange={(e) => setGroup(e.target.value)}
-          className="px-2 py-1 border rounded"
-        >
+        <select value={group} onChange={(e) => setGroup(e.target.value)} className="px-2 py-1 border rounded">
           <option value="groupA">📁 Nhóm A</option>
           <option value="groupB">📁 Nhóm B</option>
         </select>
@@ -95,25 +93,10 @@ export default function AdvancedQueryCacheDemo() {
   );
 }
 
-function UserList({
-  group,
-  cacheTime,
-  staleTime,
-}: {
-  group: string;
-  cacheTime: number;
-  staleTime: number;
-}) {
+function UserList({ group, cacheTime, staleTime }: { group: string; cacheTime: number; staleTime: number }) {
   const { ref, inView } = useInView();
 
-  const {
-    data,
-    isFetching,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    status,
-  } = useInfiniteQuery({
+  const { data, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useInfiniteQuery({
     queryKey: ["users", group],
     queryFn: fetchUsers,
     getNextPageParam: (lastPage) => lastPage.nextPage,
@@ -138,7 +121,7 @@ function UserList({
             <li key={user.id}>
               <strong>{user.name}</strong> – {user.email}
             </li>
-          ))
+          )),
         )}
       </ul>
 
@@ -161,15 +144,9 @@ function TheoryBox() {
         <li>
           🧠 <strong>cacheTime</strong>: Giữ dữ liệu trong bộ nhớ cache sau khi component unmount → có thể dùng lại.
         </li>
-        <li>
-          ⏱️ **Đồng hồ đếm cache**: Khi unmount, bắt đầu đếm ngược → hiển thị thời gian còn lại trước khi cache bị xoá.
-        </li>
-        <li>
-          📁 **QueryKey động**: `["users", group]` → cache tách biệt cho từng group người dùng.
-        </li>
-        <li>
-          📡 **Infinite scroll**: Dùng `IntersectionObserver` để tự fetch thêm khi cuộn tới cuối.
-        </li>
+        <li>⏱️ **Đồng hồ đếm cache**: Khi unmount, bắt đầu đếm ngược → hiển thị thời gian còn lại trước khi cache bị xoá.</li>
+        <li>📁 **QueryKey động**: `["users", group]` → cache tách biệt cho từng group người dùng.</li>
+        <li>📡 **Infinite scroll**: Dùng `IntersectionObserver` để tự fetch thêm khi cuộn tới cuối.</li>
       </ul>
     </div>
   );

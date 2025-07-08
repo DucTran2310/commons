@@ -20,14 +20,17 @@ import {
   REGISTER_FORM_TANSTACK,
   REGISTER_FORM_TANSTACK_MUI,
   TANSTACK_BACKGROUND_REFETCHING,
+  TANSTACK_DEPENDENT_QUERY,
   TANSTACK_INFINITE_SCROLL,
   TANSTACK_QUERY,
   TANSTACK_QUERY_ADVANCE,
   TANSTACK_QUERY_MUTATION,
+  TANSTACK_RETRY_BACKOFF,
   TANSTACK_STALE_CACHE_TIME,
   UNDO_REDO,
 } from "@/constants/menus.constants";
 import {
+  BookText,
   Brain,
   GalleryVertical,
   GalleryVerticalEnd,
@@ -99,7 +102,7 @@ export const MENU_DATA = [
   },
   {
     label: "Form",
-    icon: <Settings className="w-4 h-4" />,
+    icon: <BookText className="w-4 h-4" />,
     children: [
       {
         label: "Tanstack",
@@ -112,6 +115,8 @@ export const MENU_DATA = [
           { label: "Tanstack_Stale_Cache_Time", path: TANSTACK_STALE_CACHE_TIME },
           { label: "Tanstack_Query_Mutation", path: TANSTACK_QUERY_MUTATION },
           { label: "Tanstack_Infinite_Scroll", path: TANSTACK_INFINITE_SCROLL },
+          { label: "Tanstack_Dependent_Query", path: TANSTACK_DEPENDENT_QUERY },
+          { label: "Tanstack_Retry_Backoff", path: TANSTACK_RETRY_BACKOFF },
         ],
       },
       {
