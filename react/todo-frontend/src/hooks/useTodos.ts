@@ -1,66 +1,69 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  GET_TODOS,
   CREATE_TODO,
-  UPDATE_TODO,
   DELETE_TODO,
+  GET_TODOS,
+  UPDATE_TODO,
 } from "../apis/todos.api";
-import { apolloClient } from "../libs/apollo-client";
-import type { Todo } from "../todos";
-import type { DocumentNode } from "graphql";
-import { useNotificationContext } from "../context/NotificationContext";
+import type { Todo, Priority } from "../todo.types";
+import { fetchGraphQL } from "../graphql/fetchGraphQL";
+import {
+  showGraphQLErrors,
+  showSuccessNotification,
+} from "../commons/notification";
+import { useMemo } from "react";
+import type { TodoFilters } from "../types/todo.types";
 
-export async function fetchGraphQL<T>(
-  mutation: DocumentNode,
-  variables?: any
-): Promise<T> {
-  const { data } = await apolloClient.mutate({
-    mutation,
-    variables,
-  });
-  return data;
-}
-
-export const useTodos = () => {
+export const useTodos = (filters: TodoFilters = {}) => {
   const queryClient = useQueryClient();
-  const { showSuccess, showError } = useNotificationContext() 
+  const stableFilters = useMemo(() => filters, [filters]);
 
-  // Query to fetch todos
+  // Query to fetch todos with filters
   const { data, isLoading, isError, error, isFetching, refetch } = useQuery<
     Todo[],
     Error
   >({
-    queryKey: ["todos"],
-    queryFn: () =>
-      fetchGraphQL<{ todos: Todo[] }>(GET_TODOS).then((res) => res.todos),
+    queryKey: ["todos", stableFilters],
+    queryFn: () => {
+      return fetchGraphQL<{ todos: Todo[] }>(GET_TODOS, filters).then(
+        (res) => res.todos
+      );
+    },
+    staleTime: 60 * 1000, // Data sẽ được coi là fresh trong 1 phút
   });
 
-  // Rest of your mutations remain the same
+  // Create mutation with all fields
   const createMutation = useMutation({
-    mutationFn: (title: string) =>
-      fetchGraphQL<{ createTodo: Todo }>(CREATE_TODO, { title, completed: false }).then(
+    mutationFn: (variables: {
+      title: string;
+      completed?: boolean;
+      tags?: string[];
+      dueDate?: string;
+      priority?: Priority;
+    }) =>
+      fetchGraphQL<{ createTodo: Todo }>(CREATE_TODO, variables).then(
         (res) => res.createTodo
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["todos"] });
-      showSuccess("Success", "Todo created successfully");
+      showSuccessNotification("Success", "Todo created successfully");
     },
     onError: (err) => {
-      showError("Create failed", err.message);
+      showGraphQLErrors("Lỗi tạo Todo", err);
     },
   });
 
-  // Mutation để cập nhật todo
+  // Update mutation with all fields
   const updateMutation = useMutation({
-    mutationFn: ({
-      id,
-      ...updates
-    }: {
+    mutationFn: (variables: {
       id: number;
       title?: string;
       completed?: boolean;
+      tags?: string[];
+      dueDate?: string;
+      priority?: Priority;
     }) =>
-      fetchGraphQL<{ updateTodo: Todo }>(UPDATE_TODO, { id, ...updates }).then(
+      fetchGraphQL<{ updateTodo: Todo }>(UPDATE_TODO, variables).then(
         (res) => res.updateTodo
       ),
     onMutate: async (variables) => {
@@ -78,10 +81,10 @@ export const useTodos = () => {
       return { previousTodos };
     },
     onSuccess: () => {
-      showSuccess("Success", "Todo updated successfully");
+      showSuccessNotification("Success", "Todo updated successfully");
     },
     onError: (err, _, context) => {
-      showError("Update failed", err.message);
+      showGraphQLErrors("Update failed", err.message);
       if (context?.previousTodos) {
         queryClient.setQueryData(["todos"], context.previousTodos);
       }
@@ -91,7 +94,7 @@ export const useTodos = () => {
     },
   });
 
-  // Mutation để xóa todo
+  // Delete mutation remains the same
   const deleteMutation = useMutation({
     mutationFn: (id: number) =>
       fetchGraphQL<{ removeTodo: boolean }>(DELETE_TODO, { id }).then(
@@ -99,10 +102,10 @@ export const useTodos = () => {
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["todos"] });
-      showSuccess("Success", "Todo deleted successfully");
+      showSuccessNotification("Success", "Todo deleted successfully");
     },
     onError: (err) => {
-      showError("Delete failed", err.message);
+      showGraphQLErrors("Delete failed", err.message);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["todos"] });
