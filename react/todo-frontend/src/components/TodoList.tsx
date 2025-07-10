@@ -1,4 +1,5 @@
-import { Alert, Button, Empty, Select, Space, Spin, Tabs } from 'antd';
+import { FilterOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Alert, Button, Card, Empty, Select, Space, Spin, Tabs, Tag } from 'antd';
 import React, { useMemo, useState } from 'react';
 import { useTodos } from '../hooks/useTodos';
 import { Priority } from '../todo.types';
@@ -7,9 +8,16 @@ import { TodoItem } from './TodoItem';
 const { Option } = Select;
 
 const priorityOptions = [
-  { value: Priority.Low, label: 'Low' },
-  { value: Priority.Medium, label: 'Medium' },
-  { value: Priority.High, label: 'High' },
+  { value: Priority.Low, label: 'Low', color: 'green' },
+  { value: Priority.Medium, label: 'Medium', color: 'orange' },
+  { value: Priority.High, label: 'High', color: 'red' },
+];
+
+const sortOptions = [
+  { value: 'dueDate', label: 'Due Date' },
+  { value: 'priority', label: 'Priority' },
+  { value: 'createdAt', label: 'Created At' },
+  { value: 'title', label: 'Title' },
 ];
 
 const tabItems = [
@@ -17,13 +25,15 @@ const tabItems = [
   { key: 'active', label: 'Active' },
   { key: 'completed', label: 'Completed' },
   { key: 'overdue', label: 'Overdue' },
+  { key: 'dueSoon', label: 'Due Soon' },
 ];
 
 export const TodoList: React.FC = () => {
   const [filters, setFilters] = useState<{
     tag?: string;
     priority?: Priority;
-    sortBy?: 'dueDate' | 'priority' | 'createdAt';
+    sortBy?: string;
+    sortOrder?: 'ASC' | 'DESC';
   }>({});
 
   const [activeTab, setActiveTab] = useState('all');
@@ -35,9 +45,6 @@ export const TodoList: React.FC = () => {
     error,
     isFetching,
     refetch,
-    isCreating,
-    isUpdating,
-    isDeleting
   } = useTodos(filters);
 
   // Extract all unique tags from todos
@@ -46,15 +53,35 @@ export const TodoList: React.FC = () => {
   ).sort();
 
   const filteredTodos = useMemo(() => {
+    const now = new Date();
+    const soon = new Date();
+    soon.setHours(soon.getHours() + 24); // Due within 24 hours
+
     return todos.filter(todo => {
       if (activeTab === 'completed') return todo.completed;
       if (activeTab === 'active') return !todo.completed;
       if (activeTab === 'overdue') {
-        return todo.dueDate && new Date(todo.dueDate) < new Date() && !todo.completed;
+        return todo.dueDate && new Date(todo.dueDate) < now && !todo.completed;
+      }
+      if (activeTab === 'dueSoon') {
+        return (
+          todo.dueDate && 
+          new Date(todo.dueDate) > now && 
+          new Date(todo.dueDate) < soon && 
+          !todo.completed
+        );
       }
       return true;
     });
   }, [todos, activeTab]);
+
+  const handleSortChange = (value: string) => {
+    setFilters(prev => ({
+      ...prev,
+      sortBy: value,
+      sortOrder: value === 'priority' ? 'DESC' : 'ASC' // High priority first
+    }));
+  };
 
   if (isLoading) return <Spin size="large" className="flex justify-center mt-8" />;
 
@@ -66,7 +93,7 @@ export const TodoList: React.FC = () => {
         type="error"
         showIcon
         action={
-          <Button size="small" onClick={() => refetch()}>
+          <Button size="small" icon={<ReloadOutlined />} onClick={() => refetch()}>
             Retry
           </Button>
         }
@@ -75,75 +102,105 @@ export const TodoList: React.FC = () => {
   }
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold">Todo List</h2>
-        {(isFetching || isCreating || isUpdating || isDeleting) && (
-          <Spin size="small" />
-        )}
+        <h2 className="text-xl font-semibold">Todo Manager</h2>
+        <Space>
+          {isFetching && <Spin size="small" />}
+          <Button 
+            icon={<ReloadOutlined />} 
+            onClick={() => refetch()}
+            loading={isFetching}
+          />
+        </Space>
       </div>
 
-      <div className="bg-white rounded-lg shadow p-4 mb-4">
+      <Card 
+        title="Todo List" 
+        className="mb-4"
+      >
         <Tabs
           items={tabItems}
           activeKey={activeTab}
           onChange={setActiveTab}
+          tabBarExtraContent={
+            <div className="flex items-center">
+              <span className="mr-2 text-sm text-gray-500">
+                {filteredTodos.length} {filteredTodos.length === 1 ? 'item' : 'items'}
+              </span>
+            </div>
+          }
         />
 
-        <Space className="mb-4">
-          <Select
-            placeholder="Filter by priority"
-            allowClear
-            style={{ width: 150 }}
-            value={filters.priority} // Thêm value hiện tại
-            onChange={(value) => setFilters({ ...filters, priority: value })}
-          >
-            {priorityOptions.map(opt => (
-              <Option key={opt.value} value={opt.value}>
-                {opt.label}
-              </Option>
-            ))}
-          </Select>
+        <div className="my-4">
+          <Space wrap>
+            <Select
+              placeholder="Filter by priority"
+              allowClear
+              style={{ width: 150 }}
+              value={filters.priority}
+              onChange={(value) => setFilters({ ...filters, priority: value })}
+              suffixIcon={<FilterOutlined />}
+            >
+              {priorityOptions.map(opt => (
+                <Option key={opt.value} value={opt.value}>
+                  <Tag color={opt.color}>{opt.label}</Tag>
+                </Option>
+              ))}
+            </Select>
 
-          <Select
-            placeholder="Filter by tag"
-            allowClear
-            style={{ width: 150 }}
-            value={filters.tag}
-            onChange={(value) => setFilters({ ...filters, tag: value })}
-          >
-            {allTags.map(tag => (
-              <Option key={tag} value={tag}>
-                {tag}
-              </Option>
-            ))}
-          </Select>
+            <Select
+              placeholder="Filter by tag"
+              allowClear
+              style={{ width: 150 }}
+              value={filters.tag}
+              onChange={(value) => setFilters({ ...filters, tag: value })}
+              suffixIcon={<FilterOutlined />}
+            >
+              {allTags.map(tag => (
+                <Option key={tag} value={tag}>
+                  <Tag color="blue">{tag}</Tag>
+                </Option>
+              ))}
+            </Select>
 
-          <Select
-            placeholder="Sort by"
-            allowClear
-            style={{ width: 150 }}
-            value={filters.sortBy}
-            onChange={(value) => setFilters({ ...filters, sortBy: value })}
-          >
-            <Option value="dueDate">Due Date</Option>
-            <Option value="priority">Priority</Option>
-            <Option value="createdAt">Created At</Option>
-          </Select>
+            <Select
+              placeholder="Sort by"
+              allowClear
+              style={{ width: 150 }}
+              value={filters.sortBy}
+              onChange={handleSortChange}
+            >
+              {sortOptions.map(opt => (
+                <Option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </Option>
+              ))}
+            </Select>
 
-          <Button onClick={() => setFilters({})}>Reset Filters</Button>
-        </Space>
-      </div>
-
-      {filteredTodos.length === 0 ? (
-        <Empty description="No todos found" />
-      ) : (
-        <div className="space-y-2">
-          {filteredTodos.map((todo) => (
-            <TodoItem key={todo.id} todo={todo} />
-          ))}
+            <Button onClick={() => setFilters({})} disabled={!filters.priority && !filters.tag && !filters.sortBy}>
+              Clear Filters
+            </Button>
+          </Space>
         </div>
-      )}
+
+        {filteredTodos.length === 0 ? (
+          <Empty 
+            description={
+              activeTab === 'all' ? "No todos found" : 
+              activeTab === 'completed' ? "No completed todos" :
+              activeTab === 'overdue' ? "No overdue todos" :
+              activeTab === 'dueSoon' ? "No todos due soon" : "No active todos"
+            }
+          />
+        ) : (
+          <div className="space-y-2">
+            {filteredTodos.map((todo) => (
+              <TodoItem key={todo.id} todo={todo} />
+            ))}
+          </div>
+        )}
+      </Card>
     </div>
   );
 };
