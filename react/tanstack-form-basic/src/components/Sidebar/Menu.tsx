@@ -33,6 +33,7 @@ import {
 import {
   BookText,
   Brain,
+  ClipboardCheck,
   GalleryVertical,
   GalleryVerticalEnd,
   Home,
@@ -152,7 +153,7 @@ export const MENU_DATA = [
   },
   {
     label: "Todo-App-GraphQL",
-    icon: <Brain className="w-4 h-4" />,
+    icon: <ClipboardCheck className="w-4 h-4" />,
     path: TODO_APP_GRAPH_QL,
   },
   {

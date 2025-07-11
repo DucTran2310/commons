@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { MindMapNode } from "./MindMapNode";
 import { Edge } from "./Edge";
 import { initialNodes } from "@/mock/mindmap.mock";
+import type { MindMapNodeType } from "@/interfaces/mindmap.types";
 
 export const MindMapCanvas = () => {
   const [isDragging, setIsDragging] = useState(false);
@@ -90,6 +91,10 @@ export const MindMapCanvas = () => {
     centerMainNode();
   }, [scale]);
 
+  const handleUpdateNode = (updatedNode: MindMapNodeType) => {
+    setNodes(prev => prev.map(node => node.id === updatedNode.id ? updatedNode : node));
+  };
+
   return (
     <div
       ref={containerRef}
@@ -154,19 +159,34 @@ export const MindMapCanvas = () => {
           position: "relative",
         }}
       >
-        {/* Edges */}
-        <svg className="absolute top-0 left-0 pointer-events-none z-0" style={{ width: "2000px", height: "2000px", overflow: "visible" }}>
+        {/* Edges - z-index thấp hơn */}
+        <svg className="absolute top-0 left-0 pointer-events-none"
+          style={{
+            width: "2000px",
+            height: "2000px",
+            overflow: "visible",
+            zIndex: 1
+          }}
+        >
           {nodes.map((child) => {
             const parent = nodes.find((n) => n.id === child.parentId);
             return parent ? <Edge key={`${child.id}-${parent.id}`} from={parent} to={child} /> : null;
           })}
         </svg>
 
-        {/* Nodes */}
+        {/* Nodes - z-index cao hơn */}
         {nodes.map((node) => (
-          <MindMapNode key={node.id} node={node} onDrag={handleDragNode} />
+          <MindMapNode
+            key={node.id}
+            node={node}
+            onDrag={handleDragNode}
+            onUpdate={handleUpdateNode}
+            scale={scale}
+            canvasPosition={position}
+          />
         ))}
       </div>
+
     </div>
   );
 };
