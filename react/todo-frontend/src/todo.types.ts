@@ -1,9 +1,4 @@
-// src/todos.ts
-export enum Priority {
-  Low = 'LOW',
-  Medium = 'MEDIUM',
-  High = 'HIGH'
-}
+export type Priority = 'LOW' | 'MEDIUM' | 'HIGH';
 
 export interface Todo {
   id: number;

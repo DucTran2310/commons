@@ -46,3 +46,6 @@ export const FILE_LIST_WITH_CONTEXT_MENU = "/feature/file-list-with-context-menu
 // Debug
 export const DEBUG_DEMO = "/debug";
 export const DEBUG_WITH_HOOK = "/debug/useHook";
+
+// Remote
+export const TODO_APP_GRAPH_QL = "/todo-app-graphQL"

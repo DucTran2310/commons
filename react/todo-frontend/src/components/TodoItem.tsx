@@ -9,7 +9,6 @@ import {
   Tag, 
   DatePicker, 
   Select,
-  Badge,
   Tooltip,
   Divider
 } from 'antd';
@@ -24,8 +23,8 @@ import {
 } from '@ant-design/icons';
 import { useTodos } from '../hooks/useTodos';
 import dayjs from 'dayjs';
-import { Priority, type Todo } from '../todo.types';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import type { Priority, Todo } from '../todo.types';
 
 dayjs.extend(relativeTime);
 
@@ -34,9 +33,9 @@ interface TodoItemProps {
 }
 
 const priorityOptions = [
-  { value: Priority.Low, label: 'Low', color: 'green' },
-  { value: Priority.Medium, label: 'Medium', color: 'orange' },
-  { value: Priority.High, label: 'High', color: 'red' },
+  { value: 'LOW' as Priority, label: 'Low', color: 'green' },
+  { value: 'MEDIUM' as Priority, label: 'Medium', color: 'orange' },
+  { value: 'HIGH' as Priority, label: 'High', color: 'red' },
 ];
 
 const statusIcons = {

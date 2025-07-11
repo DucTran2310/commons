@@ -7,13 +7,6 @@ import { useThrottle } from "@/hooks/useThrottle";
 
 Chart.register(...registerables);
 
-const fakeSearchApi = (query: string): Promise<string[]> => {
-  return new Promise((res) => {
-    const delay = Math.random() * 500 + 300;
-    setTimeout(() => res([`${query} - result 1`, `${query} - result 2`]), delay);
-  });
-};
-
 type LogType = {
   type: "input" | "fetch";
   time: number;
@@ -27,7 +20,6 @@ const NUM_FAKE_USERS = 5;
 
 const AutocompleteVisualizer = () => {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<string[]>([]);
   const [log, setLog] = useState<LogType[]>([]);
   const [loading, setLoading] = useState(false);
   const [debounceMs, setDebounceMs] = useState(400);
@@ -41,9 +33,7 @@ const AutocompleteVisualizer = () => {
   const throttledFetch = useThrottle(async (q: string, inputTime?: number, userId?: number) => {
     const start = Date.now();
     setLoading(true);
-    const res = await fakeSearchApi(q);
     const latency = Date.now() - start;
-    const delayFromInput = inputTime ? start - inputTime : undefined;
 
     setLog((prev) => [
       ...prev,
@@ -56,7 +46,6 @@ const AutocompleteVisualizer = () => {
         userId,
       },
     ]);
-    setResults(res);
     setLoading(false);
   }, throttleMs);
 
@@ -64,8 +53,6 @@ const AutocompleteVisualizer = () => {
     if (debouncedQuery.trim()) {
       const now = Date.now();
       throttledFetch(debouncedQuery, now);
-    } else {
-      setResults([]);
     }
   }, [debouncedQuery]);
 

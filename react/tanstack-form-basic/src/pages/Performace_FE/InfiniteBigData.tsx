@@ -16,7 +16,6 @@ const maxPage = Math.ceil(TOTAL_ITEMS / CHUNK_SIZE);
 
 // ---- Component ----
 const InfiniteScrollAdvanced: React.FC = () => {
-  const [cache, setCache] = useState<Record<number, Item[]>>({});
   const [visibleItems, setVisibleItems] = useState<Item[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -45,7 +44,6 @@ const InfiniteScrollAdvanced: React.FC = () => {
     setLoading(true);
     const data = await fetchChunk(pageToLoad);
     hasLoaded.current.add(pageToLoad);
-    setCache((prev) => ({ ...prev, [pageToLoad]: data }));
     setVisibleItems((prev) => [...prev, ...data]);
     setLoading(false);
   };

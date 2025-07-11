@@ -3,16 +3,16 @@ import dayjs from 'dayjs';
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
 import React from 'react';
 import { useTodos } from '../hooks/useTodos';
-import { Priority } from '../todo.types';
 import { InfoCircleOutlined } from '@ant-design/icons';
+import type { Priority } from '../todo.types';
 
 const { Option } = Select;
 const { TextArea } = Input;
 
 const priorityOptions = [
-  { value: Priority.Low, label: 'LOW', color: 'green' },
-  { value: Priority.Medium, label: 'MEDIUM', color: 'orange' },
-  { value: Priority.High, label: 'HIGH', color: 'red' },
+  { value: 'LOW' as Priority, label: 'Low', color: 'green' },
+  { value: 'MEDIUM' as Priority, label: 'Medium', color: 'orange' },
+  { value: 'HIGH' as Priority, label: 'High', color: 'red' },
 ];
 
 const tagRender = (props: CustomTagProps) => {
@@ -50,7 +50,7 @@ export const TodoForm: React.FC = () => {
       form={form} 
       onFinish={handleSubmit} 
       layout="vertical"
-      initialValues={{ priority: Priority.Medium }}
+      initialValues={{ priority: 'MEDIUM' }}
     >
       <Form.Item
         name="title"

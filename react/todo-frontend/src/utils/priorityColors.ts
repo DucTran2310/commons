@@ -1,9 +1,9 @@
-import { Priority } from '../todo.types';
+import type { Priority } from "../todo.types";
 
 export const priorityColorMap: Record<Priority, string> = {
-  [Priority.High]: 'red',
-  [Priority.Medium]: 'orange',
-  [Priority.Low]: 'green',
+  HIGH: 'red',
+  MEDIUM: 'orange',
+  LOW: 'green',
 };
 
 export const getPriorityColor = (priority: Priority) => {

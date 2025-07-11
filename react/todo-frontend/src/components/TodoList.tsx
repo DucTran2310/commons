@@ -2,15 +2,15 @@ import { FilterOutlined, ReloadOutlined } from '@ant-design/icons';
 import { Alert, Button, Card, Empty, Select, Space, Spin, Tabs, Tag } from 'antd';
 import React, { useMemo, useState } from 'react';
 import { useTodos } from '../hooks/useTodos';
-import { Priority } from '../todo.types';
 import { TodoItem } from './TodoItem';
+import type { Priority } from '../todo.types';
 
 const { Option } = Select;
 
 const priorityOptions = [
-  { value: Priority.Low, label: 'Low', color: 'green' },
-  { value: Priority.Medium, label: 'Medium', color: 'orange' },
-  { value: Priority.High, label: 'High', color: 'red' },
+  { value: 'LOW' as Priority, label: 'Low', color: 'green' },
+  { value: 'MEDIUM' as Priority, label: 'Medium', color: 'orange' },
+  { value: 'HIGH' as Priority, label: 'High', color: 'red' },
 ];
 
 const sortOptions = [
@@ -32,7 +32,7 @@ export const TodoList: React.FC = () => {
   const [filters, setFilters] = useState<{
     tag?: string;
     priority?: Priority;
-    sortBy?: string;
+    sortBy?: 'title' | 'dueDate' | 'priority' | 'createdAt';
     sortOrder?: 'ASC' | 'DESC';
   }>({});
 
@@ -65,9 +65,9 @@ export const TodoList: React.FC = () => {
       }
       if (activeTab === 'dueSoon') {
         return (
-          todo.dueDate && 
-          new Date(todo.dueDate) > now && 
-          new Date(todo.dueDate) < soon && 
+          todo.dueDate &&
+          new Date(todo.dueDate) > now &&
+          new Date(todo.dueDate) < soon &&
           !todo.completed
         );
       }
@@ -75,11 +75,11 @@ export const TodoList: React.FC = () => {
     });
   }, [todos, activeTab]);
 
-  const handleSortChange = (value: string) => {
+  const handleSortChange = (value: 'title' | 'dueDate' | 'priority' | 'createdAt') => {
     setFilters(prev => ({
       ...prev,
       sortBy: value,
-      sortOrder: value === 'priority' ? 'DESC' : 'ASC' // High priority first
+      sortOrder: value === 'priority' ? 'DESC' : 'ASC'
     }));
   };
 
@@ -107,16 +107,16 @@ export const TodoList: React.FC = () => {
         <h2 className="text-xl font-semibold">Todo Manager</h2>
         <Space>
           {isFetching && <Spin size="small" />}
-          <Button 
-            icon={<ReloadOutlined />} 
+          <Button
+            icon={<ReloadOutlined />}
             onClick={() => refetch()}
             loading={isFetching}
           />
         </Space>
       </div>
 
-      <Card 
-        title="Todo List" 
+      <Card
+        title="Todo List"
         className="mb-4"
       >
         <Tabs
@@ -185,12 +185,12 @@ export const TodoList: React.FC = () => {
         </div>
 
         {filteredTodos.length === 0 ? (
-          <Empty 
+          <Empty
             description={
-              activeTab === 'all' ? "No todos found" : 
-              activeTab === 'completed' ? "No completed todos" :
-              activeTab === 'overdue' ? "No overdue todos" :
-              activeTab === 'dueSoon' ? "No todos due soon" : "No active todos"
+              activeTab === 'all' ? "No todos found" :
+                activeTab === 'completed' ? "No completed todos" :
+                  activeTab === 'overdue' ? "No overdue todos" :
+                    activeTab === 'dueSoon' ? "No todos due soon" : "No active todos"
             }
           />
         ) : (

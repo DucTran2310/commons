@@ -12,7 +12,7 @@ export type Product = {
   thumbnail: string;
 };
 
-// Fetch API
+// Fetch API with error handling
 const fetchProducts = async ({
   page,
   keyword,
@@ -28,13 +28,23 @@ const fetchProducts = async ({
 }): Promise<Product[]> => {
   const skip = (page - 1) * 10;
   const url = `https://dummyjson.com/products/search?q=${keyword}&limit=10&skip=${skip}`;
-  const res = await fetch(url);
-  const data = await res.json();
-  let products: Product[] = data.products || [];
-  if (category) {
-    products = products.filter((p) => p.category.includes(category));
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Fetch failed");
+
+    const data = await res.json();
+    let products: Product[] = data.products || [];
+
+    if (category) {
+      products = products.filter((p) => p.category.includes(category));
+    }
+
+    return products.filter((p) => p.price >= priceMin && p.price <= priceMax);
+  } catch (error) {
+    console.error("Fetch error:", error);
+    return []; // fallback
   }
-  return products.filter((p) => p.price >= priceMin && p.price <= priceMax);
 };
 
 const Tanstack_Query = () => {
@@ -47,19 +57,19 @@ const Tanstack_Query = () => {
   const queryClient = useQueryClient();
   const listRef = useRef<HTMLUListElement | null>(null);
 
-  // Debounce search
+  // ✅ Debounce với đúng kiểu dữ liệu
   const debouncedKeyword = useDebounce(keyword.trim(), 1000);
-  const debouncedPriceMin = Number(useDebounce(priceMin.toString().trim(), 1000));
-  const debouncedPriceMax = Number(useDebounce(priceMax.toString().trim(), 1000));
+  const debouncedPriceMin = useDebounce(priceMin.toString(), 1000);
+  const debouncedPriceMax = useDebounce(priceMax.toString(), 1000);
 
-  const queryKey = ["products", page, debouncedKeyword, priceMin, debouncedPriceMax, category];
+  const queryKey = ["products", page, debouncedKeyword, debouncedPriceMin, debouncedPriceMax, category];
 
   const {
-    data: products,
+    data: products = [],
     isPending,
     isError,
     isFetching,
-  } = useQuery({
+  } = useQuery<Product[]>({
     queryKey,
     queryFn: () =>
       fetchProducts({
@@ -70,16 +80,16 @@ const Tanstack_Query = () => {
         category,
       }),
     staleTime: 30 * 1000 * 5,
-    keepPreviousData: true,
+    placeholderData: (prev) => prev,
   });
 
-  // Prefetch next page
+  // ✅ Prefetch trang tiếp theo
   useEffect(() => {
     queryClient.prefetchQuery({
       queryKey: ["products", page + 1, debouncedKeyword, debouncedPriceMin, debouncedPriceMax, category],
       queryFn: () =>
         fetchProducts({
-          page,
+          page: page + 1,
           keyword: debouncedKeyword,
           priceMin: Number(debouncedPriceMin),
           priceMax: Number(debouncedPriceMax),
@@ -89,13 +99,12 @@ const Tanstack_Query = () => {
     });
   }, [page, debouncedKeyword, debouncedPriceMin, debouncedPriceMax, category, queryClient]);
 
-  // Update URL
-  // ✅ Reset page = 1 khi thay đổi filter
+  // ✅ Reset về trang 1 khi filter thay đổi
   useEffect(() => {
     setPage(1);
   }, [keyword, debouncedPriceMin, debouncedPriceMax, category]);
 
-  // ✅ Cập nhật searchParams mỗi khi state thay đổi
+  // ✅ Cập nhật URL
   useEffect(() => {
     setSearchParams({
       page: page.toString(),
@@ -106,18 +115,24 @@ const Tanstack_Query = () => {
     });
   }, [page, keyword, debouncedPriceMin, debouncedPriceMax, category, setSearchParams]);
 
-  // Scroll to top when page changes
+  // ✅ Scroll lên đầu khi đổi trang
   useEffect(() => {
     listRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [page]);
 
   const allCategories = ["smartphones", "laptops", "fragrances", "skincare", "groceries", "furniture"];
-  console.log("products: ", products);
+
+  // ✅ Kiểm tra trước xem có thể sang trang tiếp theo không
+  const nextPage = page + 1;
+  const nextPageQueryKey = ["products", nextPage, debouncedKeyword, debouncedPriceMin, debouncedPriceMax, category];
+  const nextPageData = queryClient.getQueryData<Product[]>(nextPageQueryKey);
+  const canGoNext = nextPageData ? nextPageData.length > 0 : true;
 
   return (
     <div className="max-w-3xl mx-auto p-4 space-y-6">
       <h2 className="text-2xl font-bold">📦 Sản phẩm (Trang {page})</h2>
 
+      {/* Filters */}
       <div className="flex flex-wrap gap-4">
         <input
           value={keyword}
@@ -149,13 +164,15 @@ const Tanstack_Query = () => {
         </select>
       </div>
 
+      {/* Loading / Error */}
       {isPending && <p className="text-gray-500 animate-pulse">Đang tải...</p>}
       {isError && <p className="text-red-500">❌ Lỗi khi tải dữ liệu</p>}
 
-      <div ref={listRef}>
+      {/* Product list */}
+      <div>
         <p className="text-gray-500 text-sm">Tìm thấy {products?.length || 0} sản phẩm</p>
 
-        <ul className="grid gap-4">
+        <ul ref={listRef} className="grid gap-4">
           {products?.map((product) => (
             <li key={product.id} className="flex gap-4 border p-3 rounded shadow-sm">
               <img src={product.thumbnail} alt={product.title} className="w-20 h-20 object-cover rounded" />
@@ -170,6 +187,7 @@ const Tanstack_Query = () => {
         </ul>
       </div>
 
+      {/* Pagination */}
       <div className="flex justify-between items-center mt-6">
         <button
           onClick={() => setPage((p) => Math.max(p - 1, 1))}
@@ -183,7 +201,7 @@ const Tanstack_Query = () => {
 
         <button
           onClick={() => setPage((p) => p + 1)}
-          disabled={products?.length === 0}
+          disabled={!canGoNext}
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
         >
           Trang sau ▶

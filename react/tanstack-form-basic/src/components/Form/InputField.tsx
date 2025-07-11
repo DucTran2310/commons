@@ -2,7 +2,7 @@ import { FieldApi } from "@tanstack/react-form";
 import type { ReactNode } from "react";
 
 type InputFieldProps = {
-  field: FieldApi<any, any, any, any>;
+  field: FieldApi<any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any>;
   label: string;
   type?: string;
   placeholder?: string;

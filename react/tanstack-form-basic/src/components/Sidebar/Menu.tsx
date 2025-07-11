@@ -27,6 +27,7 @@ import {
   TANSTACK_QUERY_MUTATION,
   TANSTACK_RETRY_BACKOFF,
   TANSTACK_STALE_CACHE_TIME,
+  TODO_APP_GRAPH_QL,
   UNDO_REDO,
 } from "@/constants/menus.constants";
 import {
@@ -148,6 +149,11 @@ export const MENU_DATA = [
     label: "Mind-map",
     icon: <Brain className="w-4 h-4" />,
     path: MIND_MAP_LAYOUT,
+  },
+  {
+    label: "Todo-App-GraphQL",
+    icon: <Brain className="w-4 h-4" />,
+    path: TODO_APP_GRAPH_QL,
   },
   {
     label: "Settings",

@@ -1,4 +1,4 @@
-import axios, { type AxiosError, type AxiosRequestConfig } from "axios";
+import axios, { type AxiosError, type AxiosRequestConfig, type InternalAxiosRequestConfig } from "axios";
 
 const axiosInstance = axios.create({
   baseURL: "https://api.escuelajs.co/api/v1",
@@ -22,7 +22,7 @@ const processQueue = (error: AxiosError | null, token: string | null = null) => 
   failedQueue = [];
 };
 
-axiosInstance.interceptors.request.use((config: AxiosRequestConfig) => {
+axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = localStorage.getItem("access_token");
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;

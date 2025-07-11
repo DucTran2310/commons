@@ -27,7 +27,6 @@ export default function DependentQueryDemo() {
   const {
     data: user,
     isLoading: loadingUser,
-    isError: errorUser,
   } = useQuery({
     queryKey: ["user", selectedUserId],
     queryFn: () => fetchUserById(selectedUserId!),

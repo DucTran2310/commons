@@ -2,7 +2,7 @@ import { fetchRandomData } from "@/mock/fakeUserAPI";
 import { Skeleton } from "@mui/material";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 export default function RetryBackoffDemo() {
   const queryClient = useQueryClient();
@@ -34,14 +34,6 @@ export default function RetryBackoffDemo() {
       console.log(`⏱️ Delay lần ${attempt}: ${Math.round(totalDelay)}ms`);
       return totalDelay;
     },
-
-    onError: (err: any) => {
-      toast.error(`❌ ${err.message}`);
-    },
-
-    onSuccess: () => {
-      toast.success("✅ Thành công!");
-    },
   });
 
   const resetQuery = () => {
@@ -68,7 +60,7 @@ export default function RetryBackoffDemo() {
       <p className="text-sm mt-4 text-gray-500">🔁 Retry count: {failureCount}</p>
 
       <div className="flex gap-2 mt-4">
-        <button onClick={refetch} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        <button onClick={() => refetch()} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
           🔄 Refetch
         </button>
         <button onClick={resetQuery} className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">

@@ -29,6 +29,7 @@ import {
   TANSTACK_QUERY_MUTATION,
   TANSTACK_RETRY_BACKOFF,
   TANSTACK_STALE_CACHE_TIME,
+  TODO_APP_GRAPH_QL,
   UNDO_REDO,
 } from "@/constants/menus.constants";
 import { lazy } from "react";
@@ -73,6 +74,8 @@ const FileListWithContextMenu = lazy(() => import("@/pages/Feature/Event_DOM_Han
 const DebuggerDemo = lazy(() => import("@/pages/Debug/DebugDemo"));
 const DebugWithHook = lazy(() => import("@/pages/Debug/DebugWithHook"));
 const Background_Refetching = lazy(() => import("@/pages/Form/tanstack/Background_Refetching"));
+// remote
+const TodoApp = lazy(() => import("todo_remote/TodoApp"));
 
 // Danh sách route
 export const ROUTES = [
@@ -204,6 +207,10 @@ export const ROUTES = [
       {
         path: DEBUG_WITH_HOOK,
         component: DebugWithHook,
+      },
+      {
+        path: TODO_APP_GRAPH_QL,
+        component: TodoApp
       },
       {
         path: "*",

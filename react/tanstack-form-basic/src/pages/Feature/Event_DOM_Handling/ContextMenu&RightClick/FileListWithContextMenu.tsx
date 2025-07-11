@@ -44,7 +44,7 @@ const SortableFileCard = ({
   file: FileItem;
   renamingId: string | null;
   newName: string;
-  inputRef: React.RefObject<HTMLInputElement>;
+  inputRef: React.RefObject<HTMLInputElement | null>;
   onRightClick: (e: React.MouseEvent, file: FileItem) => void;
   onDoubleClick: () => void;
   onChangeNewName: (value: string) => void;
@@ -99,7 +99,7 @@ const FileListWithContextMenu: React.FC = () => {
   const [previewFile, setPreviewFile] = useState<FileItem | null>(null);
 
   const contextRef = useRef<HTMLUListElement | null>(null);
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const submenuRef = useRef<HTMLUListElement | null>(null);
 
   useEffect(() => {

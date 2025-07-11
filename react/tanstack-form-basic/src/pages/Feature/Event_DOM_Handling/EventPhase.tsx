@@ -15,7 +15,7 @@ const EventPhasesPage: React.FC = () => {
   const [logs, setLogs] = useState<string[]>([]);
 
   const addLog = (msg: string) => {
-    setLogs((prev) => (prev.at(-1) === msg ? prev : [...prev, msg]));
+    setLogs((prev) => (prev[prev.length - 1] === msg ? prev : [...prev, msg]));
   };
 
   const highlight = (el: HTMLElement) => {
@@ -31,14 +31,14 @@ const EventPhasesPage: React.FC = () => {
     const btnA = buttonARef.current!;
     const btnB = buttonBRef.current!;
 
-    const handleCapture = (label: string, el: HTMLElement) => (e: Event) => {
+    const handleCapture = (label: string, el: HTMLElement) => () => {
       if (showCapturing) {
         highlight(el);
         addLog(`🔼 Capturing - ${label}`);
       }
     };
 
-    const handleBubbling = (label: string, el: HTMLElement) => (e: Event) => {
+    const handleBubbling = (label: string, el: HTMLElement) => () => {
       if (showBubbling) {
         highlight(el);
         addLog(`🔽 Bubbling - ${label}`);
@@ -46,7 +46,7 @@ const EventPhasesPage: React.FC = () => {
     };
 
     // Button A handlers
-    const handleButtonACapture = (e: Event) => {
+    const handleButtonACapture = () => {
       if (showCapturing) {
         addLog("🔼 Capturing - Button A");
       }
@@ -64,18 +64,18 @@ const EventPhasesPage: React.FC = () => {
       }
     };
 
-    const handleButtonABubbling2 = (e: Event) => {
+    const handleButtonABubbling2 = () => {
       highlight(btnA);
       addLog("🔽 Bubbling - Button A - [Handler 2]");
     };
 
-    const handleButtonBCapture = (e: Event) => {
+    const handleButtonBCapture = () => {
       if (showCapturing) {
         addLog("🔼 Capturing - Button B");
       }
     };
 
-    const handleButtonBBubbling = (e: Event) => {
+    const handleButtonBBubbling = () => {
       highlight(btnB);
       if (showBubbling) {
         addLog("🔽 Bubbling - Button B");

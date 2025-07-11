@@ -8,6 +8,8 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import "./index.css";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import { ApolloProvider } from "@apollo/client";
+import { apolloClient } from "@/libs/apollo-client";
 
 const queryClient = new QueryClient();
 
@@ -15,6 +17,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   // <React.StrictMode>
   <Provider store={store}>
     <CustomThemeProvider>
+      <ApolloProvider client={apolloClient}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <ErrorBoundary>
@@ -23,6 +26,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-right" />
         </BrowserRouter>
       </QueryClientProvider>
+      </ApolloProvider>
     </CustomThemeProvider>
   </Provider>,
   // </React.StrictMode>

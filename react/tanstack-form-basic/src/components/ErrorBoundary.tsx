@@ -27,6 +27,10 @@ class ErrorBoundary extends Component<Props, State> {
     window.location.reload();
   };
 
+  handleGoHome = () => {
+    window.location.href = "/";
+  }
+
   render() {
     if (this.state.hasError) {
       return (
@@ -35,9 +39,14 @@ class ErrorBoundary extends Component<Props, State> {
             <div className="text-red-500 text-5xl mb-4">⚠️</div>
             <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Có lỗi xảy ra!</h1>
             <p className="text-gray-600 mb-6">Xin lỗi vì sự bất tiện. Vui lòng thử tải lại trang.</p>
-            <button onClick={this.handleReload} className="px-5 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition">
-              🔄 Tải lại trang
-            </button>
+            <div className="flex items-center justify-between gap-2">
+              <button onClick={this.handleReload} className="px-5 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition">
+                🔄 Tải lại trang
+              </button>
+              <button onClick={this.handleGoHome} className="px-5 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition">
+                Trang chủ
+              </button>
+            </div>
           </div>
         </div>
       );

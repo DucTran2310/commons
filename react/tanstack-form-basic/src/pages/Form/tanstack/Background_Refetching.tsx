@@ -17,7 +17,7 @@ export default function Background_Refetching() {
     };
   }, []);
 
-  const { data, isLoading, isFetching, refetch } = useQuery({
+  const { data, isFetching, refetch } = useQuery({
     queryKey: ["users"],
     queryFn: fetchUsers,
     staleTime: 1000 * 30, // ⏳ Dữ liệu được xem là "fresh" trong 30s

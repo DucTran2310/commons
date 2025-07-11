@@ -37,7 +37,7 @@ export default function UserProfileForm() {
       address: { street: "", city: "" },
       friends: [{ name: "" }],
     },
-    onSubmit: async ({ value }) => {
+    onSubmit: async () => {
       showAlert("success", "Gửi thành công ✅");
     },
     onSubmitInvalid: async () => {

@@ -27,7 +27,7 @@ export default function ComplexForm() {
     name: "friends",
   });
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
+  const onSubmit: SubmitHandler<FormValues> = () => {
     alert("Form gửi thành công!");
     reset();
   };
