@@ -3,6 +3,7 @@ import { MindMapNode } from "./MindMapNode";
 import { Edge } from "./Edge";
 import { initialNodes } from "@/mock/mindmap.mock";
 import type { MindMapNodeType } from "@/interfaces/mindmap.types";
+import { checkNodeCollision, findNearestValidPosition } from "@/utils/mindmap.utils";
 
 export const MindMapCanvas = () => {
   const [isDragging, setIsDragging] = useState(false);
@@ -18,7 +19,36 @@ export const MindMapCanvas = () => {
   const isMac = /Mac/.test(navigator.platform);
 
   const handleDragNode = (id: string, newPos: { x: number; y: number }) => {
-    setNodes((prev) => prev.map((node) => (node.id === id ? { ...node, position: newPos } : node)));
+    setNodes((prev) => {
+      const updatedNodes = prev.map((node) => 
+        node.id === id ? { ...node, position: newPos } : node
+      );
+      
+      // Check for collisions after drag ends
+      if (!isDragging) {
+        const draggedNode = updatedNodes.find(n => n.id === id);
+        if (!draggedNode) return updatedNodes;
+        
+        // Check collisions with other nodes
+        const hasCollision = updatedNodes.some(otherNode => 
+          otherNode.id !== id && checkNodeCollision(draggedNode, otherNode)
+        );
+        
+        // Check collisions with edges (if needed)
+        const hasEdgeCollision = false; // Implement if edge collision is important
+        
+        if (hasCollision || hasEdgeCollision) {
+          // Find nearest valid position
+          const validPos = findNearestValidPosition(draggedNode, updatedNodes, newPos);
+          
+          return prev.map((node) => 
+            node.id === id ? { ...node, position: validPos } : node
+          );
+        }
+      }
+      
+      return updatedNodes;
+    });
   };
 
   // Mouse drag with Shift
@@ -39,8 +69,13 @@ export const MindMapCanvas = () => {
   };
 
   const handleMouseUp = () => {
-    setIsDragging(false);
-    setStartDrag(null);
+    if (isDragging) {
+      setIsDragging(false);
+      setStartDrag(null);
+    }
+    
+    // Force a re-render to check for collisions
+    setNodes(prev => [...prev]);
   };
 
   useEffect(() => {
