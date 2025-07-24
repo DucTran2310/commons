@@ -1,13 +1,17 @@
-import JSONFormatter from '@/pages/JSON_Formatter/JSONFormatter'
-import { Routes, Route } from 'react-router-dom'
+import LoadingSpinner from '@/components/common/Loading';
+import { LIST_ROUTES } from '@/constants/route.constants';
+import { ThemeProvider } from '@/context/ThemeContext';
+import React from 'react';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
-function App() {
+const router = createBrowserRouter(LIST_ROUTES);
+
+export default function App() {
   return (
-    <Routes>
-      <Route path="/format-json" element={<JSONFormatter />} />
-      {/* <Route path="*" element={<NotFoundPage />} /> */}
-    </Routes>
-  )
+    <ThemeProvider>
+      <React.Suspense fallback={<LoadingSpinner />}>
+        <RouterProvider router={router} />
+      </React.Suspense>
+    </ThemeProvider>
+  );
 }
-
-export default App

@@ -1,7 +1,10 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { useTheme } from '@/context/ThemeContext';
 import JSONNode from '@/pages/JSON_Formatter/components/JSONNode';
 import {
   AlertCircle,
@@ -10,9 +13,7 @@ import {
   Download,
   Expand,
   History,
-  Moon,
-  Shrink,
-  Sun
+  Shrink
 } from 'lucide-react';
 import * as LZString from 'lz-string';
 import React, { useEffect, useState } from 'react';
@@ -24,34 +25,27 @@ export default function JSONFormatter() {
   const [sortKeys, setSortKeys] = useState(false);
   const [copied, setCopied] = useState(false);
   const [valid, setValid] = useState(true);
-  const [error, setError] = useState<{ message: string; position?: number } | null>(
-    null
-  );
+  const [error, setError] = useState<{ message: string; position?: number } | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [allExpanded, setAllExpanded] = useState(true);
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [isProcessing, setIsProcessing] = useState(false);
   const [history, setHistory] = useState<string[]>([]);
   const [showHistory, setShowHistory] = useState(false);
 
+  const { theme } = useTheme();
+
   useEffect(() => {
-    // Load from URL if exists
     const params = new URLSearchParams(window.location.search);
     const compressedJson = params.get('json');
     if (compressedJson) {
       try {
-        const decompressed = LZString.decompressFromEncodedURIComponent(
-          compressedJson
-        );
-        if (decompressed) {
-          setInput(decompressed);
-        }
+        const decompressed = LZString.decompressFromEncodedURIComponent(compressedJson);
+        if (decompressed) setInput(decompressed);
       } catch (e) {
         console.error('Error decompressing URL data', e);
       }
     }
 
-    // Load from localStorage
     const savedHistory = localStorage.getItem('jsonFormatterHistory');
     if (savedHistory) {
       setHistory(JSON.parse(savedHistory));
@@ -90,14 +84,11 @@ export default function JSONFormatter() {
       setValid(true);
       setError(null);
 
-      // Add to history if valid and not already in history
       setHistory(prev => {
         const newHistory = [...prev];
         if (!newHistory.includes(input)) {
           newHistory.push(input);
-          if (newHistory.length > 10) {
-            newHistory.shift();
-          }
+          if (newHistory.length > 10) newHistory.shift();
         }
         return newHistory;
       });
@@ -108,10 +99,7 @@ export default function JSONFormatter() {
 
       if (e instanceof SyntaxError) {
         const match = e.message.match(/at position (\d+)/);
-        setError({
-          message: e.message,
-          position: match ? parseInt(match[1]) : undefined
-        });
+        setError({ message: e.message, position: match ? parseInt(match[1]) : undefined });
       } else {
         setError({ message: 'Invalid JSON' });
       }
@@ -179,10 +167,8 @@ export default function JSONFormatter() {
   };
 
   return (
-    <div className={`${theme === 'dark' ? 'dark bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
-      <div
-        className={`flex flex-col items-center gap-6 max-w-full py-6 px-20 min-h-screen `}
-      >
+    <div className="min-h-screen bg-[#f3f4f6] text-gray-900 dark:bg-gray-900 dark:text-white transition-colors">
+      <div className="flex flex-col items-center gap-6 max-w-full px-4 py-6">
         <h1 className="text-2xl font-bold text-center">🛠 JSON Formatter Tool</h1>
 
         <div className="flex flex-wrap items-center gap-4">
@@ -200,21 +186,13 @@ export default function JSONFormatter() {
             {allExpanded ? 'Collapse All' : 'Expand All'}
           </Button>
 
-          <Button variant="outline" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className={`${theme === 'dark' ? 'dark bg-white-900 text-white' : 'bg-white text-gray-900'
-              }`}
-          >
-            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-            {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
-          </Button>
-
           <Button variant="outline" onClick={() => setShowHistory(!showHistory)}>
             <History size={16} />
             History
           </Button>
         </div>
 
-        <div className="flex flex-wrap items-center gap-4 mt-6">
+        <div className="flex flex-wrap items-center gap-4 mt-4">
           <div className="flex items-center gap-2">
             <label className="font-medium">Sort Keys</label>
             <Switch checked={sortKeys} onCheckedChange={setSortKeys} />
@@ -232,29 +210,20 @@ export default function JSONFormatter() {
             />
           </div>
 
-          <Button
-            onClick={handleCopy}
-            variant="outline"
-            className="flex gap-2 items-center"
-            disabled={!outputObj}
-          >
+          <Button onClick={handleCopy} variant="outline" disabled={!outputObj}>
             {copied ? <Check size={16} /> : <ClipboardCopy size={16} />}
             {copied ? 'Copied!' : 'Copy'}
           </Button>
 
-          <Button
-            onClick={handleDownload}
-            variant="outline"
-            className="flex gap-2 items-center"
-            disabled={!outputObj}
-          >
+          <Button onClick={handleDownload} variant="outline" disabled={!outputObj}>
             <Download size={16} />
             Download
           </Button>
+
         </div>
 
         {showHistory && (
-          <div className={`mb-4 p-4 rounded-lg ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100'}`}>
+          <div className="mb-4 p-4 rounded-lg bg-gray-100 dark:bg-gray-800 w-full max-w-2xl">
             <div className="flex justify-between items-center mb-2">
               <h3 className="font-medium">History</h3>
               <Button variant="ghost" size="sm" onClick={clearHistory}>
@@ -266,13 +235,10 @@ export default function JSONFormatter() {
                 history.map((item, index) => (
                   <div
                     key={index}
-                    className={`p-2 mb-1 rounded cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700`}
+                    className="p-2 mb-1 rounded cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700"
                     onClick={() => loadFromHistory(item)}
                   >
-                    <div className="truncate text-sm">
-                      {item.substring(0, 50)}
-                      {item.length > 50 ? '...' : ''}
-                    </div>
+                    <div className="truncate text-sm">{item.substring(0, 50)}{item.length > 50 ? '...' : ''}</div>
                   </div>
                 ))
               ) : (
@@ -283,19 +249,16 @@ export default function JSONFormatter() {
         )}
 
         {isProcessing && (
-          <div className="text-center py-2 text-sm text-gray-500">
-            Processing large JSON...
-          </div>
+          <div className="text-center py-2 text-sm text-gray-500">Processing large JSON...</div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-6xl">
+          <div className="ml-4">
             <label className="block font-semibold mb-1">Input JSON:</label>
             <div className="relative">
               <div
                 id="line-numbers"
-                className={`absolute left-0 top-0 bottom-0 w-[24px] p-1 overflow-hidden font-mono text-xs text-right ${theme === 'dark' ? 'text-gray-400 bg-gray-800' : 'text-gray-400 bg-gray-100'
-                  }`}
+                className="absolute left-0 top-0 bottom-0 w-[24px] p-1 overflow-hidden font-mono text-xs text-right text-gray-400 bg-gray-100 dark:bg-gray-800 border-t border-b border-l rounded-s"
               >
                 {generateLineNumbers(input)}
               </div>
@@ -305,8 +268,7 @@ export default function JSONFormatter() {
                 onChange={(e) => setInput(e.target.value)}
                 onScroll={handleInputScroll}
                 placeholder="Paste your JSON here..."
-                className={`font-mono pl-10 ${!valid && input ? 'border-red-500' : ''} ${theme === 'dark' ? 'text-white bg-gray-800' : 'text-black bg-gray-100'
-                  }`}
+                className={`font-mono pl-10 text-black dark:text-white bg-gray-100 dark:bg-gray-800 ${!valid && input ? 'border-red-500' : ''}`}
                 style={{ whiteSpace: 'pre' }}
               />
             </div>
@@ -323,12 +285,9 @@ export default function JSONFormatter() {
             )}
           </div>
 
-          <div>
+          <div className="mr-4">
             <label className="block font-semibold mb-1">Live JSON Tree View:</label>
-            <div
-              className={`p-4 rounded h-[600px] overflow-auto font-mono text-sm whitespace-pre-wrap border-1 border-white ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100'
-                }`}
-            >
+            <div className="p-4 rounded overflow-auto font-mono text-sm whitespace-pre-wrap border bg-gray-100 dark:bg-gray-800">
               {valid ? (
                 outputObj ? (
                   <JSONNode
@@ -338,7 +297,7 @@ export default function JSONFormatter() {
                     theme={theme}
                   />
                 ) : (
-                  <div className={`text-center py-8 ${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'}`}>
+                  <div className="text-center py-8 text-gray-400 dark:text-gray-500">
                     Enter JSON to see the formatted tree view
                   </div>
                 )

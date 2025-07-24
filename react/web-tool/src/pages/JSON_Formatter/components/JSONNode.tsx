@@ -1,17 +1,9 @@
+import type { JSONNodeProps } from '@/types/json.types';
 import {
   ChevronDown,
   ChevronRight
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-
-interface JSONNodeProps {
-  data: any;
-  name?: string;
-  level?: number;
-  searchTerm?: string;
-  allExpanded?: boolean;
-  theme?: 'light' | 'dark';
-}
 
 const JSONNode: React.FC<JSONNodeProps> = ({
   data,
