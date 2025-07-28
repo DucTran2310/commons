@@ -1,4 +1,4 @@
-import { Braces } from 'lucide-react';
+import { Braces, FileDiff } from 'lucide-react';
 
 export const LIST_MENUS = [
   {
@@ -10,6 +10,12 @@ export const LIST_MENUS = [
         title: "Định dạng và làm đẹp JSON",
         icon: <Braces />,
         path: "/format-json",
+      },
+      {
+        id: 3,
+        title: "So sánh 2 JSON",
+        icon: <FileDiff />,
+        path: "/diff-json",
       },
     ],
   },

@@ -1,11 +1,14 @@
 import Sidebar from '@/components/common/Sidebar/Sidebar';
 import { LIST_MENUS } from '@/constants/menu.constants';
+import { useLayout } from '@/context/LayoutContext';
 import { SearchLayout } from '@/layouts/SearchLayout';
 import type { MenuItem } from '@/types/menu.types';
 import { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 
 const Layout_Tool = () => {
+
+  const { isSidebarOpen } = useLayout();
   const navigate = useNavigate();
   const location = useLocation();
   const [menuItems, setMenuItems] = useState<MenuItem[]>(LIST_MENUS);
@@ -18,7 +21,7 @@ const Layout_Tool = () => {
   const updateActiveStates = (items: MenuItem[], currentPath: string): MenuItem[] => {
     return items.map(item => {
       const isActive = item.path === currentPath;
-      
+
       return {
         ...item,
         isActive,
@@ -42,14 +45,11 @@ const Layout_Tool = () => {
       };
 
       const clickedItem = findItem(prevItems);
-      
-      // If the item has a path, navigate to it
-      // The useEffect will then update the active states based on the new route
+
       if (clickedItem?.path) {
         navigate(clickedItem.path);
       }
 
-      // Return the previous items (the useEffect will handle the state update)
       return prevItems;
     });
   };
@@ -60,13 +60,19 @@ const Layout_Tool = () => {
         menuItems={menuItems}
         onItemClick={handleItemClick}
       />
-      <div className='flex flex-col w-full'>
+      <div className='flex flex-col w-[calc(100% - 280px)]'
+        style={{
+          width: isSidebarOpen ? 'calc(100% - 280px)' : '100%',
+          transition: 'width 0.3s ease' // Thêm hiệu ứng chuyển động mượt mà
+        }}
+      >
         <SearchLayout />
-        <div style={{
-          flex: 1,
-          overflowY: 'auto',
-          backgroundColor: '#f9f9f9'
-        }}>
+        <div
+          className='bg-white dark:bg-[#0f172a]'
+          style={{
+            flex: 1,
+            overflowY: 'auto',
+          }}>
           <Outlet />
         </div>
       </div>

@@ -104,7 +104,7 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({
             {/* Vertical line connecting child items */}
             {level === 0 && item.children && item.children.length > 0 && (
               <div className={`
-                absolute left-1 top-0 bottom-0 w-px
+                absolute left-2 top-0 bottom-0 w-px
                 ${isDarkMode ? 'bg-dark-divider' : 'bg-light-divider'}
               `} />
             )}

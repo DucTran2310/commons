@@ -1,4 +1,4 @@
-import type { JSONNodeProps } from '@/types/json.types';
+import type { JSONNodeProps } from '@/types/json-formatter.types';
 import {
   ChevronDown,
   ChevronRight
