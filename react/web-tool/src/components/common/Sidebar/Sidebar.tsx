@@ -13,8 +13,8 @@ const Sidebar: React.FC<SidebarProps> = ({ menuItems, onItemClick }) => {
   return (
     <motion.div
       className={`
-        h-screen overflow-y-auto font-sans text-sm
-        ${isDarkMode ? 'bg-dark-sidebarBg' : 'bg-light-sidebarBg border-r border-light-divider p-4'}
+        h-screen overflow-y-auto font-sans text-sm ${isSidebarOpen ? 'p-4' : ''}
+        ${isDarkMode ? 'bg-dark-sidebarBg border-r border-dark-divider' : 'bg-light-sidebarBg border-r border-light-divider'}
       `}
       initial={false}
       animate={{

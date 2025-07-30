@@ -23,6 +23,22 @@ export const LIST_ROUTES = [
         },
         errorElement: <ErrorBoundary />,
       },
+      {
+        path: 'java-dotnet-escape',
+        async lazy() {
+          const { default: JavaDotNetEscape } = await import('@/pages/Development/JavaDotNetEscape/JavaDotNetEscape');
+          return { Component: JavaDotNetEscape };
+        },
+        errorElement: <ErrorBoundary />,
+      },
+      {
+        path: 'fake-data',
+        async lazy() {
+          const { default: ToolFakeData } = await import('@/pages/Development/ToolFakeData/ToolFakeData');
+          return { Component: ToolFakeData };
+        },
+        errorElement: <ErrorBoundary />,
+      },
     ],
   },
 ]

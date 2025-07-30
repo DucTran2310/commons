@@ -1,6 +1,8 @@
 import { DiffPatcher } from "jsondiffpatch";
 import copy from "copy-to-clipboard";
 import { saveAs } from "file-saver";
+import { DiffTypes, type DiffType } from "@/types/json-diff.types";
+import type { Theme } from "@/types/context.types";
 
 export const diffpatcher = new DiffPatcher({ 
   arrays: { detectMove: false }, 
@@ -38,7 +40,6 @@ export const buildDetailedLineMetadata = (jsonString: string): LineMetadata[] =>
     // Parse line content
     const isClosing = /^\s*[}\]],?$/.test(line);
     const keyValueMatch = trimmed.match(/^"([^"]+)"\s*:\s*(.*?)(?:,\s*)?$/);
-    const arrayItemMatch = trimmed.match(/^(.*?)(?:,\s*)?$/);
     const isObjectStart = trimmed.includes('{') && !trimmed.match(/^"[^"]+"\s*:\s*\{.*\},?\s*$/);
     const isArrayStart = trimmed.includes('[') && !trimmed.match(/^"[^"]+"\s*:\s*\[.*\],?\s*$/);
     
@@ -290,4 +291,38 @@ export const isPathInLine = (path: string[], line: string): boolean => {
   return false;
 };
 
+export const getDiffStyling = (diffType: DiffType, theme: Theme) => {
+    const baseClasses = 'border-l-4 transition-colors duration-200';
 
+    if (theme === 'dark') {
+      switch (diffType) {
+        case DiffTypes.ADDED:
+          return `${baseClasses} bg-green-900/30 border-green-500`;
+        case DiffTypes.REMOVED:
+          return `${baseClasses} bg-gray-800/30 border-gray-500 opacity-60`;
+        case DiffTypes.MODIFIED:
+          return `${baseClasses} bg-yellow-900/30 border-yellow-500`;
+        case DiffTypes.TYPE_CHANGE:
+          return `${baseClasses} bg-purple-900/30 border-purple-500`;
+        case DiffTypes.ARRAY_REORDER:
+          return `${baseClasses} bg-blue-900/30 border-blue-500`;
+        default:
+          return '';
+      }
+    } else {
+      switch (diffType) {
+        case DiffTypes.ADDED:
+          return `${baseClasses} bg-green-100 border-green-500`;
+        case DiffTypes.REMOVED:
+          return `${baseClasses} bg-gray-100 border-gray-500 opacity-60`;
+        case DiffTypes.MODIFIED:
+          return `${baseClasses} bg-yellow-100 border-yellow-500`;
+        case DiffTypes.TYPE_CHANGE:
+          return `${baseClasses} bg-purple-100 border-purple-500`;
+        case DiffTypes.ARRAY_REORDER:
+          return `${baseClasses} bg-blue-100 border-blue-500`;
+        default:
+          return '';
+      }
+    }
+  };

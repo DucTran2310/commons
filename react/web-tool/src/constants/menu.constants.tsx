@@ -1,4 +1,4 @@
-import { Braces, FileDiff } from 'lucide-react';
+import { Braces, BrushCleaning, DatabaseZap, FileDiff } from 'lucide-react';
 
 export const LIST_MENUS = [
   {
@@ -16,6 +16,18 @@ export const LIST_MENUS = [
         title: "So sánh 2 JSON",
         icon: <FileDiff />,
         path: "/diff-json",
+      },
+      {
+        id: 4,
+        title: "Loại bỏ ký tự trong Java",
+        icon: <BrushCleaning />,
+        path: "/java-dotnet-escape",
+      },
+      {
+        id: 5,
+        title: "Tạo dữ liệu ảo",
+        icon: <DatabaseZap />,
+        path: "/fake-data",
       },
     ],
   },
