@@ -28,7 +28,8 @@ export default function ModalType({
   const filteredCategories = FIELD_CATEGORIES.map((category) => ({
     ...category,
     types: category.types.filter((type) =>
-      type.label.toLowerCase().includes(searchTerm.toLowerCase())
+      type.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      type.value.toLowerCase().includes(searchTerm.toLowerCase())
     ),
   })).filter((category) => category.types.length > 0);
 
@@ -49,32 +50,40 @@ export default function ModalType({
           />
         </div>
 
-        <div className="flex-1 overflow-y-auto space-y-6 pr-2">
-          {filteredCategories.map((category) => (
-            <div key={category.name} className="space-y-2">
-              <h3 className="text-sm font-medium text-muted-foreground">
-                {category.name}
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                {category.types.map((type) => (
-                  <Button
-                    key={type.value}
-                    variant={field.type === type.value ? "ghost" : "outline"}
-                    className={`justify-start h-auto py-2 whitespace-normal text-left ${field.type === type.value ? "text-red-500" : ''}`}
-                    onClick={() => handleTypeChange(type.value as FieldType)}
-                  >
-                    {type.label}
-                    {field.type === type.value && (
-                      <Badge className="ml-2" variant="secondary">
-                        Selected
-                      </Badge>
-                    )}
-                  </Button>
-                ))}
+        {filteredCategories.length === 0 ? (
+          <div className="flex-1 flex items-center justify-center text-gray-500">
+            No field types match your search
+          </div>
+        ) : (
+          <div className="flex-1 overflow-y-auto space-y-6 pr-2">
+            {filteredCategories.map((category) => (
+              <div key={category.name} className="space-y-2">
+                <h3 className="text-sm font-medium text-muted-foreground">
+                  {category.name}
+                </h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                  {category.types.map((type) => (
+                    <Button
+                      key={type.value}
+                      variant={field.type === type.value ? "ghost" : "outline"}
+                      className={`justify-start h-auto py-2 whitespace-normal text-left ${
+                        field.type === type.value ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200" : ''
+                      }`}
+                      onClick={() => handleTypeChange(type.value as FieldType)}
+                    >
+                      {type.label}
+                      {field.type === type.value && (
+                        <Badge className="ml-2" variant="secondary">
+                          Selected
+                        </Badge>
+                      )}
+                    </Button>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );

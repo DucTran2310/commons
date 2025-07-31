@@ -1,14 +1,14 @@
-import { Button } from '@/components/ui/button';
-import { useFieldStore } from '@/lib/store';
-import { generateCSV, generateJSON } from '@/utils/fakerData';
-import { FileCode, FileText } from 'lucide-react';
+import { Tooltip } from "@/components/common/Tooltip";
+import { useFieldStore } from "@/lib/store";
+import { generateCSV, generateJSON, hasObjectOrArrayField } from "@/utils/fakerData";
+import { File, FileCode, FileText } from "lucide-react";
 
-export function ExportButtons() {
-  const { generatedData, fields } = useFieldStore();
+export const ExportButtons = () => {
+  const store = useFieldStore();
 
   const handleExportCSV = () => {
-    if (!generatedData) return;
-    const csv = generateCSV(generatedData, fields);
+    if (!store.generatedData || hasObjectOrArrayField(store.fields)) return;
+    const csv = generateCSV(store.generatedData, store.fields);
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -18,9 +18,63 @@ export function ExportButtons() {
     URL.revokeObjectURL(url);
   };
 
+  const handleExportExcel = () => {
+    if (!store.generatedData) return;
+
+    // Create HTML table
+    let html = '<table>';
+
+    // Add headers
+    html += '<tr>';
+    store.fields.forEach(field => {
+      html += `<th>${field.name}</th>`;
+    });
+    html += '</tr>';
+
+    // Add rows
+    store.generatedData.forEach(row => {
+      html += '<tr>';
+      store.fields.forEach(field => {
+        const value = row[field.name];
+        html += `<td>${value === null ? 'NULL' :
+            typeof value === 'object' ? (Array.isArray(value) ? '[Array]' : '{Object}') :
+              value?.toString()
+          }</td>`;
+      });
+      html += '</tr>';
+    });
+
+    html += '</table>';
+
+    // Create Excel file
+    const excelBlob = new Blob(
+      [`
+        <html xmlns:o="urn:schemas-microsoft-com:office:office" 
+              xmlns:x="urn:schemas-microsoft-com:office:excel" 
+              xmlns="http://www.w3.org/TR/REC-html40">
+        <head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>
+          <x:Name>Sheet1</x:Name>
+          <x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>
+        </x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
+        <meta http-equiv="content-type" content="text/plain; charset=UTF-8"/>
+        </head>
+        <body>${html}</body>
+        </html>
+      `],
+      { type: 'application/vnd.ms-excel' }
+    );
+
+    const url = URL.createObjectURL(excelBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'fake_data.xls';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const handleExportJSON = () => {
-    if (!generatedData) return;
-    const json = generateJSON(generatedData);
+    if (!store.generatedData) return;
+    const json = generateJSON(store.generatedData);
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -30,18 +84,43 @@ export function ExportButtons() {
     URL.revokeObjectURL(url);
   };
 
+  const hasComplexFields = hasObjectOrArrayField(store.fields);
+
   return (
-    <div className="flex gap-4">
-      <Button variant="outline" onClick={handleExportCSV} disabled={!generatedData}
-        className="border-light-divider dark:border-dark-divider hover:bg-light-hoverBg dark:hover:bg-dark-hoverBg"
+    <div className="flex gap-2">
+      <Tooltip content={hasComplexFields ? "CSV export not available for complex fields" : "Export as CSV"}>
+        <button
+          onClick={handleExportCSV}
+          disabled={store.fields.length === 0 || hasComplexFields}
+          className={`flex items-center gap-2 px-4 py-2 border rounded-lg dark:border-gray-600 dark:hover:bg-gray-700 dark:disabled:opacity-50 dark:text-white
+              border-gray-300 hover:bg-gray-50 disabled:opacity-50`}
+        >
+          <FileText className="h-4 w-4" />
+          CSV
+        </button>
+      </Tooltip>
+
+      <Tooltip content="Export as Excel (XLS)">
+        <button
+          onClick={handleExportExcel}
+          disabled={store.fields.length === 0 || hasComplexFields}
+          className={`flex items-center gap-2 px-4 py-2 border rounded-lg dark:border-gray-600 dark:hover:bg-gray-700 dark:disabled:opacity-50 dark:text-white 
+              border-gray-300 hover:bg-gray-50 disabled:opacity-50`}
+        >
+          <File className="h-4 w-4" />
+          Excel
+        </button>
+      </Tooltip>
+
+      <button
+        onClick={handleExportJSON}
+        disabled={store.fields.length === 0 || hasComplexFields}
+        className={`flex items-center gap-2 px-4 py-2 border rounded-lg dark:border-gray-600 dark:hover:bg-gray-700 dark:disabled:opacity-50 dark:text-white
+            border-gray-300 hover:bg-gray-50 disabled:opacity-50`}
       >
-        <FileText className="mr-2 h-4 w-4" /> CSV
-      </Button>
-      <Button variant="outline" onClick={handleExportJSON} disabled={!generatedData} 
-      className="border-light-divider dark:border-dark-divider hover:bg-light-hoverBg dark:hover:bg-dark-hoverBg"
-      >
-        <FileCode className="mr-2 h-4 w-4" /> JSON
-      </Button>
+        <FileCode className="h-4 w-4" />
+        JSON
+      </button>
     </div>
   );
-}
+};

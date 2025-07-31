@@ -1,162 +1,214 @@
-import { faker } from '@faker-js/faker';
 import type { Field } from '@/types/fakeData.types';
+import { faker } from '@faker-js/faker';
 
-export function generateFakeData(fields: Field[], count: number): Record<string, any>[] {
-  return Array.from({ length: count }, () => generateRecord(fields));
-}
+// Enhanced Data Generation
+export const generateFakeData = (fields: Field[], count: number): Record<string, any>[] => {
+  const uniqueValues = new Map<string, Set<any>>();
+  
+  // Validate fields before generation
+  if (fields.some(field => !field.name.trim())) {
+    throw new Error('Field names cannot be empty');
+  }
+  
+  // Reset unique values for each generation
+  uniqueValues.clear();
+  
+  return Array.from({ length: count }, (_, index) => {
+    return generateRecord(fields, uniqueValues, index);
+  });
+};
 
-function generateRecord(fields: Field[]): Record<string, any> {
+export const generateRecord = (fields: Field[], uniqueValues: Map<string, Set<any>>, index: number): Record<string, any> => {
   const record: Record<string, any> = {};
   
   fields.forEach((field) => {
     const options = field.options || '';
-    const isEmpty = options.includes('% NULL') && Math.random() < parseFloat(options) / 100;
+    const nullMatch = options.match(/(\d+)% NULL/);
+    const nullPercentage = nullMatch ? parseFloat(nullMatch[1]) : 0;
     
-    if (isEmpty) {
+    // Apply null percentage
+    if (nullPercentage > 0 && Math.random() < nullPercentage / 100) {
       record[field.name] = null;
       return;
     }
 
-    switch (field.type) {
-      case 'id':
-        record[field.name] = faker.string.uuid();
-        break;
-      case 'firstName':
-        record[field.name] = faker.person.firstName();
-        break;
-      case 'lastName':
-        record[field.name] = faker.person.lastName();
-        break;
-      case 'fullName':
-        record[field.name] = faker.person.fullName();
-        break;
-      case 'age': {
-        const ageRange = options.match(/(\d+)-(\d+)/);
-        const min = ageRange ? parseInt(ageRange[1]) : 18;
-        const max = ageRange ? parseInt(ageRange[2]) : 65;
-        record[field.name] = faker.number.int({ min, max });
-        break;
+    let value = generateFieldValue(field, options, index);
+    
+    // Handle unique values
+    if (field.unique) {
+      if (!uniqueValues.has(field.name)) {
+        uniqueValues.set(field.name, new Set());
       }
-      case 'email': {
-        const domain = options.match(/@(.+)/)?.[1] || 'example.com';
-        record[field.name] = faker.internet.email({ provider: domain });
-        break;
+      const usedValues = uniqueValues.get(field.name)!;
+      let attempts = 0;
+      while (usedValues.has(value) && attempts < 100) {
+        value = generateFieldValue(field, options, index + attempts);
+        attempts++;
       }
-      case 'phone':
-        record[field.name] = faker.phone.number();
-        break;
-      case 'gender':
-        record[field.name] = faker.person.sex();
-        break;
-      case 'date': {
-        const dateRange = options.match(/(\d+)-(\d+)/);
-        const from = dateRange ? new Date().getFullYear() - parseInt(dateRange[2]) : 10;
-        const to = dateRange ? new Date().getFullYear() - parseInt(dateRange[1]) : 0;
-        record[field.name] = faker.date.past({ years: to, refDate: from }).toISOString().split('T')[0];
-        break;
+      
+      if (attempts >= 100) {
+        console.warn(`Failed to generate unique value for field ${field.name} after 100 attempts`);
       }
-      case 'boolean':
-        record[field.name] = faker.datatype.boolean();
-        break;
-      case 'number': {
-        const numRange = options.match(/(\d+)-(\d+)/);
-        const numMin = numRange ? parseInt(numRange[1]) : 0;
-        const numMax = numRange ? parseInt(numRange[2]) : 100;
-        record[field.name] = faker.number.int({ min: numMin, max: numMax });
-        break;
-      }
-      case 'address':
-        record[field.name] = faker.location.streetAddress();
-        break;
-      case 'city':
-        record[field.name] = faker.location.city();
-        break;
-      case 'country':
-        record[field.name] = faker.location.country();
-        break;
-      case 'custom':
-        record[field.name] = options;
-        break;
-      case 'object':
-        if (field.fields) {
-          record[field.name] = generateRecord(field.fields);
-        } else {
-          record[field.name] = {};
-        }
-        break;
-      case 'array':
-        if (field.fields) {
-          const arrayLength = faker.number.int({ min: 1, max: 5 });
-          record[field.name] = Array.from({ length: arrayLength }, () => 
-            generateRecord(field.fields!)
-          );
-        } else {
-          const arrayLength = faker.number.int({ min: 1, max: 10 });
-          const primitiveType = options || 'string';
-          record[field.name] = Array.from({ length: arrayLength }, () => 
-            generatePrimitive(primitiveType, options)
-          );
-        }
-        break;
-      default:
-        record[field.name] = generatePrimitive(field.type, options);
+      
+      usedValues.add(value);
     }
+    
+    record[field.name] = value;
   });
   
   return record;
-}
+};
 
-function generatePrimitive(type: string, options: string = ''): any {
-  switch (type) {
-    case 'string': return faker.lorem.word();
-    case 'number': return faker.number.int();
-    case 'boolean': return faker.datatype.boolean();
-    default: return '';
+export const generateFieldValue = (field: Field, options: string, seed: number): any => {
+  // Remove null percentage from options
+  const cleanOptions = options.replace(/\d+% NULL,?\s?/, '').trim();
+  
+  // Seed faker for consistent results
+  faker.seed(seed);
+  
+  try {
+    switch (field.type) {
+      case 'id':
+        return faker.string.uuid();
+      case 'firstName':
+        return faker.person.firstName();
+      case 'lastName':
+        return faker.person.lastName();
+      case 'fullName':
+        return faker.person.fullName();
+      case 'jobTitle':
+        return faker.person.jobTitle();
+      case 'age': {
+        const range = cleanOptions.match(/(\d+)-(\d+)/);
+        const min = range ? parseInt(range[1]) : 18;
+        const max = range ? parseInt(range[2]) : 65;
+        return applyDistribution(field.distribution, min, max, seed);
+      }
+      case 'email': {
+        const domain = cleanOptions || 'example.com';
+        return faker.internet.email({ provider: domain });
+      }
+      case 'phone':
+        return faker.phone.number();
+      case 'gender':
+        return faker.person.sex();
+      case 'date': {
+        const range = cleanOptions.match(/(\d+)-(\d+)/);
+        const years = range ? parseInt(range[1]) : 1;
+        return faker.date.past({ years }).toISOString().split('T')[0];
+      }
+      case 'boolean':
+        return faker.datatype.boolean();
+      case 'number': {
+        const range = cleanOptions.match(/(\d+)-(\d+)/);
+        const min = range ? parseInt(range[1]) : 0;
+        const max = range ? parseInt(range[2]) : 100;
+        return applyDistribution(field.distribution, min, max, seed);
+      }
+      case 'currency': {
+        const range = cleanOptions.match(/(\d+)-(\d+)/);
+        const min = range ? parseInt(range[1]) : 10;
+        const max = range ? parseInt(range[2]) : 1000;
+        return `$${faker.number.int({ min, max }).toFixed(2)}`;
+      }
+      case 'creditCard':
+        return faker.finance.creditCardNumber();
+      case 'image':
+        return `https://picsum.photos/300/200?random=${seed}`;
+      case 'color':
+        return faker.internet.color();
+      case 'address':
+        return faker.location.streetAddress();
+      case 'city':
+        return faker.location.city();
+      case 'country':
+        return faker.location.country();
+      case 'custom': {
+        if (cleanOptions.includes(',')) {
+          const choices = cleanOptions.split(',').map(s => s.trim());
+          return faker.helpers.arrayElement(choices);
+        }
+        return cleanOptions || faker.lorem.word();
+      }
+      case 'string':
+        if (field.pattern) {
+          try {
+            return faker.helpers.fromRegExp(new RegExp(field.pattern));
+          } catch (e) {
+            console.error(`Invalid regex pattern for field ${field.name}: ${field.pattern}`);
+            return 'INVALID_PATTERN';
+          }
+        }
+        return faker.lorem.words();
+      case 'object':
+        return field.fields ? generateRecord(field.fields, new Map(), seed) : {};
+      case 'array': {
+        const length = faker.number.int({ min: 1, max: 5 });
+        if (field.fields) {
+          return Array.from({ length }, (_, i) => generateRecord(field.fields!, new Map(), seed + i));
+        }
+        return Array.from({ length }, () => faker.lorem.word());
+      }
+      default:
+        return faker.lorem.word();
+    }
+  } catch (error) {
+    console.error(`Error generating value for field ${field.name} (type: ${field.type})`, error);
+    return `ERROR_${field.type.toUpperCase()}`;
   }
-}
+};
 
-export function generateCSV(data: Record<string, any>[], fields: Field[]): string {
-  const flattenedFields = flattenFields(fields);
-  const headers = flattenedFields.map(f => f.name).join(',');
+export const applyDistribution = (distribution: string | undefined, min: number, max: number, seed: number): number => {
+  if (min > max) [min, max] = [max, min]; // Ensure min <= max
+  
+  switch (distribution) {
+    case 'normal': {
+      const mean = (min + max) / 2;
+      const stdDev = (max - min) / 6;
+      let value = faker.number.int({ min, max });
+      // Simple normal distribution approximation
+      for (let i = 0; i < 12; i++) {
+        value += Math.random();
+      }
+      value = Math.round((value - 6) * stdDev + mean);
+      return Math.max(min, Math.min(max, value));
+    }
+    case 'exponential':
+      return Math.round(min + (max - min) * (1 - Math.exp(-Math.random() * 2)));
+    default:
+      return faker.number.int({ min, max });
+  }
+};
+
+// Helper Functions
+export const generateCSV = (data: Record<string, any>[], fields: Field[]): string => {
+  const headers = fields
+    .filter(f => !hasObjectOrArrayField([f])) // Exclude complex fields
+    .map(f => f.name)
+    .join(',');
+  
   const rows = data.map(row => 
-    flattenedFields.map(field => {
-      const value = getNestedValue(row, field.originalPath || field.name);
-      if (value === null || value === undefined) return '';
-      return `"${value.toString().replace(/"/g, '""')}"`;
-    }).join(',')
+    fields
+      .filter(f => !hasObjectOrArrayField([f])) // Exclude complex fields
+      .map(field => {
+        const value = row[field.name];
+        if (value === null || value === undefined) return '';
+        return `"${value.toString().replace(/"/g, '""')}"`;
+      })
+      .join(',')
   ).join('\n');
   
   return `${headers}\n${rows}`;
-}
+};
 
-function flattenFields(fields: Field[], prefix = ''): Array<{name: string, originalPath: string}> {
-  let result: Array<{name: string, originalPath: string}> = [];
-  
-  fields.forEach(field => {
-    if (field.type === 'object' && field.fields) {
-      result = [...result, ...flattenFields(field.fields, `${prefix}${field.name}.`)];
-    } else if (field.type === 'array' && field.fields) {
-      result = [...result, ...flattenFields(field.fields, `${prefix}${field.name}[0].`)];
-    } else {
-      result.push({
-        name: `${prefix}${field.name}`,
-        originalPath: `${prefix}${field.name}`
-      });
-    }
-  });
-  
-  return result;
-}
-
-function getNestedValue(obj: any, path: string): any {
-  return path.split(/[.[\]]+/).filter(Boolean).reduce((acc, part) => {
-    if (acc && typeof acc === 'object') {
-      return acc[part];
-    }
-    return undefined;
-  }, obj);
-}
-
-export function generateJSON(data: Record<string, any>[]): string {
+export const generateJSON = (data: Record<string, any>[]): string => {
   return JSON.stringify(data, null, 2);
-}
+};
+
+export const hasObjectOrArrayField = (fields: Field[]): boolean => {
+  return fields.some(field => 
+    field.type === 'object' || 
+    field.type === 'array' ||
+    (field.fields && hasObjectOrArrayField(field.fields))
+  );
+};

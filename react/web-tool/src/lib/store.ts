@@ -1,94 +1,279 @@
 import { create } from "zustand";
-import { v4 as uuidv4 } from "uuid";
-import type { Field, FieldType } from "@/types/fakeData.types";
+import { BUILT_IN_TEMPLATES, type Field, type Template } from "@/types/fakeData.types";
 
-type Store = {
+// =======================
+// 📦 STORE ZUSTAND
+// =======================
+interface FieldStore {
   fields: Field[];
-  generatedData: Record<string, any>[] | null;
+  generatedData: Record<string, any>[];
+  templates: Template[];
+  history: Field[][];
+  historyIndex: number;
+  errors: string[];
+
+  // actions
   addField: () => void;
+  updateField: (id: string, updates: Partial<Field>) => void;
   removeField: (id: string) => void;
-  updateField: (id: string, updates: Partial<Omit<Field, "id">>) => void;
-  reorderFields: (fromId: string, toId: string) => void;
-  setGeneratedData: (data: Record<string, any>[] | null) => void;
-  updateNestedField: (
-    parentId: string,
-    fieldId: string,
-    updates: Partial<Field>
-  ) => void;
-};
+  reorderFields: (activeId: string, overId: string) => void;
+  undo: () => void;
+  redo: () => void;
+  importFields: (fields: Field[]) => void;
+  saveAsTemplate: (name: string, description: string) => void;
+  loadTemplate: (template: Template) => void;
+  setGeneratedData: (data: Record<string, any>[]) => void;
 
-export const useFieldStore = create<Store>((set) => ({
-  fields: [
-    { id: uuidv4(), name: "id", type: "id" },
-    { id: uuidv4(), name: "name", type: "fullName" },
-    { id: uuidv4(), name: "email", type: "email", options: "@example.com" },
-  ],
-  generatedData: null,
+  // helper
+  validateFields: (fields: Field[]) => string[];
+}
 
-  addField: () =>
-    set((state) => ({
-      fields: [
-        ...state.fields,
-        {
-          id: uuidv4(),
-          name: `field_${state.fields.length + 1}`,
-          type: "text" as FieldType,
-        },
-      ],
-    })),
+// =======================
+// 🏗 TẠO STORE
+// =======================
+export const useFieldStore = create<FieldStore>((set, get) => ({
+  fields: [],
+  generatedData: [],
+  templates: BUILT_IN_TEMPLATES,
+  history: [[]],
+  historyIndex: 0,
+  errors: [],
 
-  removeField: (id) =>
-    set((state) => ({
-      fields: state.fields.filter((field) => field.id !== id),
-    })),
+  // =======================
+  // ⚙️ Hàm validate
+  // =======================
+  validateFields: (fields) => {
+    const errors: string[] = [];
+    const fieldNames = new Set<string>();
+    const fieldIds = new Set<string>();
 
-  updateField: (id, updates) =>
-    set((state) => ({
-      fields: state.fields.map((field) =>
-        field.id === id ? { ...field, ...updates } : field
-      ),
-    })),
+    const validateField = (field: Field, path: string = "") => {
+      const currentPath = path ? `${path}.${field.name}` : field.name;
 
-  reorderFields: (fromId, toId) =>
-    set((state) => {
-      const fromIndex = state.fields.findIndex((f) => f.id === fromId);
-      const toIndex = state.fields.findIndex((f) => f.id === toId);
+      if (!field.name.trim()) {
+        errors.push(`Field name cannot be empty at ${currentPath}`);
+      }
 
-      if (fromIndex === -1 || toIndex === -1) return state;
+      if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(field.name)) {
+        errors.push(
+          `Invalid field name at ${currentPath}: "${field.name}". Use only letters, numbers, and underscores.`
+        );
+      }
 
-      const newFields = [...state.fields];
-      const [movedField] = newFields.splice(fromIndex, 1);
-      newFields.splice(toIndex, 0, movedField);
+      if (fieldNames.has(currentPath)) {
+        errors.push(`Duplicate field name at ${currentPath}: "${field.name}"`);
+      }
 
-      return { fields: newFields };
-    }),
+      if (fieldIds.has(field.id)) {
+        errors.push(`Duplicate field ID: "${field.id}"`);
+      }
+
+      fieldNames.add(currentPath);
+      fieldIds.add(field.id);
+
+      if (field.fields) {
+        field.fields.forEach((nested) => validateField(nested, currentPath));
+      }
+    };
+
+    fields.forEach((field) => validateField(field));
+    return errors;
+  },
+
+  // =======================
+  // 📝 History helper
+  // =======================
+  addField: () => {
+    const { fields, history, historyIndex, validateFields } = get();
+    const newField: Field = {
+      id: `field-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      name: `field${fields.length + 1}`,
+      type: "string",
+    };
+
+    const newFields = [...fields, newField];
+    const newHistory = history.slice(0, historyIndex + 1);
+    newHistory.push(JSON.parse(JSON.stringify(newFields)));
+
+    set({
+      fields: newFields,
+      history: newHistory,
+      historyIndex: newHistory.length - 1,
+      errors: validateFields(newFields),
+    });
+  },
+
+  // =======================
+  // ✏️ Update Field
+  // =======================
+  updateField: (id, updates) => {
+    const { fields, history, historyIndex, validateFields } = get();
+
+    const updateNestedFields = (list: Field[]): Field[] =>
+      list.map((field) => {
+        if (field.id === id) return { ...field, ...updates };
+        if (field.fields) {
+          return { ...field, fields: updateNestedFields(field.fields) };
+        }
+        return field;
+      });
+
+    const newFields = updateNestedFields(fields);
+    const newHistory = history.slice(0, historyIndex + 1);
+    newHistory.push(JSON.parse(JSON.stringify(newFields)));
+
+    set({
+      fields: newFields,
+      history: newHistory,
+      historyIndex: newHistory.length - 1,
+      errors: validateFields(newFields),
+    });
+  },
 
   setGeneratedData: (data) => set({ generatedData: data }),
 
-  // In your store implementation (e.g., useFieldStore.ts)
-  updateNestedField: (
-    parentId: string,
-    fieldId: string,
-    updates: Partial<Field>
-  ) => {
-    set((state) => {
-      const updateRecursive = (fields: Field[]): Field[] => {
-        return fields.map((f) => {
-          if (f.id === parentId && f.fields) {
-            return {
-              ...f,
-              fields: f.fields.map((nested) =>
-                nested.id === fieldId ? { ...nested, ...updates } : nested
-              ),
-            };
-          }
-          if (f.fields) {
-            return { ...f, fields: updateRecursive(f.fields) };
-          }
-          return f;
-        });
-      };
-      return { fields: updateRecursive(state.fields) };
+  // =======================
+  // ❌ Remove Field
+  // =======================
+  removeField: (id) => {
+    const { fields, history, historyIndex, validateFields } = get();
+
+    const removeNested = (list: Field[]): Field[] =>
+      list
+        .filter((field) => field.id !== id)
+        .map((field) => ({
+          ...field,
+          fields: field.fields ? removeNested(field.fields) : undefined,
+        }));
+
+    const newFields = removeNested(fields);
+    const newHistory = history.slice(0, historyIndex + 1);
+    newHistory.push(JSON.parse(JSON.stringify(newFields)));
+
+    set({
+      fields: newFields,
+      history: newHistory,
+      historyIndex: newHistory.length - 1,
+      errors: validateFields(newFields),
     });
+  },
+
+  // =======================
+  // 🔀 Reorder Fields
+  // =======================
+  reorderFields: (activeId, overId) => {
+    const { fields, history, historyIndex } = get();
+
+    const findIndex = (list: Field[], id: string) =>
+      list.findIndex((f) => f.id === id);
+
+    const reorder = (list: Field[]): Field[] => {
+      const activeIndex = findIndex(list, activeId);
+      const overIndex = findIndex(list, overId);
+
+      if (activeIndex !== -1 && overIndex !== -1) {
+        const newList = [...list];
+        const [moved] = newList.splice(activeIndex, 1);
+        newList.splice(overIndex, 0, moved);
+        return newList;
+      }
+
+      return list.map((f) =>
+        f.fields ? { ...f, fields: reorder(f.fields) } : f
+      );
+    };
+
+    const newFields = reorder(fields);
+    const newHistory = history.slice(0, historyIndex + 1);
+    newHistory.push(JSON.parse(JSON.stringify(newFields)));
+
+    set({
+      fields: newFields,
+      history: newHistory,
+      historyIndex: newHistory.length - 1,
+    });
+  },
+
+  // =======================
+  // ⏪ Undo / Redo
+  // =======================
+  undo: () => {
+    const { historyIndex, history, validateFields } = get();
+    if (historyIndex > 0) {
+      const newIndex = historyIndex - 1;
+      set({
+        historyIndex: newIndex,
+        fields: history[newIndex],
+        errors: validateFields(history[newIndex]),
+      });
+    }
+  },
+
+  redo: () => {
+    const { historyIndex, history, validateFields } = get();
+    if (historyIndex < history.length - 1) {
+      const newIndex = historyIndex + 1;
+      set({
+        historyIndex: newIndex,
+        fields: history[newIndex],
+        errors: validateFields(history[newIndex]),
+      });
+    }
+  },
+
+  // =======================
+  // 📥 Import Fields
+  // =======================
+  importFields: (importedFields) => {
+    const { history, historyIndex, validateFields } = get();
+
+    const generateNewIds = (list: Field[]): Field[] =>
+      list.map((field) => ({
+        ...field,
+        id: `field-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        fields: field.fields ? generateNewIds(field.fields) : undefined,
+      }));
+
+    const newFields = generateNewIds(importedFields);
+    const newHistory = history.slice(0, historyIndex + 1);
+    newHistory.push(JSON.parse(JSON.stringify(newFields)));
+
+    set({
+      fields: newFields,
+      history: newHistory,
+      historyIndex: newHistory.length - 1,
+      errors: validateFields(newFields),
+    });
+  },
+
+  // =======================
+  // 💾 Save Template
+  // =======================
+  saveAsTemplate: (name, description) => {
+    const { fields, templates } = get();
+    const newTemplate: Template = {
+      id: `template-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      name,
+      description,
+      fields: JSON.parse(JSON.stringify(fields)),
+      isBuiltIn: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const updatedTemplates = [...templates, newTemplate];
+    localStorage.setItem(
+      "userTemplates",
+      JSON.stringify([...JSON.parse(localStorage.getItem("userTemplates") || "[]"), newTemplate])
+    );
+
+    set({ templates: updatedTemplates });
+  },
+
+  // =======================
+  // 📂 Load Template
+  // =======================
+  loadTemplate: (template) => {
+    get().importFields(template.fields);
   },
 }));

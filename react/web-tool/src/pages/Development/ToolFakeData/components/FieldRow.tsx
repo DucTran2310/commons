@@ -1,36 +1,41 @@
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { FIELD_CATEGORIES } from '@/constants/typeData.constants';
-import { useFieldStore } from '@/lib/store';
-import ModalType from '@/pages/Development/ToolFakeData/components/ModalType';
-import type { Field, FieldType } from '@/types/fakeData.types';
-import { useSortable } from '@dnd-kit/sortable';
+import { useFieldStore } from "@/lib/store";
+import { FIELD_CATEGORIES, type Field, type FieldType } from "@/types/fakeData.types";
+import { useSortable } from "@dnd-kit/sortable";
+import { GripVertical, Settings, Trash2, ChevronDown, ChevronRight, Plus } from "lucide-react";
+import { useEffect, useState } from "react";
 import { CSS } from '@dnd-kit/utilities';
-import { GripVertical, Plus, Trash2 } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import ModalType from "@/pages/Development/ToolFakeData/components/ModalType";
 
-export function FieldRow({ field, depth = 0, parentId }: { field: Field; depth?: number; parentId?: string }) {
-  const { updateField, removeField, updateNestedField } = useFieldStore();
+export const FieldRow = ({ 
+  field, 
+  depth = 0
+}: { 
+  field: Field; 
+  depth?: number;
+}) => {
+  const store = useFieldStore();
+  const [optionsInput, setOptionsInput] = useState('');
+  const [nullPercentage, setNullPercentage] = useState('0');
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [optionsInput, setOptionsInput] = useState(field.options || '');
-  const [nullPercentage, setNullPercentage] = useState('');
+  const [isExpanded, setIsExpanded] = useState(true);
 
+  // Parse options when field changes
   useEffect(() => {
-    const nullMatch = field.options?.match(/(\d+)% NULL/);
-    if (nullMatch) {
-      setNullPercentage(nullMatch[1]);
-      setOptionsInput(field.options?.replace(/\d+% NULL,?\s?/, '') || '');
+    if (field.options) {
+      const nullMatch = field.options.match(/(\d+)% NULL/);
+      if (nullMatch) {
+        setNullPercentage(nullMatch[1]);
+        setOptionsInput(field.options.replace(/\d+% NULL,?\s?/, ''));
+      } else {
+        setOptionsInput(field.options);
+        setNullPercentage('0');
+      }
     } else {
-      setOptionsInput(field.options || '');
+      setOptionsInput('');
+      setNullPercentage('0');
     }
   }, [field.options]);
-
-  const TYPE_LABELS = FIELD_CATEGORIES.reduce((acc, category) => {
-    category.types.forEach((type) => {
-      acc[type.value as FieldType] = type.label;
-    });
-    return acc;
-  }, {} as Record<FieldType, string>);
 
   const {
     attributes,
@@ -48,184 +53,241 @@ export function FieldRow({ field, depth = 0, parentId }: { field: Field; depth?:
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (parentId) {
-      updateNestedField(parentId, field.id, { name: e.target.value });
-    } else {
-      updateField(field.id, { ...field, name: e.target.value });
+    store.updateField(field.id, { name: e.target.value });
+  };
+
+  const updateOptionsInStore = (options: string, percentage: string) => {
+    let newOptions = options;
+    const percentageNum = parseInt(percentage) || 0;
+    
+    if (percentageNum > 0) {
+      newOptions = `${percentageNum}% NULL${options ? `, ${options}` : ''}`;
     }
+    
+    store.updateField(field.id, { options: newOptions });
   };
 
   const handleOptionsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setOptionsInput(value);
-    updateOptions(value);
+    updateOptionsInStore(value, nullPercentage);
   };
 
   const handleNullPercentageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^0-9]/g, '');
-    const percentage = Math.min(100, Math.max(0, parseInt(value) || 0));
-    setNullPercentage(percentage.toString());
-    updateOptions(optionsInput, percentage.toString());
+    const value = e.target.value;
+    const percentage = Math.min(100, Math.max(0, parseInt(value) || 0)).toString();
+    setNullPercentage(percentage);
+    updateOptionsInStore(optionsInput, percentage);
   };
 
-  const updateOptions = (options: string, percentage: string = nullPercentage) => {
-    let newOptions = options;
-    if (percentage && parseInt(percentage) > 0) {
-      newOptions = `${percentage}% NULL${options ? `, ${options}` : ''}`;
+  const handleTypeChange = (newType: FieldType) => {
+    store.updateField(field.id, { type: newType });
+  };
+
+  const addNestedField = () => {
+    if (!field.fields) {
+      store.updateField(field.id, { fields: [] });
     }
-    updateField(field.id, { ...field, options: newOptions });
-  };
-
-  const handleAddNestedField = () => {
     const newField: Field = {
       id: `field-${Date.now()}`,
-      name: 'newField',
-      type: 'string',
+      name: `nested${field.fields ? field.fields.length + 1 : 1}`,
+      type: "string",
     };
-    updateField(field.id, {
-      ...field,
-      fields: [...(field.fields || []), newField],
+    store.updateField(field.id, {
+      fields: [...(field.fields || []), newField]
     });
   };
 
-  const handleTypeChange = (value: FieldType) => {
-    const updates: Partial<Field> = { type: value };
-
-    if (value === 'object' || value === 'array') {
-      updates.fields = updates.fields || [];
-      updates.isArray = value === 'array';
-    } else {
-      updates.fields = undefined;
-      updates.isArray = undefined;
-    }
-
-    updateField(field.id, { ...field, ...updates });
+  const removeNestedField = (nestedFieldId: string) => {
+    store.updateField(field.id, {
+      fields: field.fields?.filter(f => f.id !== nestedFieldId)
+    });
   };
 
-  const getInputProps = () => {
-    switch (field.type) {
-      case 'email':
-        return {
-          type: 'email',
-          placeholder: 'Domain (e.g., example.com)',
-          pattern: '[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}'
-        };
-      case 'date':
-        return {
-          type: 'text',
-          placeholder: 'Format: dd/mm/yyyy or mm/dd/yyyy',
-          pattern: '(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\\d{4}|(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01])/\\d{4}'
-        };
-      case 'age':
-      case 'number':
-        return {
-          type: 'number',
-          placeholder: 'Range (e.g., 18-65)',
-          pattern: '\\d+-\\d+'
-        };
-      case 'boolean':
-        return {
-          type: 'text',
-          placeholder: 'true or false',
-          pattern: 'true|false'
-        };
-      case 'phone':
-        return {
-          type: 'tel',
-          placeholder: 'Phone format',
-          pattern: '[0-9\\-\\+\\s]+'
-        };
-      default:
-        return {
-          type: 'text',
-          placeholder: 'Options'
-        };
-    }
-  };
-
-  const inputProps = getInputProps();
+  const TYPE_LABELS = FIELD_CATEGORIES.reduce((acc, category) => {
+    category.types.forEach((type) => {
+      acc[type.value as FieldType] = type.label;
+    });
+    return acc;
+  }, {} as Record<FieldType, string>);
 
   return (
     <div className="space-y-2">
       <div
         ref={setNodeRef}
         style={{ ...style, marginLeft: `${depth * 20}px` }}
-        className="flex items-center gap-2 p-2 border rounded-md bg-light-background dark:bg-dark-background border-light-divider dark:border-dark-divider"
+        className={`flex items-center gap-2 p-3 rounded-lg shadow-sm dark:bg-gray-700 dark:border-gray-600 bg-white border-gray-200 border`}
       >
         <button
           {...attributes}
           {...listeners}
-          className="p-1 rounded hover:bg-accent cursor-grab active:cursor-grabbing"
+          className={`p-1 rounded dark:hover:bg-gray-600 hover:bg-gray-100
+          cursor-grab active:cursor-grabbing`}
         >
-          <GripVertical className="h-4 w-4 text-muted-foreground" />
+          <GripVertical className={`h-4 w-4 dark:text-gray-400 text-gray-500
+          `} />
         </button>
 
-        <Input
+        {(field.type === 'object' || field.type === 'array') && (
+          <button 
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="p-1"
+          >
+            {isExpanded ? (
+              <ChevronDown className="h-4 w-4 text-gray-500" />
+            ) : (
+              <ChevronRight className="h-4 w-4 text-gray-500" />
+            )}
+          </button>
+        )}
+
+        <input
+          type="text"
           placeholder="Field name"
           value={field.name}
           onChange={handleNameChange}
-          className="w-40"
+          className={`w-32 px-2 py-1 border rounded focus:outline-none focus:ring-2 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-500 dark:text-white
+              bg-white border-gray-300 focus:ring-blue-500
+          `}
         />
 
-        <Button
-          variant="outline"
-          className="w-40 justify-start"
+        <button
           onClick={() => setIsModalOpen(true)}
+          className={`w-36 px-2 py-1 border rounded text-left focus:outline-none focus:ring-2 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-500 dark:text-white
+              bg-white border-gray-300 focus:ring-blue-500
+          `}
         >
-          {TYPE_LABELS[field.type] || "Select type"}
-        </Button>
+          {TYPE_LABELS[field.type] || field.type}
+        </button>
+
+        <ModalType
+          field={field}
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          onTypeChange={handleTypeChange}
+        />
 
         <div className="relative w-20">
-          <Input
+          <input
             type="number"
             placeholder="NULL %"
             value={nullPercentage}
             onChange={handleNullPercentageChange}
             min="0"
             max="100"
-            className="pr-6"
+            className={`w-full px-2 py-1 pr-6 border rounded focus:outline-none focus:ring-2 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-500 text-white
+                bg-white border-gray-300 focus:ring-blue-500
+            `}
           />
-          <span className="absolute right-2 top-2 text-xs text-muted-foreground">%</span>
+          <span className={`absolute right-2 top-2 text-xs dark:text-gray-400 text-gray-500
+          `}>%</span>
         </div>
 
-        <Input
-          {...inputProps}
+        <input
+          type="text"
+          placeholder="Options"
           value={optionsInput}
           onChange={handleOptionsChange}
-          className="flex-1"
+          className={`flex-1 px-2 py-1 border rounded focus:outline-none focus:ring-2 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-500 dark:text-white
+              bg-white border-gray-300 focus:ring-blue-500
+          `}
         />
 
-        {(field.type === 'object' || field.type === 'array') && (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleAddNestedField}
-            title="Add nested field"
-          >
-            <Plus className="h-4 w-4" />
-          </Button>
-        )}
+        <button
+          onClick={() => setShowAdvanced(!showAdvanced)}
+          className={`p-1 rounded dark:hover:bg-gray-600 dark:text-gray-300
+              hover:bg-gray-100 text-gray-600
+          `}
+          title="Advanced options"
+        >
+          <Settings className="h-4 w-4" />
+        </button>
 
-        <Button variant="ghost" size="icon" onClick={() => removeField(field.id)}>
-          <Trash2 className="h-4 w-4 text-destructive" />
-        </Button>
-
-        <ModalType
-          field={field}
-          setIsModalOpen={setIsModalOpen}
-          isModalOpen={isModalOpen}
-          onTypeChange={handleTypeChange}
-        />
+        <button
+          onClick={() => store.removeField(field.id)}
+          className={`p-1 rounded dark:hover:bg-red-900 dark:text-red-400 hover:bg-red-100 text-red-600
+          `}
+        >
+          <Trash2 className="h-4 w-4" />
+        </button>
       </div>
 
-      {field.fields?.map((nestedField) => (
-        <FieldRow
-          key={nestedField.id}
-          field={nestedField}
-          depth={depth + 1}
-          parentId={field.id}  // Pass the current field as parent
-        />
-      ))}
+      {showAdvanced && (
+        <div className={`ml-8 p-3 rounded-lg space-y-2 dark:bg-gray-700 bg-gray-50
+        `}>
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={field.unique || false}
+              onChange={(e) => store.updateField(field.id, { unique: e.target.checked })}
+              className={'dark:accent-blue-500'}
+            />
+            <span className={`text-sm dark:text-gray-300 text-gray-700'
+            `}>
+              Unique values
+            </span>
+          </label>
+          
+          {field.type === 'string' && (
+            <div>
+              <label className={`block text-sm font-medium mb-1 dark:text-gray-300 text-gray-700
+              `}>
+                Pattern (RegExp)
+              </label>
+              <input
+                type="text"
+                placeholder="e.g., [A-Z]{3}-\\d{4}"
+                value={field.pattern || ''}
+                onChange={(e) => store.updateField(field.id, { pattern: e.target.value })}
+                className={`w-full px-2 py-1 border rounded focus:outline-none focus:ring-2 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-500 dark:text-white
+                    bg-white border-gray-300 focus:ring-blue-500
+                `}
+              />
+            </div>
+          )}
+          
+          {(field.type === 'number' || field.type === 'age') && (
+            <div>
+              <label className={`block text-sm font-medium mb-1 dark:text-gray-300 text-gray-700
+              `}>
+                Distribution
+              </label>
+              <select
+                value={field.distribution || 'uniform'}
+                onChange={(e) => store.updateField(field.id, { distribution: e.target.value as any })}
+                className={`w-full px-2 py-1 border rounded focus:outline-none focus:ring-2 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-500 dark:text-white
+                    bg-white border-gray-300 focus:ring-blue-500
+                `}
+              >
+                <option value="uniform">Uniform</option>
+                <option value="normal">Normal</option>
+                <option value="exponential">Exponential</option>
+              </select>
+            </div>
+          )}
+        </div>
+      )}
+
+      {(field.type === 'object' || field.type === 'array') && isExpanded && (
+        <div className="ml-8 space-y-2">
+          {field.fields?.map((nestedField) => (
+            <FieldRow 
+              key={nestedField.id} 
+              field={nestedField} 
+              depth={depth + 1}
+            />
+          ))}
+          <button
+            onClick={addNestedField}
+            className={`ml-8 flex items-center gap-2 px-3 py-1 border-2 border-dashed rounded-lg dark:border-gray-600 dark:hover:border-gray-500 text-white' 
+                : 'border-gray-300 hover:border-gray-400'
+            }`}
+          >
+            <Plus className="h-3 w-3" />
+            Add Nested Field
+          </button>
+        </div>
+      )}
     </div>
   );
-}
+};
