@@ -4,6 +4,7 @@ import { LayoutProvider } from '@/context/LayoutContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import React from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import '@/lib/i18n';
 
 const router = createBrowserRouter(LIST_ROUTES);
 

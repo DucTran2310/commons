@@ -1,0 +1,11 @@
+{
+  "csv": "CSV",
+  "excel": "Excel",
+  "json": "JSON",
+  "tooltip": {
+    "csv": "Xuất file CSV",
+    "csvDisabled": "Không thể xuất CSV với field phức tạp",
+    "excel": "Xuất file Excel (XLS)",
+    "json": "Xuất file JSON"
+  }
+}

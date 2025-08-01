@@ -1,0 +1,82 @@
+{
+  "generatorControls": {
+    "recordsLabel": "Records",
+    "generateButton": "Generate Data",
+    "generating": "Generating...",
+    "previewButton": "Preview",
+    "alertNoField": "Please add at least one field before generating data",
+    "alertFixErrors": "Please fix validation errors before generating data",
+    "alertError": "An error occurred while generating data. Please check your field configurations.",
+    "recordsGenerated": "{{count}} records generated",
+    "memoryUsed": "{{memory}}MB used"
+  },
+  "importExport": {
+    "importConfig": "Import Config",
+    "exportConfig": "Export Config",
+    "importConfiguration": "Import Configuration",
+    "pasteJsonConfig": "Paste JSON Configuration",
+    "invalidConfig": "Invalid configuration format: missing fields array",
+    "invalidJson": "Invalid JSON format: {{error}}",
+    "importError": "Import Error",
+    "import": "Import",
+    "cancel": "Cancel",
+    "confirmReplace": "Importing will replace your current fields. Continue?"
+  },
+  "modalType": {
+    "selectFieldType": "Select Field Type",
+    "searchPlaceholder": "Search field types...",
+    "noMatch": "No field types match your search",
+    "selected": "Selected"
+  },
+  "previewTable": {
+    "noData": "No data generated yet. Configure fields and click \"Generate Data\".",
+    "searchPlaceholder": "Search data...",
+    "show": "Show {{size}}",
+    "columns": "Columns",
+    "null": "null",
+    "array": "[Array]",
+    "object": "{Object}",
+    "showing": "Showing {{start}} to {{end}} of {{total}} records",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {{current}} of {{totalPages}}"
+  },
+  "common": {
+    "undo": "Undo",
+    "redo": "Redo",
+    "validationErrors": "Validation Errors",
+    "addField": "Add Field",
+    "addNestedField": "Add Nested Field",
+    "uniqueValues": "Unique values",
+    "pattern": "Pattern (RegExp)",
+    "distribution": "Distribution",
+    "uniform": "Uniform",
+    "normal": "Normal",
+    "exponential": "Exponential",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "templateManager": {
+    "templates": "Templates",
+    "saveAsTemplate": "Save as Template",
+    "availableTemplates": "Available Templates",
+    "searchPlaceholder": "Search templates...",
+    "noTemplates": "No templates found",
+    "builtIn": "Built-in",
+    "load": "Load",
+    "saveTemplate": "Save Template",
+    "templateName": "Template Name",
+    "enterTemplateName": "Enter template name",
+    "description": "Description",
+    "enterDescription": "Enter template description",
+    "confirmReplace": "Loading this template will replace your current fields. Continue?",
+    "nameEmpty": "Template name cannot be empty",
+    "emptyTemplate": "Cannot save an empty template"
+  },
+  "layout": {
+    "title": "Enhanced Fake Data Generator",
+    "subtitle": "Configure fields and generate realistic fake data for testing and development",
+    "exportOptions": "Export Options",
+    "dataPreview": "Data Preview"
+  }
+}

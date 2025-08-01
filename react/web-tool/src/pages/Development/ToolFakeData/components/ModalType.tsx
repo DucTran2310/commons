@@ -6,6 +6,7 @@ import { FIELD_CATEGORIES } from '@/constants/typeData.constants';
 import type { FieldType } from '@/types/fakeData.types';
 import { Search } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function ModalType({
   field,
@@ -18,6 +19,9 @@ export default function ModalType({
   setIsModalOpen: (value: boolean) => void;
   onTypeChange: (value: FieldType) => void;
 }) {
+
+  const { t } = useTranslation("fakeData"); 
+
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleTypeChange = (value: FieldType) => {
@@ -37,13 +41,13 @@ export default function ModalType({
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
       <DialogContent className="bg-white max-w-2xl max-h-[80vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle>Select Field Type</DialogTitle>
+          <DialogTitle>{t('modalType.selectFieldType')}</DialogTitle>
         </DialogHeader>
 
         <div className="relative mb-4">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search field types..."
+            placeholder={t('modalType.searchPlaceholder')}
             className="pl-9"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -52,7 +56,7 @@ export default function ModalType({
 
         {filteredCategories.length === 0 ? (
           <div className="flex-1 flex items-center justify-center text-gray-500">
-            No field types match your search
+            {t('modalType.noMatch')}
           </div>
         ) : (
           <div className="flex-1 overflow-y-auto space-y-6 pr-2">
@@ -74,7 +78,7 @@ export default function ModalType({
                       {type.label}
                       {field.type === type.value && (
                         <Badge className="ml-2" variant="secondary">
-                          Selected
+                          {t('modalType.selected')}
                         </Badge>
                       )}
                     </Button>

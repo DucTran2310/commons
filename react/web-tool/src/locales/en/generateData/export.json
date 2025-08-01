@@ -1,0 +1,11 @@
+{
+  "csv": "CSV",
+  "excel": "Excel",
+  "json": "JSON",
+  "tooltip": {
+    "csv": "Export as CSV",
+    "csvDisabled": "CSV export not available for complex fields",
+    "excel": "Export as Excel (XLS)",
+    "json": "Export as JSON"
+  }
+}

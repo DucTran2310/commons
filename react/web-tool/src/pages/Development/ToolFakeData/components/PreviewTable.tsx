@@ -1,9 +1,13 @@
 import { useFieldStore } from "@/lib/store";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 // import { CSVLink } from "react-csv";
 
 export const PreviewTable = () => {
+
   const store = useFieldStore();
+  const { t } = useTranslation("fakeData");
+
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage, setRecordsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
@@ -14,7 +18,7 @@ export const PreviewTable = () => {
   if (!store.generatedData || store.generatedData.length === 0) {
     return (
       <div className={`flex items-center justify-center h-32 dark:'text-gray-400 text-gray-500}`}>
-        No data generated yet. Configure fields and click "Generate Data".
+        {t("previewTable.noData")}
       </div>
     );
   }
@@ -53,7 +57,7 @@ export const PreviewTable = () => {
         <div className="relative w-full sm:w-64">
           <input
             type="text"
-            placeholder="Search data..."
+            placeholder={t("previewTable.searchPlaceholder")}
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
@@ -93,7 +97,7 @@ export const PreviewTable = () => {
             `}
           >
             {[5, 10, 20, 50, 100].map(size => (
-              <option key={size} value={size}>Show {size}</option>
+              <option key={size} value={size}>{t("previewTable.show", { size })}</option>
             ))}
           </select>
 
@@ -104,7 +108,7 @@ export const PreviewTable = () => {
                   bg-white border-gray-300 hover:bg-gray-50
               `}
             >
-              <span>Columns</span>
+              <span>{t("previewTable.columns")}</span>
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
@@ -185,10 +189,10 @@ export const PreviewTable = () => {
                         {row[field.name] === null ? (
                           <span className={`italic 
                             dark:text-gray-400  text-gray-500
-                          `}>null</span>
+                          `}>{t("previewTable.null")}</span>
                         ) : typeof row[field.name] === 'object' ? (
                           <span className={"dark:text-blue-400 text-blue-600"}>
-                            {Array.isArray(row[field.name]) ? '[Array]' : '{Object}'}
+                            {Array.isArray(row[field.name]) ? t("previewTable.array") : t("previewTable.object")}
                           </span>
                         ) : (
                           row[field.name]?.toString()
@@ -209,7 +213,11 @@ export const PreviewTable = () => {
           <div className={`text-sm mb-2 sm:mb-0 
             dark:text-gray-400 text-gray-600
           `}>
-            Showing {startIndex + 1} to {Math.min(endIndex, filteredData.length)} of {filteredData.length} records
+            {t("previewTable.showing", {
+              start: startIndex + 1,
+              end: Math.min(endIndex, filteredData.length),
+              total: filteredData.length
+            })}
           </div>
           <div className="flex gap-2">
             <button
@@ -220,12 +228,12 @@ export const PreviewTable = () => {
                   bg-white border-gray-300 hover:bg-gray-50 disabled:opacity-50
               `}
             >
-              Previous
+              {t("previewTable.previous")}
             </button>
             <div className={`px-3 py-1 
               dark:text-gray-300 text-gray-700
             `}>
-              Page {currentPage} of {totalPages}
+              {t("previewTable.page", { current: currentPage, totalPages })}
             </div>
             <button
               onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
@@ -235,7 +243,7 @@ export const PreviewTable = () => {
                   bg-white border-gray-300 hover:bg-gray-50 disabled:opacity-50
               `}
             >
-              Next
+              {t("previewTable.next")}
             </button>
           </div>
         </div>

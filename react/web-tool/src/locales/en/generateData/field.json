@@ -1,0 +1,25 @@
+{
+  "configurator": {
+    "title": "Fields Configuration",
+    "undo": "Undo",
+    "redo": "Redo",
+    "validationErrors": "Validation Errors",
+    "addField": "Add Field"
+  },
+  "row": {
+    "fieldNamePlaceholder": "Field name",
+    "nullPlaceholder": "NULL %",
+    "optionsPlaceholder": "Options",
+    "advancedTitle": "Advanced options",
+    "unique": "Unique values",
+    "pattern": "Pattern (RegExp)",
+    "patternPlaceholder": "e.g., [A-Z]{3}-\\d{4}",
+    "distribution": "Distribution",
+    "distributionOptions": {
+      "uniform": "Uniform",
+      "normal": "Normal",
+      "exponential": "Exponential"
+    },
+    "addNestedField": "Add Nested Field"
+  }
+}

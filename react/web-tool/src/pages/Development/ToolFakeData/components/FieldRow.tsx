@@ -5,6 +5,7 @@ import { GripVertical, Settings, Trash2, ChevronDown, ChevronRight, Plus } from 
 import { useEffect, useState } from "react";
 import { CSS } from '@dnd-kit/utilities';
 import ModalType from "@/pages/Development/ToolFakeData/components/ModalType";
+import { useTranslation } from "react-i18next";
 
 export const FieldRow = ({ 
   field, 
@@ -14,6 +15,8 @@ export const FieldRow = ({
   depth?: number;
 }) => {
   const store = useFieldStore();
+  const { t } = useTranslation("field");
+
   const [optionsInput, setOptionsInput] = useState('');
   const [nullPercentage, setNullPercentage] = useState('0');
   const [showAdvanced, setShowAdvanced] = useState(false);
@@ -143,7 +146,7 @@ export const FieldRow = ({
 
         <input
           type="text"
-          placeholder="Field name"
+          placeholder={t("row.fieldNamePlaceholder")}
           value={field.name}
           onChange={handleNameChange}
           className={`w-32 px-2 py-1 border rounded focus:outline-none focus:ring-2 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-500 dark:text-white
@@ -170,7 +173,7 @@ export const FieldRow = ({
         <div className="relative w-20">
           <input
             type="number"
-            placeholder="NULL %"
+            placeholder={t("row.nullPlaceholder")}
             value={nullPercentage}
             onChange={handleNullPercentageChange}
             min="0"
@@ -185,7 +188,7 @@ export const FieldRow = ({
 
         <input
           type="text"
-          placeholder="Options"
+          placeholder={t("row.optionsPlaceholder")}
           value={optionsInput}
           onChange={handleOptionsChange}
           className={`flex-1 px-2 py-1 border rounded focus:outline-none focus:ring-2 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-500 dark:text-white
@@ -198,7 +201,7 @@ export const FieldRow = ({
           className={`p-1 rounded dark:hover:bg-gray-600 dark:text-gray-300
               hover:bg-gray-100 text-gray-600
           `}
-          title="Advanced options"
+          title={t("row.advancedTitle")}
         >
           <Settings className="h-4 w-4" />
         </button>
@@ -224,7 +227,7 @@ export const FieldRow = ({
             />
             <span className={`text-sm dark:text-gray-300 text-gray-700'
             `}>
-              Unique values
+              {t("row.unique")}
             </span>
           </label>
           
@@ -232,11 +235,11 @@ export const FieldRow = ({
             <div>
               <label className={`block text-sm font-medium mb-1 dark:text-gray-300 text-gray-700
               `}>
-                Pattern (RegExp)
+                {t("row.pattern")}
               </label>
               <input
                 type="text"
-                placeholder="e.g., [A-Z]{3}-\\d{4}"
+                placeholder={t("row.patternPlaceholder")}
                 value={field.pattern || ''}
                 onChange={(e) => store.updateField(field.id, { pattern: e.target.value })}
                 className={`w-full px-2 py-1 border rounded focus:outline-none focus:ring-2 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-500 dark:text-white
@@ -250,7 +253,7 @@ export const FieldRow = ({
             <div>
               <label className={`block text-sm font-medium mb-1 dark:text-gray-300 text-gray-700
               `}>
-                Distribution
+                {t("row.distributionOptions.uniform")}
               </label>
               <select
                 value={field.distribution || 'uniform'}
@@ -259,9 +262,9 @@ export const FieldRow = ({
                     bg-white border-gray-300 focus:ring-blue-500
                 `}
               >
-                <option value="uniform">Uniform</option>
-                <option value="normal">Normal</option>
-                <option value="exponential">Exponential</option>
+                <option value="uniform">{t("row.distributionOptions.uniform")}</option>
+                <option value="normal">{t("row.distributionOptions.normal")}</option>
+                <option value="exponential">{t("row.distributionOptions.exponential")}</option>
               </select>
             </div>
           )}
@@ -284,7 +287,7 @@ export const FieldRow = ({
             }`}
           >
             <Plus className="h-3 w-3" />
-            Add Nested Field
+            {t("row.addNestedField")}
           </button>
         </div>
       )}

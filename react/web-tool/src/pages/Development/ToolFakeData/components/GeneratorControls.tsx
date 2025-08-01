@@ -2,6 +2,7 @@ import { useFieldStore } from "@/lib/store";
 import { generateFakeData } from "@/utils/fakerData";
 import { Eye, RotateCw } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export const GeneratorControls = ({
   onPreviewClick
@@ -9,17 +10,19 @@ export const GeneratorControls = ({
   onPreviewClick?: () => void
 }) => {
   const store = useFieldStore();
+  const { t } = useTranslation("fakeData"); 
+
   const [count, setCount] = useState(100);
   const [isGenerating, setIsGenerating] = useState(false);
 
   const handleGenerate = async () => {
     if (store.fields.length === 0) {
-      alert('Please add at least one field before generating data');
+      alert(t('generatorControls.alertNoField'))
       return;
     }
 
     if (store.errors.length > 0) {
-      alert('Please fix validation errors before generating data');
+      alert(t('generatorControls.alertFixErrors'));
       return;
     }
 
@@ -31,11 +34,16 @@ export const GeneratorControls = ({
       store.setGeneratedData(data);
     } catch (error) {
       console.error('Error generating data:', error);
-      alert('An error occurred while generating data. Please check your field configurations.');
+      alert(t('generatorControls.alertError'));
     } finally {
       setIsGenerating(false);
     }
   };
+  
+  // 👉 Tính memory (MB)
+  const memoryUsed = Math.round(
+    (((performance as any).memory?.usedJSHeapSize || 0) / 1024 / 1024) || 0
+  );
 
   return (
     <div className={`flex flex-col sm:flex-row items-center gap-4 p-4 rounded-lg 
@@ -45,7 +53,7 @@ export const GeneratorControls = ({
         <label className={`text-sm font-medium 
           dark:text-gray-300 text-gray-700
         `}>
-          Records:
+          {t('generatorControls.recordsLabel')}:
         </label>
         <input
           type="number"
@@ -75,9 +83,9 @@ export const GeneratorControls = ({
           {isGenerating ? (
             <>
               <RotateCw className="h-4 w-4 animate-spin" />
-              Generating...
+              {t('generatorControls.generating')}
             </>
-          ) : 'Generate Data'}
+          ) : t('generatorControls.generateButton')}
         </button>
 
         <button
@@ -89,7 +97,7 @@ export const GeneratorControls = ({
           } w-full sm:w-auto justify-center`}
         >
           <Eye className="h-4 w-4" />
-          Preview
+          {t('generatorControls.previewButton')}
         </button>
       </div>
 
@@ -98,10 +106,12 @@ export const GeneratorControls = ({
        w-full sm:w-auto text-center sm:text-left`}>
         {store.generatedData?.length > 0 && (
           <>
-            {store.generatedData.length} records generated
+            {t("generatorControls.recordsGenerated", {
+              count: store.generatedData.length,
+            })}
             {store.fields.length > 0 && (
               <span className="ml-2">
-                ({Math.round(((performance as any).memory?.usedJSHeapSize || 0) / 1024 / 1024) || '?'}MB used)
+                ({t("generatorControls.memoryUsed", { memory: memoryUsed })})
               </span>
             )}
           </>

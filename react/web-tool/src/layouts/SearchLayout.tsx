@@ -1,12 +1,6 @@
+import { LanguageSelector } from '@/components/common/LanguageSelector';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useLayout } from '@/context/LayoutContext';
 import { useTheme } from "@/context/ThemeContext";
@@ -82,20 +76,7 @@ export function SearchLayout() {
       </div>
       {/* Language selector and theme toggle */}
       <div className="flex items-center justify-between">
-        <div className="w-32 mr-4">
-          <Select value={language} onValueChange={setLanguage}>
-            <SelectTrigger className={`w-full border ${isDarkMode ? 'bg-dark-background border-dark-divider text-dark-text' : 'bg-light-background border-light-divider text-light-text'}`}>
-              <SelectValue placeholder="Ngôn ngữ" />
-            </SelectTrigger>
-            <SelectContent className={`border ${isDarkMode ? 'bg-dark-background border-dark-divider' : 'bg-light-background border-light-divider'}`}>
-              {["en", "vi", "ja", "zh", "ko"].map((lang, index) => (
-                <SelectItem key={index} value={lang} className={isDarkMode ? 'text-white hover:bg-dark-hoverBg' : 'hover:bg-light-hoverBg'}>
-                  {lang === "en" ? "English" : lang === "vi" ? "Tiếng Việt" : lang === "ja" ? "日本語" : lang === "zh" ? "中文" : "한국어"}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <LanguageSelector />
         {/* Theme toggle */}
         <TooltipProvider>
           <Tooltip>

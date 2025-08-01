@@ -1,0 +1,71 @@
+{
+  "documentation": "Documentation",
+  "title": "Fake Data Generator Documentation",
+  "gettingStarted": {
+    "title": "Getting Started",
+    "steps": [
+      "Add fields using the 'Add Field' button",
+      "Configure each field with name, type, and options",
+      "Set the number of records to generate",
+      "Click 'Generate Data' to create fake data",
+      "Preview and export your data"
+    ]
+  },
+  "fieldTypes": {
+    "title": "Field Types & Examples",
+    "examples": {
+      "firstName": "John, Sarah, Michael",
+      "email": "user@domain.com (specify domain in options)",
+      "age": "Use options: '18-65' for age range",
+      "date": "Format: YYYY-MM-DD, use options for year range",
+      "number": "Use options: '1-100' for number range",
+      "custom": "Use options: 'value1,value2,value3' for choices",
+      "currency": "Use options: '10-1000' for price range",
+      "creditCard": "Generates valid credit card numbers",
+      "image": "Returns placeholder image URLs",
+      "color": "Returns hex color codes (#ffffff)",
+      "pattern": "Use pattern field for regex generation",
+      "unique": "Check unique option to avoid duplicates",
+      "distribution": "Choose normal, uniform, or exponential for numbers"
+    }
+  },
+  "advanced": {
+    "title": "Advanced Features",
+    "items": {
+      "nullValues": {
+        "title": "NULL Values",
+        "desc": "Set percentage of NULL values using the % field (0-100)"
+      },
+      "unique": {
+        "title": "Unique Values",
+        "desc": "Enable unique constraint in advanced options to prevent duplicates"
+      },
+      "pattern": {
+        "title": "Pattern Matching",
+        "desc": "Use regular expressions for string fields (e.g., [A-Z]{3}-\\d{4})"
+      },
+      "distribution": {
+        "title": "Data Distribution",
+        "desc": "Choose normal, uniform, or exponential distribution for numeric fields"
+      }
+    }
+  },
+  "templates": {
+    "title": "Templates",
+    "desc": "Use built-in templates or save your own configurations:",
+    "names": {
+      "userProfile": "User Profile",
+      "productCatalog": "Product Catalog",
+      "orderManagement": "Order Management",
+      "socialMedia": "Social Media",
+      "inventory": "Inventory"
+    },
+    "list": {
+      "userProfile": "Basic user information with contact details",
+      "productCatalog": "E-commerce product data structure",
+      "orderManagement": "Order and transaction data",
+      "socialMedia": "User posts and interactions",
+      "inventory": "Product stock and warehouse data"
+    }
+  }
+}

@@ -6,9 +6,11 @@ import { ImportExportManager } from "@/pages/Development/ToolFakeData/components
 import { PreviewTable } from "@/pages/Development/ToolFakeData/components/PreviewTable";
 import { TemplateManager } from "@/pages/Development/ToolFakeData/components/TemplateManager";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function ToolFakeData() {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const { t } = useTranslation("fakeData");
 
   return (
     <div className={`min-h-screen dark:bg-gray-900 bg-gray-100 p-6 transition-colors duration-300`}>
@@ -19,11 +21,11 @@ export default function ToolFakeData() {
             <div>
               <div className="flex items-center gap-4">
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                  Enhanced Fake Data Generator
+                  {t("layout.title")}
                 </h1>
               </div>
               <p className="text-gray-600 dark:text-gray-300 mt-2">
-                Configure fields and generate realistic fake data for testing and development
+                {t("layout.subtitle")}
               </p>
             </div>
             <DocumentationPanel />
@@ -47,7 +49,7 @@ export default function ToolFakeData() {
         <div className={`dark:bg-gray-800 bg-white p-4 rounded-lg shadow-sm transition-colors duration-300`}>
           <div className="flex items-center justify-between">
             <h2 className={`text-lg font-semibold dark:text-white text-gray-900`}>
-              Export Options
+              {t("layout.exportOptions")}
             </h2>
             <ExportButtons  />
           </div>
@@ -64,7 +66,7 @@ export default function ToolFakeData() {
             <div className={`dark:bg-gray-800 bg-white p-6 rounded-lg max-w-6xl w-full mx-4 max-h-[90vh] flex flex-col transition-colors duration-300`}>
               <div className="flex justify-between items-center mb-4">
                 <h2 className={`text-xl font-semibold dark:text-white text-gray-900`}>
-                  Data Preview
+                  {t("layout.dataPreview")}
                 </h2>
                 <button
                   onClick={() => setIsPreviewOpen(false)}

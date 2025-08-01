@@ -1,0 +1,25 @@
+{
+  "configurator": {
+    "title": "Cấu hình Fields",
+    "undo": "Hoàn tác",
+    "redo": "Làm lại",
+    "validationErrors": "Lỗi kiểm tra dữ liệu",
+    "addField": "Thêm Field"
+  },
+  "row": {
+    "fieldNamePlaceholder": "Tên field",
+    "nullPlaceholder": "NULL %",
+    "optionsPlaceholder": "Tùy chọn",
+    "advancedTitle": "Tùy chọn nâng cao",
+    "unique": "Giá trị duy nhất",
+    "pattern": "Biểu thức (RegExp)",
+    "patternPlaceholder": "vd: [A-Z]{3}-\\d{4}",
+    "distribution": "Phân phối",
+    "distributionOptions": {
+      "uniform": "Đều",
+      "normal": "Chuẩn",
+      "exponential": "Hàm mũ"
+    },
+    "addNestedField": "Thêm Field con"
+  }
+}

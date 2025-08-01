@@ -1,0 +1,71 @@
+{
+  "documentation": "Tài liệu",
+  "title": "Tài liệu Hướng dẫn Fake Data",
+  "gettingStarted": {
+    "title": "Bắt đầu",
+    "steps": [
+      "Thêm field bằng nút 'Add Field'",
+      "Cấu hình từng field với name, type và options",
+      "Nhập số lượng record muốn tạo",
+      "Bấm 'Generate Data' để tạo dữ liệu",
+      "Xem trước và xuất dữ liệu"
+    ]
+  },
+  "fieldTypes": {
+    "title": "Các loại Field & Ví dụ",
+    "examples": {
+      "firstName": "John, Sarah, Michael",
+      "email": "user@domain.com (ghi rõ domain trong options)",
+      "age": "Dùng options: '18-65' để giới hạn độ tuổi",
+      "date": "Định dạng: YYYY-MM-DD, dùng options cho khoảng năm",
+      "number": "Dùng options: '1-100' để giới hạn số",
+      "custom": "Dùng options: 'giá trị1,giá trị2,giá trị3' để chọn",
+      "currency": "Dùng options: '10-1000' để giới hạn giá",
+      "creditCard": "Sinh số thẻ tín dụng hợp lệ",
+      "image": "Trả về URL ảnh placeholder",
+      "color": "Trả về mã màu hex (#ffffff)",
+      "pattern": "Dùng pattern field để sinh regex",
+      "unique": "Chọn tùy chọn unique để tránh trùng lặp",
+      "distribution": "Chọn normal, uniform hoặc exponential cho số"
+    }
+  },
+  "advanced": {
+    "title": "Tính năng Nâng cao",
+    "items": {
+      "nullValues": {
+        "title": "Giá trị NULL",
+        "desc": "Thiết lập % giá trị NULL bằng trường % (0-100)"
+      },
+      "unique": {
+        "title": "Giá trị Duy nhất",
+        "desc": "Bật tùy chọn unique trong nâng cao để tránh trùng lặp"
+      },
+      "pattern": {
+        "title": "Pattern Matching",
+        "desc": "Dùng regex cho trường string (vd: [A-Z]{3}-\\d{4})"
+      },
+      "distribution": {
+        "title": "Phân phối dữ liệu",
+        "desc": "Chọn normal, uniform hoặc exponential cho trường số"
+      }
+    }
+  },
+  "templates": {
+    "title": "Mẫu dữ liệu",
+    "desc": "Dùng mẫu có sẵn hoặc lưu cấu hình của bạn:",
+    "names": {
+      "userProfile": "Hồ sơ người dùng",
+      "productCatalog": "Danh mục sản phẩm",
+      "orderManagement": "Quản lý đơn hàng",
+      "socialMedia": "Mạng xã hội",
+      "inventory": "Hàng tồn kho"
+    },
+    "list": {
+      "userProfile": "Thông tin cơ bản của người dùng với chi tiết liên hệ",
+      "productCatalog": "Cấu trúc dữ liệu sản phẩm thương mại điện tử",
+      "orderManagement": "Dữ liệu đơn hàng và giao dịch",
+      "socialMedia": "Bài viết và tương tác người dùng",
+      "inventory": "Dữ liệu tồn kho và kho hàng"
+    }
+  }
+}

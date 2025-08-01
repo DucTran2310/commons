@@ -4,9 +4,11 @@ import { closestCenter, DndContext } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { AlertTriangle, Plus, Redo, Undo } from "lucide-react";
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
+import { useTranslation } from "react-i18next";
 
 export const FieldConfigurator = () => {
   const store = useFieldStore();
+  const { t } = useTranslation("field");
 
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
@@ -21,7 +23,7 @@ export const FieldConfigurator = () => {
         <h2 className={`text-lg font-semibold 
           dark:text-white text-gray-900
         `}>
-          Fields Configuration
+          {t("configurator.title")}
         </h2>
         <div className="flex gap-2">
           <button
@@ -31,7 +33,7 @@ export const FieldConfigurator = () => {
                dark:hover:bg-gray-700 dark:disabled:opacity-50 dark:text-white
                 hover:bg-gray-100 disabled:opacity-50
             `}
-            title="Undo"
+            title={t("configurator.undo")}
           >
             <Undo className="h-4 w-4" />
           </button>
@@ -42,7 +44,7 @@ export const FieldConfigurator = () => {
               dark:hover:bg-gray-700 dark:disabled:opacity-50 dark:text-white
                 hover:bg-gray-100 disabled:opacity-50
             `}
-            title="Redo"
+            title={t("configurator.redo")}
           >
             <Redo className="h-4 w-4" />
           </button>
@@ -61,7 +63,7 @@ export const FieldConfigurator = () => {
               <h3 className={`font-medium 
                 dark:text-red-100 text-red-800
               `}>
-                Validation Errors
+                {t("configurator.validationErrors")}
               </h3>
               <ul className={`mt-1 text-sm list-disc list-inside 
                 dark:text-red-300 text-red-700
@@ -95,7 +97,7 @@ export const FieldConfigurator = () => {
         `}
       >
         <Plus className="h-4 w-4" />
-        Add Field
+        {t("configurator.addField")}
       </button>
     </div>
   );

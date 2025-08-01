@@ -1,0 +1,63 @@
+{
+  "generatorControls": {
+    "recordsLabel": "Số bản ghi",
+    "generateButton": "Tạo dữ liệu",
+    "generating": "Đang tạo...",
+    "previewButton": "Xem trước",
+    "alertNoField": "Vui lòng thêm ít nhất một trường trước khi tạo dữ liệu",
+    "alertFixErrors": "Vui lòng sửa lỗi xác thực trước khi tạo dữ liệu",
+    "alertError": "Đã xảy ra lỗi khi tạo dữ liệu. Vui lòng kiểm tra cấu hình trường.",
+    "recordsGenerated": "Đã tạo {{count}} bản ghi",
+    "memoryUsed": "Đã dùng {{memory}}MB bộ nhớ"
+  },
+  "importExport": {
+    "importConfig": "Nhập cấu hình",
+    "exportConfig": "Xuất cấu hình",
+    "importConfiguration": "Nhập tệp cấu hình",
+    "pasteJsonConfig": "Dán cấu hình JSON",
+    "invalidConfig": "Định dạng cấu hình không hợp lệ: thiếu mảng fields",
+    "invalidJson": "Định dạng JSON không hợp lệ: {{error}}",
+    "importError": "Lỗi nhập dữ liệu",
+    "import": "Nhập",
+    "cancel": "Hủy",
+    "confirmReplace": "Nhập mới sẽ thay thế các trường hiện tại. Bạn có muốn tiếp tục?"
+  },
+  "modalType": {
+    "selectFieldType": "Chọn loại trường",
+    "searchPlaceholder": "Tìm loại trường...",
+    "noMatch": "Không có loại trường nào khớp với tìm kiếm",
+    "selected": "Đã chọn"
+  },
+  "previewTable": {
+    "noData": "Chưa có dữ liệu nào được tạo. Hãy cấu hình trường và bấm \"Tạo dữ liệu\".",
+    "searchPlaceholder": "Tìm dữ liệu...",
+    "show": "Hiển thị {{size}}",
+    "columns": "Cột",
+    "null": "trống",
+    "array": "[Mảng]",
+    "object": "{Đối tượng}",
+    "showing": "Đang hiển thị từ {{start}} đến {{end}} trên tổng số {{total}} bản ghi",
+    "previous": "Trước",
+    "next": "Sau",
+    "page": "Trang {{current}} trên {{totalPages}}"
+  },
+  "common": {
+    "undo": "Hoàn tác",
+    "redo": "Làm lại",
+    "validationErrors": "Lỗi xác thực",
+    "addField": "Thêm trường",
+    "addNestedField": "Thêm trường lồng",
+    "uniqueValues": "Giá trị duy nhất",
+    "pattern": "Mẫu (RegExp)",
+    "distribution": "Phân phối",
+    "uniform": "Đều",
+    "normal": "Chuẩn",
+    "exponential": "Hàm mũ"
+  },
+  "layout": {
+    "title": "Trình tạo dữ liệu giả nâng cao",
+    "subtitle": "Cấu hình các trường và tạo dữ liệu giả thực tế để phục vụ kiểm thử và phát triển",
+    "exportOptions": "Tùy chọn xuất dữ liệu",
+    "dataPreview": "Xem trước dữ liệu"
+  }
+}
