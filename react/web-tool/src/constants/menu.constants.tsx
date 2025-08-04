@@ -1,4 +1,4 @@
-import { Braces, BrushCleaning, DatabaseZap, FileDiff } from 'lucide-react';
+import { Braces, BrushCleaning, DatabaseZap, FileDiff, FileJson } from 'lucide-react';
 
 export const LIST_MENUS = [
   {
@@ -28,6 +28,12 @@ export const LIST_MENUS = [
         title: "Tạo dữ liệu ảo",
         icon: <DatabaseZap />,
         path: "/fake-data",
+      },
+      {
+        id: 6,
+        title: "Giảm kích thước JSON",
+        icon: <FileJson />,
+        path: "/json-minifier",
       },
     ],
   },

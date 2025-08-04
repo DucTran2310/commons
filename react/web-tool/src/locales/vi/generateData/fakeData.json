@@ -54,6 +54,23 @@
     "normal": "Chuẩn",
     "exponential": "Hàm mũ"
   },
+  "templateManager": {
+    "templates": "Mẫu",
+    "saveAsTemplate": "Lưu thành Mẫu",
+    "availableTemplates": "Các Mẫu Có Sẵn",
+    "searchPlaceholder": "Tìm kiếm mẫu...",
+    "noTemplates": "Không tìm thấy mẫu nào",
+    "builtIn": "Mẫu có sẵn",
+    "load": "Tải",
+    "saveTemplate": "Lưu Mẫu",
+    "templateName": "Tên Mẫu",
+    "enterTemplateName": "Nhập tên mẫu",
+    "description": "Mô tả",
+    "enterDescription": "Nhập mô tả mẫu",
+    "confirmReplace": "Việc tải mẫu này sẽ thay thế các trường hiện tại. Bạn có muốn tiếp tục?",
+    "nameEmpty": "Tên mẫu không được để trống",
+    "emptyTemplate": "Không thể lưu một mẫu trống"
+  },
   "layout": {
     "title": "Trình tạo dữ liệu giả nâng cao",
     "subtitle": "Cấu hình các trường và tạo dữ liệu giả thực tế để phục vụ kiểm thử và phát triển",

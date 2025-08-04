@@ -39,6 +39,14 @@ export const LIST_ROUTES = [
         },
         errorElement: <ErrorBoundary />,
       },
+      {
+        path: 'json-minifier',
+        async lazy() {
+          const { default: JSONMinifier } = await import('@/pages/Development/JSONMinifier/JSONMinifier');
+          return { Component: JSONMinifier };
+        },
+        errorElement: <ErrorBoundary />,
+      },
     ],
   },
 ]
