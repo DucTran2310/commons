@@ -22,7 +22,7 @@ module.exports = {
         // Dark mode colors
         dark: {
           background: '#1e293b',
-          text: '#f8fafc',
+          text: '#fff',
           activeBg: '#334155',
           activeText: '#38bdf8',
           hoverBg: '#334155',

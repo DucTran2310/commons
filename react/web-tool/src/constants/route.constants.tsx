@@ -47,6 +47,30 @@ export const LIST_ROUTES = [
         },
         errorElement: <ErrorBoundary />,
       },
+      {
+        path: 'text-converter',
+        async lazy() {
+          const { default: TextCaseConverter } = await import('@/pages/Converter/TextConverter/TextCaseConverter');
+          return { Component: TextCaseConverter };
+        },
+        errorElement: <ErrorBoundary />,
+      },
+      {
+        path: 'color-converter',
+        async lazy() {
+          const { default: ColorConverter } = await import('@/pages/Converter/ColorConverter/ColorConverter');
+          return { Component: ColorConverter };
+        },
+        errorElement: <ErrorBoundary />,
+      },
+      {
+        path: 'markdown-converter',
+        async lazy() {
+          const { default: MarkdownConverter } = await import('@/pages/Converter/MarkdownConverter/MarkdownConverter');
+          return { Component: MarkdownConverter };
+        },
+        errorElement: <ErrorBoundary />,
+      },
     ],
   },
 ]

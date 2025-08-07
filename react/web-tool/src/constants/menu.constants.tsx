@@ -1,4 +1,4 @@
-import { Braces, BrushCleaning, DatabaseZap, FileDiff, FileJson } from 'lucide-react';
+import { BookMarked, Braces, BrushCleaning, CaseSensitive, DatabaseZap, FileDiff, FileJson, Palette } from 'lucide-react';
 
 export const LIST_MENUS = [
   {
@@ -35,6 +35,30 @@ export const LIST_MENUS = [
         icon: <FileJson />,
         path: "/json-minifier",
       },
+    ],
+  },
+  {
+    id: 7,
+    title: "Converter",
+    children: [
+      {
+        id: 8,
+        title: "Chuyển đổi chữ hoa/ chữ thường",
+        icon: <CaseSensitive />,
+        path: "/text-converter",
+      },
+      {
+        id: 9,
+        title: "Chuyển đổi màu",
+        icon: <Palette />,
+        path: "/color-converter",
+      },
+      {
+        id: 10,
+        title: "Chuyển đổi markdown sang HTML",
+        icon: <BookMarked />,
+        path: "/markdown-converter",
+      }
     ],
   },
 ];

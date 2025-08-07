@@ -84,7 +84,7 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({
           </span>
         )}
 
-        <span className={`flex-1 text-sm ${item.isActive ? 
+        <span className={`flex-1 text-sm text-ellipsis overflow-hidden w-[160px] whitespace-nowrap ${item.isActive ? 
           (isDarkMode ? 'text-dark-activeText' : 'text-light-activeText') : 
           (isDarkMode ? 'text-dark-text' : 'text-light-text')
         }`}>

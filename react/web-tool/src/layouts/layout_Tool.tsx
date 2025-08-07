@@ -68,7 +68,7 @@ const Layout_Tool = () => {
       >
         <SearchLayout />
         <div
-          className='bg-white dark:bg-[#0f172a]'
+          className='bg-[#f3f4f6] dark:bg-[#0f172a]'
           style={{
             flex: 1,
             overflowY: 'auto',
