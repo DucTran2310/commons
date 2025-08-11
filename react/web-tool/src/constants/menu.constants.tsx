@@ -1,4 +1,4 @@
-import { BookMarked, Braces, BrushCleaning, CaseSensitive, DatabaseZap, FileDiff, FileJson, Palette } from 'lucide-react';
+import { BookMarked, Braces, BrushCleaning, CaseSensitive, DatabaseZap, FileDiff, FileJson, Key, Palette } from 'lucide-react';
 
 export const LIST_MENUS = [
   {
@@ -34,6 +34,12 @@ export const LIST_MENUS = [
         title: "Giảm kích thước JSON",
         icon: <FileJson />,
         path: "/json-minifier",
+      },
+      {
+        id: 11,
+        title: "JWT Decode",
+        icon: <Key />,
+        path: "/jwt-decode",
       },
     ],
   },

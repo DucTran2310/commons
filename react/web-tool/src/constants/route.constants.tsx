@@ -71,6 +71,14 @@ export const LIST_ROUTES = [
         },
         errorElement: <ErrorBoundary />,
       },
+      {
+        path: 'jwt-decode',
+        async lazy() {
+          const { default: JwtDecoder } = await import('@/pages/Development/JWT-Decoder/JwtDecoder');
+          return { Component: JwtDecoder };
+        },
+        errorElement: <ErrorBoundary />,
+      },
     ],
   },
 ]
