@@ -79,6 +79,14 @@ export const LIST_ROUTES = [
         },
         errorElement: <ErrorBoundary />,
       },
+      {
+        path: 'uuid-generator',
+        async lazy() {
+          const { default: UUIDGenerator } = await import('@/pages/Development/UUIDGenerator/UUIDGenerator');
+          return { Component: UUIDGenerator };
+        },
+        errorElement: <ErrorBoundary />,
+      },
     ],
   },
 ]

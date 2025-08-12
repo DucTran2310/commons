@@ -1,4 +1,4 @@
-import { BookMarked, Braces, BrushCleaning, CaseSensitive, DatabaseZap, FileDiff, FileJson, Key, Palette } from 'lucide-react';
+import { BookMarked, Braces, BrushCleaning, CaseSensitive, DatabaseZap, FileDiff, FileJson, IdCard, Key, Palette } from 'lucide-react';
 
 export const LIST_MENUS = [
   {
@@ -40,6 +40,12 @@ export const LIST_MENUS = [
         title: "JWT Decode",
         icon: <Key />,
         path: "/jwt-decode",
+      },
+      {
+        id: 12,
+        title: "Trình tạo UUID",
+        icon: <IdCard />,
+        path: "/uuid-generator",
       },
     ],
   },
