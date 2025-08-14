@@ -87,6 +87,22 @@ export const LIST_ROUTES = [
         },
         errorElement: <ErrorBoundary />,
       },
+      {
+        path: 'color-palette-generator',
+        async lazy() {
+          const { default: ColorPaletteGenerator } = await import('@/pages/Web/ColorPaletteGenerator/ColorPaletteGenerator');
+          return { Component: ColorPaletteGenerator };
+        },
+        errorElement: <ErrorBoundary />,
+      },
+      {
+        path: 'box-shadow-generator',
+        async lazy() {
+          const { default: BoxShadowGenerator } = await import('@/pages/Web/BoxShadowGenerator/BoxShadowGenerator');
+          return { Component: BoxShadowGenerator };
+        },
+        errorElement: <ErrorBoundary />,
+      },
     ],
   },
 ]

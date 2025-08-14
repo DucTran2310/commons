@@ -1,4 +1,5 @@
 import Sidebar from '@/components/common/Sidebar/Sidebar';
+import { Toaster } from '@/components/ui/sonner';
 import { LIST_MENUS } from '@/constants/menu.constants';
 import { useLayout } from '@/context/LayoutContext';
 import { SearchLayout } from '@/layouts/SearchLayout';
@@ -56,6 +57,7 @@ const Layout_Tool = () => {
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
+      <Toaster />
       <Sidebar
         menuItems={menuItems}
         onItemClick={handleItemClick}

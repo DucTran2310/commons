@@ -1,4 +1,4 @@
-import { BookMarked, Braces, BrushCleaning, CaseSensitive, DatabaseZap, FileDiff, FileJson, IdCard, Key, Palette } from 'lucide-react';
+import { BookMarked, Braces, BrushCleaning, CaseSensitive, Crop, DatabaseZap, FileDiff, FileJson, IdCard, Key, Paintbrush, Palette } from 'lucide-react';
 
 export const LIST_MENUS = [
   {
@@ -71,6 +71,24 @@ export const LIST_MENUS = [
         icon: <BookMarked />,
         path: "/markdown-converter",
       }
+    ],
+  },
+  {
+    id: 13,
+    title: "Web",
+    children: [
+      {
+        id: 14,
+        title: "Sinh bảng màu",
+        icon: <Paintbrush />,
+        path: "/color-palette-generator",
+      },
+      {
+        id: 15,
+        title: "Tạo box-shadow",
+        icon: <Crop />,
+        path: "/box-shadow-generator",
+      },
     ],
   },
 ];
