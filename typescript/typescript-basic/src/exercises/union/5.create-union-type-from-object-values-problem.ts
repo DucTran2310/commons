@@ -5,6 +5,11 @@ export const notification = {
   WARNING: "warning",
   DANGER: "danger",
 } as const;
-export type NotificationWD = unknown;
+type Notification = typeof notification;
+type NotificationNeededKeys = Exclude<keyof Notification, "ALERT">;
+export type NotificationWD = Omit<
+  Notification,
+  "ALERT"
+>[NotificationNeededKeys];
 // type NotificationWD = "warning" | "danger"
 type tests = [Expect<Equal<NotificationWD, "warning" | "danger">>];

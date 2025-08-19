@@ -13,7 +13,7 @@ export type Ranking =
       type: "normal";
       award: "bronze";
     };
-type RankingBest = unknown;
+type RankingBest = Extract<Ranking, { type: "best" }>;
 type tests = [
   Expect<
     Equal<

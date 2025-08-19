@@ -21,8 +21,11 @@ const TOPPINGS = [
     description: "A colorful vegetable topping",
     price: 0.5,
   },
-];
-type Toppings = unknown;
+] as const;
+type Toppings = typeof TOPPINGS; // array
+type Toppingss = (typeof TOPPINGS)[number]["name"]; // array
+type ToppingsList = Toppings[number]; // union
+type ToppingsName = ToppingsList["name"]; // property
 type tests = [
-  Expect<Equal<Toppings, "pineapple" | "pepperoni" | "anchovy" | "peppers">>
+  Expect<Equal<Toppingss, "pineapple" | "pepperoni" | "anchovy" | "peppers">>
 ];

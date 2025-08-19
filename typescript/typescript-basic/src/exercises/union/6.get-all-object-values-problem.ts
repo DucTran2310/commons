@@ -6,5 +6,6 @@ export const notification = {
   DANGER: "danger",
 } as const;
 
-type Notification = unknown;
+type NotificationKeys = keyof typeof notification;
+type Notification = (typeof notification)[NotificationKeys];
 type tests = [Expect<Equal<Notification, "alert" | "warning" | "danger">>];

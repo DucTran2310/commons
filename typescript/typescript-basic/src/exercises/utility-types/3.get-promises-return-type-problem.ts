@@ -6,7 +6,8 @@ const fetchingCars = () => {
     color: "blue",
   });
 };
-type FetchingCars = unknown;
+type ReturnFetchingCars = ReturnType<typeof fetchingCars>;
+type FetchingCars = Awaited<ReturnFetchingCars>;
 /* Expected
 type FetchingCars = {
   id: number;

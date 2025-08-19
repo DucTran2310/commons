@@ -12,7 +12,13 @@ interface Admin {
   role: string;
 }
 
-type PowerUser = unknown;
+type PowerUser = {
+  type: "powerUser";
+  name: string;
+  age: number;
+  role: string;
+  occupation: string;
+};
 
 export type Person = User | Admin | PowerUser;
 

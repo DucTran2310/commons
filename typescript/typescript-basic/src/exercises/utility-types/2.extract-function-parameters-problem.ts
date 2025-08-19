@@ -4,7 +4,7 @@ function filterData(
   limit?: number,
   offset?: number
 ) {}
-type FilterDataParameters = unknown;
+type FilterDataParameters = Parameters<typeof filterData>;
 /** Expected
 type FilterDataParameters = [
   filter: string,

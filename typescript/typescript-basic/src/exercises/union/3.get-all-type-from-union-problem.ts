@@ -13,5 +13,5 @@ export type Ranking =
       type: "normal";
       award: "bronze";
     };
-type AwardType = unknown;
+type AwardType = Ranking["type"];
 type tests = [Expect<Equal<AwardType, "best" | "good" | "normal">>];

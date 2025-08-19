@@ -6,5 +6,6 @@ export const programingLanguages = {
   VUE: "vue",
   RUBY: "ruby",
 } as const;
-export type IndividualLanguage = unknown;
+export type IndividualLanguage =
+  (typeof programingLanguages)[keyof typeof programingLanguages];
 // type IndividualProgram = "php" | "python" | "vue" | "ruby"

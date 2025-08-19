@@ -7,7 +7,8 @@ const array = [
   },
 ];
 
-const obj = array.reduce((accum, item) => {
+const obj = array.reduce<Record<string, any>>((accum, item) => {
   accum[item.name] = item;
   return accum;
 }, {});
+console.log("🚀 ~ obj:", obj);

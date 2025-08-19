@@ -1,9 +1,9 @@
 import { Equal, Expect } from "@/type-utils";
 
-type ReturnTypeOfFunction<T> = unknown;
+type ReturnTypeOfFunction<T> = T extends (...args: any) => infer R ? R : never;
 
 // Test cases
-type Case1 = Expect<Equal<ReturnTypeOfFunction<() => number>, number>>; // number
-type Case2 = Expect<
-  Equal<ReturnTypeOfFunction<(x: string) => boolean>, boolean>
->; // boolean
+type test = [
+  Expect<Equal<ReturnTypeOfFunction<() => number>, number>>, // number
+  Expect<Equal<ReturnTypeOfFunction<(x: string) => boolean>, boolean>> // boolean
+];

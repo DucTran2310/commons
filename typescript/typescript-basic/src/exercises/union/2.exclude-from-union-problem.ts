@@ -13,7 +13,7 @@ export type Ranking =
       type: "normal";
       award: "bronze";
     };
-type NotRankingBest = unknown;
+type NotRankingBest = Exclude<Ranking, { type: "best" }>;
 type tests = [
   Expect<
     Equal<
